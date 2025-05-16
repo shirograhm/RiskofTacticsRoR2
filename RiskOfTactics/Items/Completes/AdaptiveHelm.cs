@@ -213,74 +213,81 @@ namespace RiskOfTactics
                         args.cooldownMultAdd -= percentCooldownReductionBonus;
                         args.baseShieldAdd += sender.healthComponent.fullHealth * percentShieldBonus;
 
-                        if (melee)
-                        {
-                            args.armorAdd += meleeResistBonus;
-                            args.baseShieldAdd += sender.healthComponent.fullHealth * percentMeleeShieldBonus;
-                        }
+                        //if (melee)
+                        //{
+                        //    args.armorAdd += meleeResistBonus;
+                        //    args.baseShieldAdd += sender.healthComponent.fullHealth * percentMeleeShieldBonus;
+                        //}
 
-                        if (ranged) 
-                        {
-                            args.baseDamageAdd += rangedDamageBonus.Value;
-                        }
-                     }
-                }
-            };
-
-            GenericGameEvents.OnTakeDamage += (damageReport) =>
-            {
-                CharacterBody vicBody = damageReport.victimBody;
-                if (melee && vicBody && vicBody.inventory)
-                {
-                    int count = vicBody.inventory.GetItemCount(itemDef);
-                    if (count > 0)
-                    {
-                        foreach (GenericSkill skill in vicBody.skillLocator.allSkills)
-                        {
-                            skill.rechargeStopwatch -= skill.baseRechargeStopwatch * percentCooldownReductionBonus;
-                        }
+                        //if (ranged) 
+                        //{
+                        //    args.baseDamageAdd += rangedDamageBonus.Value;
+                        //}
                     }
                 }
             };
 
-            Stage.onStageStartGlobal += (stage) =>
-            {
-                foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
-                {
-                    CharacterMaster master = user.masterController.master ?? user.master;
-                    if (master && master.inventory && master.inventory.GetItemCount(itemDef) > 0)
-                    {
-                        Statistics component = master.inventory.GetComponent<Statistics>();
-                        if (component)
-                        {
-                            component.LastTick = Environment.TickCount;
-                        }
-                    }
-                }
-            };
+            //GenericGameEvents.OnTakeDamage += (damageReport) =>
+            //{
+            //    if (melee)
+            //    {
+            //        CharacterBody vicBody = damageReport.victimBody;
+            //        if (vicBody && vicBody.inventory)
+            //        {
+            //            int count = vicBody.inventory.GetItemCount(itemDef);
+            //            if (count > 0)
+            //            {
+            //                foreach (GenericSkill skill in vicBody.skillLocator.allSkills)
+            //                {
+            //                    skill.rechargeStopwatch -= skill.baseRechargeStopwatch * percentCooldownReductionBonus;
+            //                }
+            //            }
+            //        }
+            //    }
+            //};
 
-            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
-            {
-                orig(self);
+            //Stage.onStageStartGlobal += (stage) =>
+            //{
+            //    foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
+            //    {
+            //        CharacterMaster master = user.masterController.master ?? user.master;
+            //        if (master && master.inventory && master.inventory.GetItemCount(itemDef) > 0)
+            //        {
+            //            Statistics component = master.inventory.GetComponent<Statistics>();
+            //            if (component)
+            //            {
+            //                component.LastTick = Environment.TickCount;
+            //            }
+            //        }
+            //    }
+            //};
 
-                if (ranged && self && self.inventory)
-                {
-                    int itemCount = self.inventory.GetItemCount(itemDef);
-                    if (itemCount > 0)
-                    {
-                        Statistics component = self.inventory.GetComponent<Statistics>();
-                        // Check time elapsed 
-                        if (component && Environment.TickCount - component.LastTick > cooldownRefreshInterval * 1000)
-                        {
-                            foreach (GenericSkill skill in self.skillLocator.allSkills)
-                            {
-                                skill.rechargeStopwatch = 0;
-                            }
-                            component.LastTick = Environment.TickCount;
-                        }
-                    }
-                }
-            };
+            //On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
+            //{
+            //    orig(self);
+
+            //    if (ranged)
+            //    {
+            //        if (self && self.inventory)
+            //        {
+            //            int itemCount = self.inventory.GetItemCount(itemDef);
+            //            if (itemCount > 0)
+            //            {
+            //                Statistics component = self.inventory.GetComponent<Statistics>();
+            //                // Check time elapsed 
+            //                if (component && Environment.TickCount - component.LastTick > cooldownRefreshInterval * 1000)
+            //                {
+            //                    foreach (GenericSkill skill in self.skillLocator.allSkills)
+            //                    {
+            //                        skill.rechargeStopwatch = 0;
+            //                    }
+            //                    component.LastTick = Environment.TickCount;
+            //                }
+            //            }
+
+            //        }
+            //    }
+            //};
         }
     }
 }

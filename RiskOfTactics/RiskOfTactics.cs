@@ -76,12 +76,16 @@ namespace RiskOfTactics
                 TearOfTheGoddess.Init();
 
             // Completes
+            if (AdaptiveHelm.isEnabled.Value)
+                AdaptiveHelm.Init();
             if (ArchangelsStaff.isEnabled.Value)
                 ArchangelsStaff.Init();
             if (Deathblade.isEnabled.Value)
                 Deathblade.Init();
             if (DragonsClaw.isEnabled.Value)
                 DragonsClaw.Init();
+            if (HandOfJustice.isEnabled.Value)
+                HandOfJustice.Init();
 
             // Radiants
 

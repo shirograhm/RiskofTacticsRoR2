@@ -46,6 +46,11 @@
     "ITEM_TEAROFTHEGODDESS_DESC": "| <style=cIsUtility>+{Cooldown Reduction}% Cooldown Reduction</style> |",
     "ITEM_TEAROFTHEGODDESS_LORE": "",
 
+    "ADAPTIVEHELM": "Adaptive Helm",
+    "ITEM_ADAPTIVEHELM_NAME": "Adaptive Helm",
+    "ITEM_ADAPTIVEHELM_PICKUP": "| <style=cIsDamage>+{Flat Damage} Damage</style> | <style=cIsUtility>+{Cooldown Reduction}% Cooldown Reduction</style> | <style=cIsUtility>+{Percent Shield}% Max HP Shield</style> |",
+    "ITEM_ADAPTIVEHELM_DESC": "| <style=cIsDamage>+{Flat Damage} Damage</style> | <style=cIsUtility>+{Cooldown Reduction}% Cooldown Reduction</style> | <style=cIsUtility>+{Percent Shield}% Max HP Shield</style> |",
+    "ITEM_ADAPTIVEHELM_LORE": "",
     "ARCHANGELSSTAFF": "Archangel's Staff",
     "ITEM_ARCHANGELSSTAFF_NAME": "Archangel's Staff",
     "ITEM_ARCHANGELSSTAFF_PICKUP": "| <style=cIsDamage>+{Flat Damage} Damage</style> | <style=cIsUtility>+{Cooldown Reduction}% Cooldown Reduction</style> |\n\nGain a stack of <style=cWorldEvent>Foresight</style> every <style=cIsUtility>{Tick Duration} seconds</style>. Each stack grants <style=cIsDamage>{Flat Damage Per Tick} damage</style>, and stacks are reset at the start of each stage.",
@@ -60,6 +65,11 @@
     "ITEM_DRAGONSCLAW_NAME": "Dragon's Claw",
     "ITEM_DRAGONSCLAW_PICKUP": "| <style=cIsUtility>+{Percent Shield}% Max HP Shield</style> |\n\nGain <style=cIsHealth>+{Percent Health}% max HP</style>. Every <style=cIsUtility>{Tick Duration} seconds</style>, heal for <style=cIsHealing>{Healing Per Tick}% max HP</style>.",
     "ITEM_DRAGONSCLAW_DESC": "| <style=cIsUtility>+{Percent Shield}% Max HP Shield</style> |\n\nGain <style=cIsHealth>+{Percent Health}% max HP</style>. Every <style=cIsUtility>{Tick Duration} seconds</style>, heal for <style=cIsHealing>{Healing Per Tick}% max HP</style>.",
-    "ITEM_DRAGONSCLAW_LORE": ""
+    "ITEM_DRAGONSCLAW_LORE": "",
+    "HANDOFJUSTICE": "Hand Of Justice",
+    "ITEM_HANDOFJUSTICE_NAME": "Hand Of Justice",
+    "ITEM_HANDOFJUSTICE_PICKUP": "| <style=cIsUtility>+{Cooldown Reduction}% Cooldown Reduction</style> | <style=cIsDamage>+{Crit Chance}% Crit Chance</style> |\n\nGain 2 effects:\n- <style=cIsDamage>{Bonus Damages} flat damage</style> and <style=cIsDamage>{Bonus Damages}% damage scaling</style>.\n<style=cIsHealing>{Omnivamp}% omnivamp</style>.\n While at or above <style=cIsHealth>50% HP</style>, double the first effect. While below <style=cIsHealth>50% HP</style>, double the second.",
+    "ITEM_HANDOFJUSTICE_DESC": "| <style=cIsUtility>+{Cooldown Reduction}% Cooldown Reduction</style> | <style=cIsDamage>+{Crit Chance}% Crit Chance</style> |\n\nGain 2 effects:\n- <style=cIsDamage>{Bonus Damages} flat damage</style> and <style=cIsDamage>{Bonus Damages}% damage scaling</style>.\n<style=cIsHealing>{Omnivamp}% omnivamp</style>.\n While at or above <style=cIsHealth>50% HP</style>, double the first effect. While below <style=cIsHealth>50% HP</style>, double the second.",
+    "ITEM_HANDOFJUSTICE_LORE": ""
   }
 }
