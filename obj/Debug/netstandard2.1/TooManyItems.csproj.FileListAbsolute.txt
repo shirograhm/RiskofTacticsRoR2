@@ -1,0 +1,22 @@
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\bin\Debug\netstandard2.1\TooManyItems.deps.json
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\bin\Debug\netstandard2.1\TooManyItems.dll
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\bin\Debug\netstandard2.1\TooManyItems.pdb
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\bin\Debug\netstandard2.1\LookingGlass.dll
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.AssemblyInfoInputs.cache
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.AssemblyInfo.cs
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.csproj.CoreCompileInputs.cache
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.csproj.CopyComplete
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.dll
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.pdb
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\bin\Debug\netstandard2.1\TooManyItems.deps.json
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\bin\Debug\netstandard2.1\TooManyItems.dll
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\bin\Debug\netstandard2.1\TooManyItems.pdb
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\bin\Debug\netstandard2.1\LookingGlass.dll
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.AssemblyInfoInputs.cache
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.AssemblyInfo.cs
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.csproj.CoreCompileInputs.cache
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.csproj.CopyComplete
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.dll
+C:\Users\xavie\Documents\Personal\Github\TooManyItemsRoR2\TooManyItems\obj\Debug\netstandard2.1\TooManyItems.pdb

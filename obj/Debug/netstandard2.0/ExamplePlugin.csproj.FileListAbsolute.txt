@@ -1,0 +1,10 @@
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\ExamplePlugin\bin\Debug\netstandard2.0\ExamplePlugin.deps.json
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\ExamplePlugin\bin\Debug\netstandard2.0\ExamplePlugin.dll
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\ExamplePlugin\bin\Debug\netstandard2.0\ExamplePlugin.pdb
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\ExamplePlugin\obj\Debug\netstandard2.0\ExamplePlugin.csproj.AssemblyReference.cache
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\ExamplePlugin\obj\Debug\netstandard2.0\ExamplePlugin.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\ExamplePlugin\obj\Debug\netstandard2.0\ExamplePlugin.AssemblyInfoInputs.cache
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\ExamplePlugin\obj\Debug\netstandard2.0\ExamplePlugin.AssemblyInfo.cs
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\ExamplePlugin\obj\Debug\netstandard2.0\ExamplePlugin.csproj.CoreCompileInputs.cache
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\ExamplePlugin\obj\Debug\netstandard2.0\ExamplePlugin.dll
+C:\Users\xavie\Documents\Personal Projects\Github\TooManyItemsRoR2\ExamplePlugin\obj\Debug\netstandard2.0\ExamplePlugin.pdb

@@ -1,0 +1,11 @@
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\obj\Debug\netstandard2.1\RiskOfTactics.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\obj\Debug\netstandard2.1\RiskOfTactics.AssemblyInfoInputs.cache
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\obj\Debug\netstandard2.1\RiskOfTactics.AssemblyInfo.cs
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\obj\Debug\netstandard2.1\RiskOfTactics.csproj.CoreCompileInputs.cache
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\bin\Debug\netstandard2.1\RiskOfTactics.deps.json
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\bin\Debug\netstandard2.1\RiskOfTactics.dll
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\bin\Debug\netstandard2.1\RiskOfTactics.pdb
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\bin\Debug\netstandard2.1\LookingGlass.dll
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\obj\Debug\netstandard2.1\RiskOfTactics.csproj.CopyComplete
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\obj\Debug\netstandard2.1\RiskOfTactics.dll
+C:\Users\xavie\Documents\Personal\Github\RiskofTacticsRoR2\RiskOfTactics\obj\Debug\netstandard2.1\RiskOfTactics.pdb
