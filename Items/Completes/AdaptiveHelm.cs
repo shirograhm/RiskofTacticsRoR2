@@ -213,7 +213,7 @@ namespace RiskOfTactics
                         args.cooldownMultAdd -= percentCooldownReductionBonus;
                         args.baseShieldAdd += sender.healthComponent.fullHealth * percentShieldBonus;
 
-                        if (sender.skillLocator.primary.)
+                        if (melee)
                         {
                             args.armorAdd += meleeResistBonus;
                             args.baseShieldAdd += sender.healthComponent.fullHealth * percentMeleeShieldBonus;
