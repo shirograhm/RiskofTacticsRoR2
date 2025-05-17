@@ -219,17 +219,23 @@ namespace RiskOfTactics
             {
                 orig(self);
 
-                if (self && self.inventory)
+                foreach (HoldoutZoneController hzc in InstanceTracker.GetInstancesList<HoldoutZoneController>())
                 {
-                    int itemCount = self.inventory.GetItemCount(itemDef);
-                    if (itemCount > 0)
+                    if (hzc.isActiveAndEnabled && hzc.IsBodyInChargingRadius(self))
                     {
-                        Statistics component = self.inventory.GetComponent<Statistics>();
-                        // Check time elapsed 
-                        if (component && Environment.TickCount - component.LastForesightTick > tickDuration * 1000)
+                        if (self && self.inventory)
                         {
-                            self.AddBuff(foresightBuff);
-                            component.LastForesightTick = Environment.TickCount;
+                            int itemCount = self.inventory.GetItemCount(itemDef);
+                            if (itemCount > 0)
+                            {
+                                Statistics component = self.inventory.GetComponent<Statistics>();
+                                // Check time elapsed 
+                                if (component && Environment.TickCount - component.LastForesightTick > tickDuration * 1000)
+                                {
+                                    self.AddBuff(foresightBuff);
+                                    component.LastForesightTick = Environment.TickCount;
+                                }
+                            }
                         }
                     }
                 }
