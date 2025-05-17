@@ -70,6 +70,26 @@
     "ITEM_HANDOFJUSTICE_NAME": "Hand Of Justice",
     "ITEM_HANDOFJUSTICE_PICKUP": "| <style=cIsUtility>+{Cooldown Reduction}% Cooldown Reduction</style> | <style=cIsDamage>+{Crit Chance}% Crit Chance</style> |\n\nGain 2 effects:\n- <style=cIsDamage>{Bonus Damages} flat damage</style> and <style=cIsDamage>{Bonus Damages}% damage scaling</style>.\n<style=cIsHealing>{Omnivamp}% omnivamp</style>.\n While at or above <style=cIsHealth>50% HP</style>, double the first effect. While below <style=cIsHealth>50% HP</style>, double the second.",
     "ITEM_HANDOFJUSTICE_DESC": "| <style=cIsUtility>+{Cooldown Reduction}% Cooldown Reduction</style> | <style=cIsDamage>+{Crit Chance}% Crit Chance</style> |\n\nGain 2 effects:\n- <style=cIsDamage>{Bonus Damages} flat damage</style> and <style=cIsDamage>{Bonus Damages}% damage scaling</style>.\n<style=cIsHealing>{Omnivamp}% omnivamp</style>.\n While at or above <style=cIsHealth>50% HP</style>, double the first effect. While below <style=cIsHealth>50% HP</style>, double the second.",
-    "ITEM_HANDOFJUSTICE_LORE": ""
+    "ITEM_HANDOFJUSTICE_LORE": "",
+    "RABADONSDEATHCAP": "Rabadon's Deathcap",
+    "ITEM_RABADONSDEATHCAP_NAME": "Rabadon's Deathcap",
+    "ITEM_RABADONSDEATHCAP_PICKUP": "| <style=cIsDamage>+{Flat Damage} Damage</style> |\n\nDeal <style=cIsDamage>20%</style> more damage.",
+    "ITEM_RABADONSDEATHCAP_DESC": "| <style=cIsDamage>+{Flat Damage} Damage</style> |\n\nDeal <style=cIsDamage>20%</style> more damage.",
+    "ITEM_RABADONSDEATHCAP_LORE": "",
+    "JEWELEDGAUNTLET": "Jeweled Gauntlet",
+    "ITEM_JEWELEDGAUNTLET_NAME": "Jeweled Gauntlet",
+    "ITEM_JEWELEDGAUNTLET_PICKUP": "| <style=cIsDamage>+{Flat Damage} Damage</style> | <style=cIsDamage>+{Crit Chance}% Crit Chance</style> |\n\n<style=cIsDamage>Critical strikes</style> deal an additional <style=cIsDamage>{Crit Amp}% damage</style>.",
+    "ITEM_JEWELEDGAUNTLET_DESC": "| <style=cIsDamage>+{Flat Damage} Damage</style> | <style=cIsDamage>+{Crit Chance}% Crit Chance</style> |\n\n<style=cIsDamage>Critical strikes</style> deal an additional <style=cIsDamage>{Crit Amp}% damage</style>.",
+    "ITEM_JEWELEDGAUNTLET_LORE": "",
+    "STEADFASTHEART": "Steadfast Heart",
+    "ITEM_STEADFASTHEART_NAME": "Steadfast Heart",
+    "ITEM_STEADFASTHEART_PICKUP": "| <style=cEvent>+{Armor} Armor</style> | <style=cIsDamage>+{Crit Chance}% Crit Chance</style> | <style=cIsHealth>+{Health}% Max HP</style> |\n\nGain <style=cIsUtility>{Durability Bonus}% durability</style>. If above <style=cIsHealth>50% max health</style>, instead gain <style=cIsUtility>{Durability Bonus Healthy}% durability</style>.",
+    "ITEM_STEADFASTHEART_DESC": "| <style=cEvent>+{Armor} Armor</style> | <style=cIsDamage>+{Crit Chance}% Crit Chance</style> | <style=cIsHealth>+{Health}% Max HP</style> |\n\nGain <style=cIsUtility>{Durability Bonus}% durability</style>. If above <style=cIsHealth>50% max health</style>, instead gain <style=cIsUtility>{Durability Bonus Healthy}% durability</style>.",
+    "ITEM_STEADFASTHEART_LORE": "",
+    "QUICKSILVER": "Quicksilver",
+    "ITEM_QUICKSILVER_NAME": "Quicksilver",
+    "ITEM_QUICKSILVER_PICKUP": "| <style=cIsDamage>+{Percent Damage}% Damage</style> | <style=cIsDamage>+{Crit Chance}% Crit Chance</style> | <style=cIsUtility>+{Percent Shield}% Max HP Shield</style> |\n\nUpon activation of the teleporter, gain immunity to crowd control effects for <style=cIsUtility>{CC Immunity Duration} seconds</style>. During this time, also gain <style=cIsDamage>{Attack Speed}% per second</style>.",
+    "ITEM_QUICKSILVER_DESC": "| <style=cIsDamage>+{Percent Damage}% Damage</style> | <style=cIsDamage>+{Crit Chance}% Crit Chance</style> | <style=cIsUtility>+{Percent Shield}% Max HP Shield</style> |\n\nUpon activation of the teleporter, gain immunity to crowd control effects for <style=cIsUtility>{CC Immunity Duration} seconds</style>. During this time, also gain <style=cIsDamage>{Attack Speed}% per second</style>.",
+    "ITEM_QUICKSILVER_LORE": ""
   }
 }
