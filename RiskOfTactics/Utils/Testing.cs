@@ -13,9 +13,24 @@ namespace RiskOfTactics
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 /* TODO: Add items here for testing purposes. */
+                DropItem(BFSword.itemDef);
+                DropItem(ChainVest.itemDef);
+                DropItem(GiantsBelt.itemDef);
+                DropItem(NeedlesslyLargeRod.itemDef);
+                DropItem(NegatronCloak.itemDef);
+                DropItem(RecurveBow.itemDef);
+                DropItem(SparringGloves.itemDef);
+                DropItem(TearOfTheGoddess.itemDef);
+
+                DropItem(AdaptiveHelm.itemDef);
                 DropItem(ArchangelsStaff.itemDef);
                 DropItem(Deathblade.itemDef);
                 DropItem(DragonsClaw.itemDef);
+                DropItem(HandOfJustice.itemDef);
+                DropItem(RabadonsDeathcap.itemDef);
+                DropItem(JeweledGauntlet.itemDef);
+                DropItem(SteadfastHeart.itemDef);
+                DropItem(Quicksilver.itemDef);
             }
         }
 
