@@ -7,7 +7,7 @@
 *.xcf
 *.dll
 Thunderstore/*
-Assets/*
+RiskOfTacticsUnity/*
 
 # User-specific files
 *.suo
