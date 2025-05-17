@@ -86,6 +86,14 @@ namespace RiskOfTactics
                 DragonsClaw.Init();
             if (HandOfJustice.isEnabled.Value)
                 HandOfJustice.Init();
+            if (JeweledGauntlet.isEnabled.Value)
+                JeweledGauntlet.Init();
+            if (Quicksilver.isEnabled.Value)
+                Quicksilver.Init();
+            if (RabadonsDeathcap.isEnabled.Value)
+                RabadonsDeathcap.Init();
+            if (SteadfastHeart.isEnabled.Value)
+                SteadfastHeart.Init();
 
             // Radiants
 

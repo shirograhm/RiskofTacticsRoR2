@@ -7,7 +7,7 @@ namespace RiskOfTactics
     public static class AssetHandler
     {
         public static AssetBundle bundle;
-        public const string bundleName = "tmiassets";
+        public const string bundleName = "rotassets";
 
         public static string AssetBundlePath
         {
