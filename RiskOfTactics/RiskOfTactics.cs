@@ -95,6 +95,8 @@ namespace RiskOfTactics
                 Quicksilver.Init();
             if (RabadonsDeathcap.isEnabled.Value)
                 RabadonsDeathcap.Init();
+            if (StatikkShiv.isEnabled.Value)
+                StatikkShiv.Init();
             if (SteadfastHeart.isEnabled.Value)
                 SteadfastHeart.Init();
 
