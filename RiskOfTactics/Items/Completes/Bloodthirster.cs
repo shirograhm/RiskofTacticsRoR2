@@ -15,7 +15,7 @@ namespace RiskOfTactics
         public static ItemDef itemDef;
         public static BuffDef satedBuff;
 
-        // Gain scaling damage, flat damage, shielding and omnivamp. Every 30 seconds, falling below 50% max HP grants a 100% max HP barrier.
+        // Gain scaling damage, flat damage, shielding and omnivamp. Every 30 seconds, falling below 20% max HP grants a 50% max HP barrier.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Bloodthirster",
             "Enabled",
@@ -79,7 +79,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> barrierTriggerHP = new(
             "Item: Bloodthirster",
             "HP Threshold",
-            40f,
+            20f,
             "Threshold needed to fall below in order to trigger this item's effect.",
             new List<string>()
             {
@@ -89,7 +89,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> barrierSize = new(
             "Item: Bloodthirster",
             "Percent Barrier",
-            25f,
+            50f,
             "Percent max HP barrier given when this item is procced during the teleporter event.",
             new List<string>()
             {
@@ -133,7 +133,9 @@ namespace RiskOfTactics
             {
                 ItemTag.Damage,
                 ItemTag.Healing,
-                ItemTag.Utility
+                ItemTag.Utility,
+
+                ItemTag.LowHealth
             };
         }
 

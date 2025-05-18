@@ -99,7 +99,8 @@ namespace RiskOfTactics
                 StatikkShiv.Init();
             if (SteadfastHeart.isEnabled.Value)
                 SteadfastHeart.Init();
-
+            if (WarmogsArmor.isEnabled.Value)
+                WarmogsArmor.Init();
             // Radiants
 
             // Supports

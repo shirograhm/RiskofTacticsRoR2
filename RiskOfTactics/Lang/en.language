@@ -100,6 +100,11 @@
     "ITEM_QUICKSILVER_NAME": "Quicksilver",
     "ITEM_QUICKSILVER_PICKUP": "<style=cIsDamage>+{Percent Damage}% damage</style>\n<style=cIsDamage>+{Crit Chance}% crit chance</style>\n<style=cIsUtility>+{Percent Shield}% max HP shield</style>\n\nUpon activation of the teleporter, become <style=cWorldEvent>immune</style> to crowd control effects for <style=cIsUtility>{CC Immunity Duration} seconds</style>. During this time, also gain <style=cIsDamage>{Attack Speed}% attack speed</style> per second.",
     "ITEM_QUICKSILVER_DESC": "<style=cIsDamage>+{Percent Damage}% damage</style>\n<style=cIsDamage>+{Crit Chance}% crit chance</style>\n<style=cIsUtility>+{Percent Shield}% max HP shield</style>\n\nUpon activation of the teleporter, become <style=cWorldEvent>immune</style> to crowd control effects for <style=cIsUtility>{CC Immunity Duration} seconds</style>. During this time, also gain <style=cIsDamage>{Attack Speed}% attack speed</style> per second.",
-    "ITEM_QUICKSILVER_LORE": ""
+    "ITEM_QUICKSILVER_LORE": "",
+    "WARMOGSARMOR": "Warmog's Armor",
+    "ITEM_WARMOGSARMOR_NAME": "Warmog's Armor",
+    "ITEM_WARMOGSARMOR_PICKUP": "<style=cIsHealth>+{Flat Health}% max HP</style>\n\nGain <style=cIsHealth>{Percent Health}% max HP</style>.",
+    "ITEM_WARMOGSARMOR_DESC": "<style=cIsHealth>+{Flat Health}% max HP</style>\n\nGain <style=cIsHealth>{Percent Health}% max HP</style>.",
+    "ITEM_WARMOGSARMOR_LORE": ""
   }
 }
