@@ -23,7 +23,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> critChanceBonus = new(
             "Item: Sparring Gloves",
             "Crit Chance",
-            20f,
+            10f,
             "Crit chance gained when holding this item.",
             new List<string>()
             {
@@ -48,7 +48,7 @@ namespace RiskOfTactics
             itemDef.name = "SPARRINGGLOVES";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+            Utils.SetItemTier(itemDef, ItemTier.Tier1);
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("SparringGloves.png");
             itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("SparringGloves.prefab");

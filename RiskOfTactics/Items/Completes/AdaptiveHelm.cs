@@ -14,7 +14,6 @@ namespace RiskOfTactics
     {
         public static ItemDef itemDef;
 
-        // Gain . Every 10 seconds, gain 1 flat damage.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Adaptive Helm",
             "Enabled",
@@ -212,6 +211,8 @@ namespace RiskOfTactics
                         args.baseDamageAdd += flatDamageBonus.Value;
                         args.cooldownMultAdd -= percentCooldownReductionBonus;
                         args.baseShieldAdd += sender.healthComponent.fullHealth * percentShieldBonus;
+
+                        // TODO: Sort melee and ranged
 
                         //if (melee)
                         //{

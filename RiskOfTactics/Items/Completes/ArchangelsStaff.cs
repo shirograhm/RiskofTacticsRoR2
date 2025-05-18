@@ -29,7 +29,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> flatDamageBonus = new(
             "Item: Archangels Staff",
             "Flat Damage",
-            20f,
+            10f,
             "Flat damage bonus when holding this item.",
             new List<string>()
             {
@@ -39,7 +39,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> cooldownReductionBonus = new(
             "Item: Archangels Staff",
             "Cooldown Reduction",
-            15f,
+            12f,
             "Cooldown reduction gained when holding this item.",
             new List<string>()
             {

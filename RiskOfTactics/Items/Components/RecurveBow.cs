@@ -23,7 +23,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> attackSpeedBonus = new(
             "Item: Recurve Bow",
             "Attack Speed",
-            10f,
+            15f,
             "Percent attack speed gained when holding this item.",
             new List<string>()
             {
@@ -49,7 +49,7 @@ namespace RiskOfTactics
             itemDef.name = "RECURVEBOW";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+            Utils.SetItemTier(itemDef, ItemTier.Tier1);
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("RecurveBow.png");
             itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("RecurveBow.prefab");

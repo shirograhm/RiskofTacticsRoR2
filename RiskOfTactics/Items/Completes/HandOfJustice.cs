@@ -14,7 +14,6 @@ namespace RiskOfTactics
     {
         public static ItemDef itemDef;
 
-        //
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Hand Of Justice",
             "Enabled",
@@ -28,7 +27,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> cooldownReductionBonus = new(
             "Item: Hand Of Justice",
             "Cooldown Reduction",
-            15f,
+            12f,
             "Cooldown reduction gained when holding this item.",
             new List<string>()
             {
@@ -38,18 +37,28 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> critChanceBonus = new(
             "Item: Hand Of Justice",
             "Crit Chance",
-            20f,
+            15f,
             "Crit chance gained when holding this item.",
             new List<string>()
             {
                 "ITEM_HANDOFJUSTICE_DESC"
             }
         );
-        public static ConfigurableValue<float> bonusDamageEffect = new(
+        public static ConfigurableValue<float> flatBonusDamageEffect = new(
             "Item: Hand Of Justice",
-            "Bonus Damages",
-            15f,
-            "Flat and percent damage scaling effect gained for this item.",
+            "Bonus Damage Flat",
+            4f,
+            "Flat damage scaling effect gained for this item.",
+            new List<string>()
+            {
+                "ITEM_HANDOFJUSTICE_DESC"
+            }
+        );
+        public static ConfigurableValue<float> scaledBonusDamageEffect = new(
+            "Item: Hand Of Justice",
+            "Bonus Damage Percent",
+            10f,
+            "Percent damage scaling effect gained for this item.",
             new List<string>()
             {
                 "ITEM_HANDOFJUSTICE_DESC"
@@ -58,7 +67,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> omnivampEffect = new(
             "Item: Hand Of Justice",
             "Omnivamp",
-            12f,
+            8f,
             "Percent omnivamp scaling effect gained for this item.",
             new List<string>()
             {
@@ -66,7 +75,7 @@ namespace RiskOfTactics
             }
         );
         private static readonly float percentCooldownReductionBonus = cooldownReductionBonus.Value / 100f;
-        private static readonly float percentBonusDamageEffect = bonusDamageEffect.Value / 100f;
+        private static readonly float percentScaledBonusDamageEffect = scaledBonusDamageEffect.Value / 100f;
         private static readonly float percentOmnivampEffect = omnivampEffect.Value / 100f;
 
         internal static void Init()
@@ -114,8 +123,8 @@ namespace RiskOfTactics
                         args.critAdd += critChanceBonus.Value;
 
                         int multiplier = sender.healthComponent.combinedHealthFraction >= 0.50f ? 2 : 1;
-                        args.baseDamageAdd += bonusDamageEffect.Value * multiplier;
-                        args.damageMultAdd += percentBonusDamageEffect * multiplier;
+                        args.baseDamageAdd += flatBonusDamageEffect.Value * multiplier;
+                        args.damageMultAdd += percentScaledBonusDamageEffect * multiplier;
                     }
                 }
             };

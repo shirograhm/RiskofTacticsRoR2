@@ -23,7 +23,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> cooldownReductionBonus = new(
             "Item: Tear Of The Goddess",
             "Cooldown Reduction",
-            15f,
+            10f,
             "Cooldown reduction gained when holding this item.",
             new List<string>()
             {

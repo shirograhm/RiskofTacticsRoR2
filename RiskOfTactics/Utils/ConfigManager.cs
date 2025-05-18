@@ -18,9 +18,9 @@ namespace RiskOfTactics
                 categoryName,
                 config,
                 "! Important !",
-                "Use Custom Config",
+                "Use Custom Configs",
                 false,
-                "Set to true to enable custom configurations."
+                "Set to true to enable the custom config values below."
             );
         }
     }

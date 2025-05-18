@@ -23,7 +23,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> baseDamageBonus = new(
             "Item: Needlessly Large Rod",
             "Flat Damage",
-            10f,
+            4f,
             "Flat damage gained when holding this item.",
             new List<string>()
             {
