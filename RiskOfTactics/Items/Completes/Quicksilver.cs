@@ -14,6 +14,7 @@ namespace RiskOfTactics
     {
         public static ItemDef itemDef;
         public static BuffDef flowBuff;
+        public static BuffDef cleanseBuff;
 
         // Gain scaling damage, crit chance and shielding. When the teleporter is activated, gain immunity to crowd control for 30 seconds. During this time, gain 0.5% attack speed every second.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -39,7 +40,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> critChanceBonus = new(
             "Item: Quicksilver",
             "Crit Chance",
-            20f,
+            15f,
             "Crit chance gained when holding this item.",
             new List<string>()
             {
@@ -69,7 +70,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> attackSpeedPerBuff = new(
             "Item: Quicksilver",
             "Attack Speed",
-            0.5f,
+            1f,
             "Attack speed gained per second while immune to CC.",
             new List<string>()
             {
@@ -152,6 +153,7 @@ namespace RiskOfTactics
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
             ContentAddition.AddBuffDef(flowBuff);
+            ContentAddition.AddBuffDef(cleanseBuff);
 
             Hooks();
         }
@@ -187,6 +189,16 @@ namespace RiskOfTactics
             flowBuff.isHidden = false;
             flowBuff.isDebuff = false;
             flowBuff.isCooldown = false;
+
+            cleanseBuff = ScriptableObject.CreateInstance<BuffDef>();
+
+            cleanseBuff.name = "Cleanse";
+            cleanseBuff.iconSprite = AssetHandler.bundle.LoadAsset<Sprite>("Cleanse.png");
+            cleanseBuff.canStack = false;
+            cleanseBuff.isHidden = false;
+            cleanseBuff.isDebuff = false;
+            cleanseBuff.isCooldown = true;
+
         }
 
         public static void Hooks()
@@ -200,15 +212,16 @@ namespace RiskOfTactics
             {
                 if (sender && sender.inventory)
                 {
+                    int buffCount = sender.GetBuffCount(flowBuff);
+                    if (buffCount > 0)
+                        args.attackSpeedMultAdd += buffCount * percentAttackSpeedPerBuff;
+
                     int count = sender.inventory.GetItemCount(itemDef);
                     if (count > 0)
                     {
-                        int buffCount = sender.GetBuffCount(flowBuff);
-
                         args.damageMultAdd += percentDamageBonus;
                         args.critAdd += critChanceBonus.Value;
                         args.baseShieldAdd += sender.healthComponent.fullHealth * percentShieldBonus;
-                        args.attackSpeedMultAdd += buffCount * percentAttackSpeedPerBuff;
                     }
                 }
             };
@@ -235,12 +248,16 @@ namespace RiskOfTactics
 
                 foreach (HoldoutZoneController hzc in InstanceTracker.GetInstancesList<HoldoutZoneController>())
                 {
-                    if (hzc.isActiveAndEnabled && hzc.IsBodyInChargingRadius(self))
+                    if (self && self.inventory)
                     {
-                        if (self && self.inventory)
+                        int itemCount = self.inventory.GetItemCount(itemDef);
+
+                        if (itemCount > 0 && hzc.isActiveAndEnabled)
                         {
-                            int itemCount = self.inventory.GetItemCount(itemDef);
-                            if (itemCount > 0)
+                            if (self.GetBuffCount(flowBuff) == 0 && self.GetBuffCount(cleanseBuff) == 0)
+                                self.AddTimedBuff(cleanseBuff, ccImmunityDuration);
+
+                            if (self.GetBuffCount(cleanseBuff) > 0)
                             {
                                 Statistics component = self.inventory.GetComponent<Statistics>();
                                 // Check time elapsed 

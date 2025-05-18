@@ -79,7 +79,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> barrierTriggerHP = new(
             "Item: Bloodthirster",
             "HP Threshold",
-            50f,
+            40f,
             "Threshold needed to fall below in order to trigger this item's effect.",
             new List<string>()
             {
@@ -89,7 +89,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> barrierSize = new(
             "Item: Bloodthirster",
             "Percent Barrier",
-            100f,
+            25f,
             "Percent max HP barrier given when this item is procced during the teleporter event.",
             new List<string>()
             {
@@ -185,7 +185,7 @@ namespace RiskOfTactics
                     int buffCount = vicBody.GetBuffCount(satedBuff);
                     if (vicCount > 0 && buffCount == 0 && vicBody.healthComponent.combinedHealthFraction < percentBarrierTriggerHP)
                     {
-                        vicBody.healthComponent.AddBarrier(vicBody.healthComponent.fullCombinedHealth);
+                        vicBody.healthComponent.AddBarrier(vicBody.healthComponent.fullCombinedHealth * percentBarrierSize);
                         vicBody.AddTimedBuff(satedBuff, effectCooldown);
                     }
                 }

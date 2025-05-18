@@ -30,6 +30,7 @@ namespace RiskOfTactics
                 DropItem(HandOfJustice.itemDef);
                 DropItem(JeweledGauntlet.itemDef);
                 DropItem(RabadonsDeathcap.itemDef);
+                DropItem(StatikkShiv.itemDef);
                 DropItem(SteadfastHeart.itemDef);
                 DropItem(Quicksilver.itemDef);
             }

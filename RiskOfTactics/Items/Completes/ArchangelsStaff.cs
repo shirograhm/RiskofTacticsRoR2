@@ -70,13 +70,13 @@ namespace RiskOfTactics
 
         public class Statistics : MonoBehaviour
         {
-            private float _lastForesightTick;
-            public float LastForesightTick
+            private float _lastTick;
+            public float LastTick
             {
-                get { return _lastForesightTick; }
+                get { return _lastTick; }
                 set
                 {
-                    _lastForesightTick = value;
+                    _lastTick = value;
                     if (NetworkServer.active)
                     {
                         new Sync(gameObject.GetComponent<NetworkIdentity>().netId, value).Send(NetworkDestination.Clients);
@@ -87,22 +87,22 @@ namespace RiskOfTactics
             public class Sync : INetMessage
             {
                 NetworkInstanceId objId;
-                float lastForesightTick;
+                float lastTick;
 
                 public Sync()
                 {
                 }
 
-                public Sync(NetworkInstanceId objId, float foresightTick)
+                public Sync(NetworkInstanceId objId, float tick)
                 {
                     this.objId = objId;
-                    lastForesightTick = foresightTick;
+                    lastTick = tick;
                 }
 
                 public void Deserialize(NetworkReader reader)
                 {
                     objId = reader.ReadNetworkId();
-                    lastForesightTick = reader.ReadSingle();
+                    lastTick = reader.ReadSingle();
                 }
 
                 public void OnReceived()
@@ -115,7 +115,7 @@ namespace RiskOfTactics
                         Statistics component = obj.GetComponent<Statistics>();
                         if (component != null)
                         {
-                            component.LastForesightTick = lastForesightTick;
+                            component.LastTick = lastTick;
                         }
                     }
                 }
@@ -123,7 +123,7 @@ namespace RiskOfTactics
                 public void Serialize(NetworkWriter writer)
                 {
                     writer.Write(objId);
-                    writer.Write(lastForesightTick);
+                    writer.Write(lastTick);
 
                     writer.FinishMessage();
                 }
@@ -209,7 +209,7 @@ namespace RiskOfTactics
                         Statistics component = master.inventory.GetComponent<Statistics>();
                         if (component)
                         {
-                            component.LastForesightTick = Environment.TickCount;
+                            component.LastTick = Environment.TickCount;
                         }
                     }
                 }
@@ -221,20 +221,18 @@ namespace RiskOfTactics
 
                 foreach (HoldoutZoneController hzc in InstanceTracker.GetInstancesList<HoldoutZoneController>())
                 {
-                    if (hzc.isActiveAndEnabled && hzc.IsBodyInChargingRadius(self))
+                    if (self && self.inventory)
                     {
-                        if (self && self.inventory)
+                        int itemCount = self.inventory.GetItemCount(itemDef);
+
+                        if (itemCount > 0 && hzc.isActiveAndEnabled)
                         {
-                            int itemCount = self.inventory.GetItemCount(itemDef);
-                            if (itemCount > 0)
+                            Statistics component = self.inventory.GetComponent<Statistics>();
+                            // Check time elapsed 
+                            if (component && Environment.TickCount - component.LastTick > tickDuration * 1000)
                             {
-                                Statistics component = self.inventory.GetComponent<Statistics>();
-                                // Check time elapsed 
-                                if (component && Environment.TickCount - component.LastForesightTick > tickDuration * 1000)
-                                {
-                                    self.AddBuff(foresightBuff);
-                                    component.LastForesightTick = Environment.TickCount;
-                                }
+                                self.AddBuff(foresightBuff);
+                                component.LastTick = Environment.TickCount;
                             }
                         }
                     }
