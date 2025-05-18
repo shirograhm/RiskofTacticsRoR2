@@ -53,6 +53,7 @@ namespace RiskOfTactics
             GenericGameEvents.Init();
             ConfigOptions.Init();
 
+            ItemCatalog.availability.CallWhenAvailable(ItemRemover.Init);
             ItemCatalog.availability.CallWhenAvailable(Integrations.Init);
             //ItemCatalog.availability.CallWhenAvailable(InjectVoidItemTramsforms);
 
