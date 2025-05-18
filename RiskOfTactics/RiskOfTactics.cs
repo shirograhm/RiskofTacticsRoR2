@@ -81,6 +81,8 @@ namespace RiskOfTactics
                 AdaptiveHelm.Init();
             if (ArchangelsStaff.isEnabled.Value)
                 ArchangelsStaff.Init();
+            if (Bloodthirster.isEnabled.Value)
+                Bloodthirster.Init();
             if (Deathblade.isEnabled.Value)
                 Deathblade.Init();
             if (DragonsClaw.isEnabled.Value)

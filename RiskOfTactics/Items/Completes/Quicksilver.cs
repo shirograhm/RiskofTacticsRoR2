@@ -59,7 +59,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> ccImmunityDuration = new(
             "Item: Quicksilver",
             "CC Immunity Duration",
-            60f,
+            30f,
             "Number of seconds immune to crowd control once the teleporter event starts.",
             new List<string>()
             {
