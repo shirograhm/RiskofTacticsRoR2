@@ -159,8 +159,68 @@ namespace RiskOfTactics
             {
                 return ItemTier.Lunar;
             }
-            
+
             return null;
+        }
+
+        public static ItemDef GetCompeletedItemFromParts(ItemDef itemDef, ItemDef i)
+        {
+            List<ItemDef> list = new List<ItemDef>();
+            list.Append(itemDef);
+            list.Append(i);
+
+            list.Sort();
+
+            Log.Debug("list sorted: " + list.ToArray().ToString());
+
+            if (itemDef == TearOfTheGoddess.itemDef && i == NegatronCloak.itemDef ||
+                i == TearOfTheGoddess.itemDef && itemDef == NegatronCloak.itemDef)
+            {
+                return AdaptiveHelm.itemDef;
+            }
+            if (itemDef == NeedlesslyLargeRod.itemDef && i == TearOfTheGoddess.itemDef ||
+                i == NeedlesslyLargeRod.itemDef && itemDef == TearOfTheGoddess.itemDef)
+            {
+                return ArchangelsStaff.itemDef;
+            }
+            if (itemDef == BFSword.itemDef && i == BFSword.itemDef ||
+                i == BFSword.itemDef && itemDef == BFSword.itemDef)
+            {
+                return Deathblade.itemDef;
+            }
+            if (itemDef == NegatronCloak.itemDef && i == NegatronCloak.itemDef ||
+                i == NegatronCloak.itemDef && itemDef == NegatronCloak.itemDef)
+            {
+                return DragonsClaw.itemDef;
+            }
+            if (itemDef == TearOfTheGoddess.itemDef && i == SparringGloves.itemDef ||
+                i == TearOfTheGoddess.itemDef && itemDef == SparringGloves.itemDef)
+            {
+                return HandOfJustice.itemDef;
+            }
+            if (itemDef == NeedlesslyLargeRod.itemDef && i == SparringGloves.itemDef ||
+                i == NeedlesslyLargeRod.itemDef && itemDef == SparringGloves.itemDef)
+            {
+                return JeweledGauntlet.itemDef;
+            }
+            if (itemDef == NegatronCloak.itemDef && i == SparringGloves.itemDef ||
+                i == NegatronCloak.itemDef && itemDef == SparringGloves.itemDef)
+            {
+                return Quicksilver.itemDef;
+            }
+            if (itemDef == NeedlesslyLargeRod.itemDef && i == NeedlesslyLargeRod.itemDef ||
+                i == NeedlesslyLargeRod.itemDef && itemDef == NeedlesslyLargeRod.itemDef)
+            {
+                return RabadonsDeathcap.itemDef;
+            }
+            if (itemDef == ChainVest.itemDef && i == SparringGloves.itemDef ||
+                i == ChainVest.itemDef && itemDef == SparringGloves.itemDef)
+            {
+                return SteadfastHeart.itemDef;
+            }
+
+            // Return poop item if the item is missing
+            return RoR2Content.Items.Bandolier;
         }
 
         public static ItemDef GetRandomItemOfTier(ItemTier tier)
@@ -168,6 +228,20 @@ namespace RiskOfTactics
             ItemDef[] tierItems = ItemCatalog.allItemDefs.Where(itemDef => itemDef.tier == tier).ToArray();
 
             return tierItems[RiskOfTactics.RandGen.Next(0, tierItems.Length)];
+        }
+
+        internal static BuffDef GenerateBuffDef(string name, Sprite sprite, bool canStack, bool isHidden, bool isDebuff, bool isCooldown)
+        {
+            BuffDef returnable = ScriptableObject.CreateInstance<BuffDef>();
+
+            returnable.name = name;
+            returnable.iconSprite = sprite;
+            returnable.canStack = canStack;
+            returnable.isHidden = isHidden;
+            returnable.isDebuff = isDebuff;
+            returnable.isCooldown = isCooldown;
+
+            return returnable;
         }
     }
 }
