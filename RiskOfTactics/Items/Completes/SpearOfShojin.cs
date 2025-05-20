@@ -10,12 +10,9 @@ using UnityEngine.Networking;
 
 namespace RiskOfTactics
 {
-    class StatikkShiv
+    class SpearOfShojin
     {
         public static ItemDef itemDef;
-        public static BuffDef shockBuff;
-        public static BuffDef shockCooldown;
-        public static BuffDef shredDebuff;
 
         // Gain attack speed, flat damage, and cooldown reduction. Every 10 seconds, your next attack deals an additional 18 damage and reduces nearby enemy armor by 10.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -28,17 +25,17 @@ namespace RiskOfTactics
                 "ITEM_STATIKKSHIV_DESC"
             }
         );
-        public static ConfigurableValue<float> attackSpeedBonus = new(
+        public static ConfigurableValue<float> percentDamageBonus = new(
             "Item: Statikk Shiv",
-            "Attack Speed",
-            25f,
+            "Percent Damage",
+            20f,
             "Percent attack speed gained when holding this item.",
             new List<string>()
             {
                 "ITEM_STATIKKSHIV_DESC"
             }
         );
-        public static ConfigurableValue<float> damageBonus = new(
+        public static ConfigurableValue<float> flatDamageBonus = new(
             "Item: Statikk Shiv",
             "Flat Damage",
             8f,
@@ -58,7 +55,7 @@ namespace RiskOfTactics
                 "ITEM_STATIKKSHIV_DESC"
             }
         );
-        public static ConfigurableValue<int> effectCooldown = new(
+        public static ConfigurableValue<int> cooldownOnHit = new(
             "Item: Statikk Shiv",
             "Effect Cooldown",
             12,
