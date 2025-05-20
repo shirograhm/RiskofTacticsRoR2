@@ -166,14 +166,7 @@ namespace RiskOfTactics
 
         private static void GenerateBuff()
         {
-            foresightBuff = ScriptableObject.CreateInstance<BuffDef>();
-
-            foresightBuff.name = "Foresight";
-            foresightBuff.iconSprite = AssetHandler.bundle.LoadAsset<Sprite>("Foresight.png");
-            foresightBuff.canStack = true;
-            foresightBuff.isHidden = false;
-            foresightBuff.isDebuff = false;
-            foresightBuff.isCooldown = false;
+            foresightBuff = Utils.GenerateBuffDef("Foresight", AssetHandler.bundle.LoadAsset<Sprite>("Foresight.png"), true, false, false, false);
         }
 
         public static void Hooks()

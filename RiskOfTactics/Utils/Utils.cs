@@ -163,7 +163,7 @@ namespace RiskOfTactics
             return null;
         }
 
-        public static ItemDef GetCompeletedItemFromParts(ItemDef itemDef, ItemDef i)
+        public static ItemDef GetCompletedItemFromParts(ItemDef itemDef, ItemDef i)
         {
             List<ItemDef> list = new List<ItemDef>();
             list.Append(itemDef);
