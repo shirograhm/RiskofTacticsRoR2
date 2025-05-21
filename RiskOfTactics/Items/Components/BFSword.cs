@@ -49,7 +49,7 @@ namespace RiskOfTactics
             itemDef.name = "BFSWORD";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+            Utils.SetItemTier(itemDef, ItemTier.Tier1);
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("BFSword.png");
             itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("BFSword.prefab");
@@ -71,7 +71,7 @@ namespace RiskOfTactics
                     int itemCount = sender.inventory.GetItemCount(itemDef);
                     if (itemCount > 0)
                     {
-                        args.damageMultAdd += percentDamageBonus;
+                        args.damageMultAdd += percentDamageBonus * itemCount;
                     }
                 }
             };

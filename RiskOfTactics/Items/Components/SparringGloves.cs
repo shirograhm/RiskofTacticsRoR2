@@ -70,7 +70,7 @@ namespace RiskOfTactics
                     int itemCount = sender.inventory.GetItemCount(itemDef);
                     if (itemCount > 0)
                     {
-                        args.critAdd += critChanceBonus.Value;
+                        args.critAdd += critChanceBonus.Value * itemCount;
                     }
                 }
             };

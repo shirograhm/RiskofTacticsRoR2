@@ -28,7 +28,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> damageBonus = new(
             "Item: Deathblade",
             "Percent Damage",
-            55f,
+            25f,
             "Percent damage bonus when holding this item.",
             new List<string>()
             {
@@ -99,7 +99,7 @@ namespace RiskOfTactics
                 if (attackerBody && victimBody && attackerBody.inventory)
                 {
                     int count = attackerBody.inventory.GetItemCount(itemDef);
-                    if (count > 0 && attackerBody.master)
+                    if (count > 0)
                     {
                         damageInfo.damage *= 1 + percentDamageAmp;
                     }

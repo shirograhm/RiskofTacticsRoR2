@@ -57,6 +57,7 @@ namespace RiskOfTactics
             ItemCatalog.availability.CallWhenAvailable(Integrations.Init);
             //ItemCatalog.availability.CallWhenAvailable(InjectVoidItemTramsforms);
 
+            InjectTFTItemCompletion();
 
             // Components
             if (BFSword.isEnabled.Value)
@@ -83,10 +84,14 @@ namespace RiskOfTactics
                 ArchangelsStaff.Init();
             if (Bloodthirster.isEnabled.Value)
                 Bloodthirster.Init();
+            if (Crownguard.isEnabled.Value)
+                Crownguard.Init();
             if (Deathblade.isEnabled.Value)
                 Deathblade.Init();
             if (DragonsClaw.isEnabled.Value)
                 DragonsClaw.Init();
+            if (GiantSlayer.isEnabled.Value)
+                GiantSlayer.Init();
             if (HandOfJustice.isEnabled.Value)
                 HandOfJustice.Init();
             if (JeweledGauntlet.isEnabled.Value)
@@ -95,6 +100,8 @@ namespace RiskOfTactics
                 Quicksilver.Init();
             if (RabadonsDeathcap.isEnabled.Value)
                 RabadonsDeathcap.Init();
+            if (SpearOfShojin.isEnabled.Value)
+                SpearOfShojin.Init();
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
             if (SteadfastHeart.isEnabled.Value)
@@ -107,6 +114,50 @@ namespace RiskOfTactics
 
 
             Log.Message("Finished initializations.");
+        }
+
+        private void InjectTFTItemCompletion()
+        {
+            ItemDef[] componentList =
+            {
+                BFSword.itemDef,
+                ChainVest.itemDef,
+                GiantsBelt.itemDef,
+                NeedlesslyLargeRod.itemDef,
+                NegatronCloak.itemDef,
+                RecurveBow.itemDef,
+                SparringGloves.itemDef,
+                TearOfTheGoddess.itemDef
+            };
+
+            On.RoR2.Inventory.GiveItem_ItemDef_int += (orig, self, itemDef, count) =>
+            {
+                if (componentList.Contains(itemDef))
+                {
+                    CharacterMaster master = self.GetComponent<CharacterMaster>();
+                    if (master && master.GetBody() && master.GetBody().inventory)
+                    {
+                        Inventory inv = master.GetBody().inventory;
+                        foreach (ItemDef i in componentList)
+                        {
+                            if (inv.GetItemCount(i) > 0)
+                            {
+                                ItemDef completeItem = Utils.GetCompletedItemFromParts(itemDef, i);
+                                // Remove components
+                                inv.RemoveItem(itemDef);
+                                inv.RemoveItem(i);
+                                // Add new full item
+                                inv.GiveItem(completeItem);
+                                // Notify player
+                                CharacterMasterNotificationQueue.PushItemNotification(
+                                    master, completeItem.itemIndex);
+                            }
+                        }
+                    }
+                }
+
+                orig(self, itemDef, count);
+            };
         }
 
         //private void InjectVoidItemTramsforms()

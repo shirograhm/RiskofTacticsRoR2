@@ -27,7 +27,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> cooldownReductionBonus = new(
             "Item: Hand Of Justice",
             "Cooldown Reduction",
-            12f,
+            8f,
             "Cooldown reduction gained when holding this item.",
             new List<string>()
             {
@@ -37,7 +37,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> critChanceBonus = new(
             "Item: Hand Of Justice",
             "Crit Chance",
-            15f,
+            16f,
             "Crit chance gained when holding this item.",
             new List<string>()
             {
@@ -47,7 +47,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> flatBonusDamageEffect = new(
             "Item: Hand Of Justice",
             "Bonus Damage Flat",
-            4f,
+            3f,
             "Flat damage scaling effect gained for this item.",
             new List<string>()
             {
@@ -57,7 +57,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> scaledBonusDamageEffect = new(
             "Item: Hand Of Justice",
             "Bonus Damage Percent",
-            10f,
+            5f,
             "Percent damage scaling effect gained for this item.",
             new List<string>()
             {
@@ -67,7 +67,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> omnivampEffect = new(
             "Item: Hand Of Justice",
             "Omnivamp",
-            8f,
+            5f,
             "Percent omnivamp scaling effect gained for this item.",
             new List<string>()
             {

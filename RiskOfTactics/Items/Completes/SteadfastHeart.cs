@@ -25,7 +25,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> armorBonus = new(
             "Item: Steadfast Heart",
             "Armor",
-            20f,
+            15f,
             "Armor gained when holding this item.",
             new List<string>()
             {
@@ -35,7 +35,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> critChanceBonus = new(
             "Item: Steadfast Heart",
             "Crit Chance",
-            20f,
+            15f,
             "Crit chance gained when holding this item.",
             new List<string>()
             {
@@ -45,7 +45,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> healthBonus = new(
             "Item: Steadfast Heart",
             "Health",
-            250f,
+            100f,
             "Max health gained when holding this item.",
             new List<string>()
             {

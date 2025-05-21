@@ -25,14 +25,17 @@ namespace RiskOfTactics
                 DropItem(AdaptiveHelm.itemDef);
                 DropItem(ArchangelsStaff.itemDef);
                 DropItem(Bloodthirster.itemDef);
+                DropItem(Crownguard.itemDef);
                 DropItem(Deathblade.itemDef);
                 DropItem(DragonsClaw.itemDef);
                 DropItem(HandOfJustice.itemDef);
                 DropItem(JeweledGauntlet.itemDef);
                 DropItem(RabadonsDeathcap.itemDef);
+                DropItem(SpearOfShojin.itemDef);
                 DropItem(StatikkShiv.itemDef);
                 DropItem(SteadfastHeart.itemDef);
                 DropItem(Quicksilver.itemDef);
+                DropItem(WarmogsArmor.itemDef);
             }
         }
 

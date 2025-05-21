@@ -27,7 +27,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> healthBonus = new(
             "Item: Warmogs Armor",
             "Flat Health",
-            600f,
+            250f,
             "Max health bonus when holding this item.",
             new List<string>()
             {

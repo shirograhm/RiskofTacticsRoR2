@@ -23,7 +23,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> shieldBonus = new(
             "Item: Negatron Cloak",
             "Percent Shield",
-            20f,
+            10f,
             "Percent shield gained when holding this item.",
             new List<string>()
             {
@@ -49,7 +49,7 @@ namespace RiskOfTactics
             itemDef.name = "NEGATRONCLOAK";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+            Utils.SetItemTier(itemDef, ItemTier.Tier1);
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("NegatronCloak.png");
             itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("NegatronCloak.prefab");
@@ -71,7 +71,7 @@ namespace RiskOfTactics
                     int itemCount = sender.inventory.GetItemCount(itemDef);
                     if (itemCount > 0)
                     {
-                        args.baseShieldAdd += sender.healthComponent.fullHealth * percentShieldBonus;
+                        args.baseShieldAdd += sender.healthComponent.fullHealth * percentShieldBonus * itemCount;
                     }
                 }
             };

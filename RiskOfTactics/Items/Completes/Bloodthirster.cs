@@ -29,7 +29,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> flatDamageBonus = new(
             "Item: Bloodthirster",
             "Flat Damage",
-            8f,
+            4f,
             "Percent damage bonus when holding this item.",
             new List<string>()
             {
@@ -39,7 +39,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> damageBonus = new(
             "Item: Bloodthirster",
             "Percent Damage",
-            15f,
+            12f,
             "Percent damage bonus when holding this item.",
             new List<string>()
             {
@@ -49,7 +49,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> shieldBonus = new(
             "Item: Bloodthirster",
             "Percent Shield",
-            20f,
+            12f,
             "Percent max HP shield gained when holding this item.",
             new List<string>()
             {
@@ -59,7 +59,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> omnivampBonus = new(
             "Item: Bloodthirster",
             "Omnivamp",
-            20f,
+            12f,
             "Percent omnivamp gained when holding this item.",
             new List<string>()
             {

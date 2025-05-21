@@ -23,7 +23,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> cooldownReductionBonus = new(
             "Item: Tear Of The Goddess",
             "Cooldown Reduction",
-            10f,
+            5f,
             "Cooldown reduction gained when holding this item.",
             new List<string>()
             {
@@ -49,7 +49,7 @@ namespace RiskOfTactics
             itemDef.name = "TEAROFTHEGODDESS";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+            Utils.SetItemTier(itemDef, ItemTier.Tier1);
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("TearOfTheGoddess.png");
             itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("TearOfTheGoddess.prefab");
@@ -71,7 +71,7 @@ namespace RiskOfTactics
                     int itemCount = sender.inventory.GetItemCount(itemDef);
                     if (itemCount > 0)
                     {
-                        args.cooldownMultAdd -= percentCooldownReductionBonus;
+                        args.cooldownMultAdd -= Utils.GetHyperbolicStacking(percentCooldownReductionBonus, itemCount);
                     }
                 }
             };

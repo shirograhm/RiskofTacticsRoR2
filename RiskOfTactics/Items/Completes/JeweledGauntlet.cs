@@ -28,7 +28,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> damageBonus = new(
             "Item: Jeweled Gauntlet",
             "Flat Damage",
-            35f,
+            10f,
             "Flat damage bonus when holding this item.",
             new List<string>()
             {
@@ -38,7 +38,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> critChance = new(
             "Item: Jeweled Gauntlet",
             "Crit Chance",
-            35f,
+            20f,
             "Percent crit chance gained when holding this item.",
             new List<string>()
             {

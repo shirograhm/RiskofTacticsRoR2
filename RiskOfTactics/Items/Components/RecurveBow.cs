@@ -71,7 +71,7 @@ namespace RiskOfTactics
                     int itemCount = sender.inventory.GetItemCount(itemDef);
                     if (itemCount > 0)
                     {
-                        args.attackSpeedMultAdd += percentAttackSpeedBonus;
+                        args.attackSpeedMultAdd += percentAttackSpeedBonus * itemCount;
                     }
                 }
             };

@@ -23,7 +23,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> armorBonus = new(
             "Item: Chain Vest",
             "Armor",
-            20f,
+            10f,
             "Armor gained when holding this item.",
             new List<string>()
             {
@@ -48,7 +48,7 @@ namespace RiskOfTactics
             itemDef.name = "CHAINVEST";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+            Utils.SetItemTier(itemDef, ItemTier.Tier1);
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("ChainVest.png");
             itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("ChainVest.prefab");
@@ -70,7 +70,7 @@ namespace RiskOfTactics
                     int itemCount = sender.inventory.GetItemCount(itemDef);
                     if (itemCount > 0)
                     {
-                        args.armorAdd += armorBonus.Value;
+                        args.armorAdd += armorBonus.Value * itemCount;
                     }
                 }
             };

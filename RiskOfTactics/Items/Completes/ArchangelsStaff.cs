@@ -15,7 +15,7 @@ namespace RiskOfTactics
         public static ItemDef itemDef;
         public static BuffDef foresightBuff;
 
-        // Gain flat damage and cooldown reduction. Every 10 seconds, gain 1 flat damage.
+        // Gain flat damage and cooldown reduction. Upon activation of the teleporter, gain 1 damage every 10 seconds.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Archangels Staff",
             "Enabled",
@@ -29,7 +29,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> flatDamageBonus = new(
             "Item: Archangels Staff",
             "Flat Damage",
-            10f,
+            8f,
             "Flat damage bonus when holding this item.",
             new List<string>()
             {
@@ -39,7 +39,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> cooldownReductionBonus = new(
             "Item: Archangels Staff",
             "Cooldown Reduction",
-            12f,
+            8f,
             "Cooldown reduction gained when holding this item.",
             new List<string>()
             {

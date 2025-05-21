@@ -28,7 +28,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> shieldBonus = new(
             "Item: Dragons Claw",
             "Percent Shield",
-            45f,
+            30f,
             "Percent shield bonus when holding this item.",
             new List<string>()
             {
@@ -55,10 +55,10 @@ namespace RiskOfTactics
                 "ITEM_DRAGONSCLAW_DESC"
             }
         );
-        public static ConfigurableValue<float> tickDuration = new(
+        public static ConfigurableValue<int> tickDuration = new(
             "Item: Dragons Claw",
             "Tick Duration",
-            9f,
+            9,
             "Number of seconds between item procs.",
             new List<string>()
             {

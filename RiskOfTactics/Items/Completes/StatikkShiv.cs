@@ -31,7 +31,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> attackSpeedBonus = new(
             "Item: Statikk Shiv",
             "Attack Speed",
-            25f,
+            20f,
             "Percent attack speed gained when holding this item.",
             new List<string>()
             {
@@ -41,7 +41,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> damageBonus = new(
             "Item: Statikk Shiv",
             "Flat Damage",
-            8f,
+            4f,
             "Flat damage gained when holding this item.",
             new List<string>()
             {
@@ -51,7 +51,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> cooldownReductionBonus = new(
             "Item: Statikk Shiv",
             "Cooldown Reduction",
-            15f,
+            8f,
             "Percent cooldown reduction gained when holding this item.",
             new List<string>()
             {
@@ -61,7 +61,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<int> effectCooldown = new(
             "Item: Statikk Shiv",
             "Effect Cooldown",
-            12,
+            20,
             "Cooldown of this item's effect.",
             new List<string>()
             {
@@ -71,7 +71,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> onHitDamage = new(
             "Item: Statikk Shiv",
             "Bonus On-Hit",
-            18f,
+            20f,
             "Bonus on-hit damage dealt by this item's effect.",
             new List<string>()
             {

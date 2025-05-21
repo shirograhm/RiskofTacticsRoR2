@@ -22,63 +22,70 @@ namespace RiskOfTactics
             "Enabled",
             true,
             "Whether or not the item is enabled.",
-            [
+            new List<string>()
+            {
                 "ITEM_CROWNGUARD_DESC"
-            ]
+            }
         );
         public static ConfigurableValue<float> flatDamageBonus = new(
             "Item: Crownguard",
             "Flat Damage",
             8f,
             "Flat damage bonus when holding this item.",
-            [
+            new List<string>()
+            {
                 "ITEM_CROWNGUARD_DESC"
-            ]
+            }
         );
         public static ConfigurableValue<float> armorBonus = new(
             "Item: Crownguard",
             "Armor",
             15f,
             "Armor bonus when holding this item.",
-            [
+            new List<string>()
+            {
                 "ITEM_CROWNGUARD_DESC"
-            ]
+            }
         );
         public static ConfigurableValue<float> flatHealthBonus = new(
             "Item: Crownguard",
             "Flat Health",
-            100f,
+            50f,
             "Flat health bonus when holding this item.",
-            [
+            new List<string>()
+            {
                 "ITEM_CROWNGUARD_DESC"
-            ]
+            }
         );
         public static ConfigurableValue<float> effectShield = new(
             "Item: Crownguard",
             "Effect Shield",
-            50f,
+            25f,
             "Percent max HP shield bonus when teleporter is activated.",
-            [
+            new List<string>()
+            {
                 "ITEM_CROWNGUARD_DESC"
-            ]
+            }
         );
         public static ConfigurableValue<int> effectDuration = new(
             "Item: Crownguard",
             "Effect Duration",
             10,
             "How long the shield effect lasts when teleporter is activated.",
-            [
+            new List<string>()
+            {
                 "ITEM_CROWNGUARD_DESC"
-            ]
+            }
         );
         public static ConfigurableValue<float> effectDamage = new(
             "Item: Crownguard",
             "Effect Damage",
             8f,
             "Damage bonus given after the shield effect expires.",
-            [
+            new List<string>()
+            {
                 "ITEM_CROWNGUARD_DESC"
-            ]
+            }
         );
         private static readonly float percentEffectShield = effectShield.Value / 100f;
 
@@ -145,9 +152,7 @@ namespace RiskOfTactics
                 orig(self, buffDef);
 
                 if (buffDef == guardedBuff)
-                {
-
-                }
+                    self.AddBuff(crownedBuff);
             };
 
             On.RoR2.HoldoutZoneController.Awake += (orig, self) =>

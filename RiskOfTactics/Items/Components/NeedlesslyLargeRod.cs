@@ -48,7 +48,7 @@ namespace RiskOfTactics
             itemDef.name = "NEEDLESSLYLARGEROD";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+            Utils.SetItemTier(itemDef, ItemTier.Tier1);
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("NeedlesslyLargeRod.png");
             itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("NeedlesslyLargeRod.prefab");
@@ -70,7 +70,7 @@ namespace RiskOfTactics
                     int itemCount = sender.inventory.GetItemCount(itemDef);
                     if (itemCount > 0)
                     {
-                        args.baseDamageAdd += baseDamageBonus.Value;
+                        args.baseDamageAdd += baseDamageBonus.Value * itemCount;
                     }
                 }
             };

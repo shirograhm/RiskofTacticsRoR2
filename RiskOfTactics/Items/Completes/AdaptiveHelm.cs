@@ -212,6 +212,7 @@ namespace RiskOfTactics
                         args.cooldownMultAdd -= percentCooldownReductionBonus;
                         args.baseShieldAdd += sender.healthComponent.fullHealth * percentShieldBonus;
 
+                        
                         // TODO: Sort melee and ranged
 
                         //if (melee)
@@ -240,7 +241,7 @@ namespace RiskOfTactics
             //            {
             //                foreach (GenericSkill skill in vicBody.skillLocator.allSkills)
             //                {
-            //                    skill.rechargeStopwatch -= skill.baseRechargeStopwatch * percentCooldownReductionBonus;
+            //                    skill.rechargeStopwatch += skill.baseRechargeStopwatch * percentCooldownReductionBonus;
             //                }
             //            }
             //        }

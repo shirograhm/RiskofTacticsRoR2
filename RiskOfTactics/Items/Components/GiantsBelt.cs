@@ -23,7 +23,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> baseHealthBonus = new(
             "Item: Giants Belt",
             "Health",
-            150f,
+            100f,
             "Health gained when holding this item.",
             new List<string>()
             {
@@ -48,7 +48,7 @@ namespace RiskOfTactics
             itemDef.name = "GIANTSBELT";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+            Utils.SetItemTier(itemDef, ItemTier.Tier1);
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("GiantsBelt.png");
             itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("GiantsBelt.prefab");

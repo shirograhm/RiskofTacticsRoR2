@@ -30,7 +30,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> damageBonus = new(
             "Item: Quicksilver",
             "Percent Damage",
-            30f,
+            10f,
             "Percent damage bonus when holding this item.",
             new List<string>()
             {
@@ -50,7 +50,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> shieldBonus = new(
             "Item: Quicksilver",
             "Percent Shield",
-            20f,
+            15f,
             "Percent max health shield gained when holding this item.",
             new List<string>()
             {
