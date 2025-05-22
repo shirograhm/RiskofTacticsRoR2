@@ -146,13 +146,15 @@ namespace RiskOfTactics
         internal static void Init()
         {
             GenerateItem();
-            GenerateBuff();
 
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
+
+            flowBuff = Utils.GenerateBuffDef("Flow", AssetHandler.bundle.LoadAsset<Sprite>("Flow.png"), true, false, false, false);
             ContentAddition.AddBuffDef(flowBuff);
+            cleanseBuff = Utils.GenerateBuffDef("Cleanse", AssetHandler.bundle.LoadAsset<Sprite>("flowBuff.png"), false, false, false, true);
             ContentAddition.AddBuffDef(cleanseBuff);
 
             Hooks();
@@ -177,28 +179,6 @@ namespace RiskOfTactics
                 ItemTag.Damage,
                 ItemTag.Utility
             };
-        }
-
-        private static void GenerateBuff()
-        {
-            flowBuff = ScriptableObject.CreateInstance<BuffDef>();
-
-            flowBuff.name = "Flow";
-            flowBuff.iconSprite = AssetHandler.bundle.LoadAsset<Sprite>("Flow.png");
-            flowBuff.canStack = true;
-            flowBuff.isHidden = false;
-            flowBuff.isDebuff = false;
-            flowBuff.isCooldown = false;
-
-            cleanseBuff = ScriptableObject.CreateInstance<BuffDef>();
-
-            cleanseBuff.name = "Cleanse";
-            cleanseBuff.iconSprite = AssetHandler.bundle.LoadAsset<Sprite>("Cleanse.png");
-            cleanseBuff.canStack = false;
-            cleanseBuff.isHidden = false;
-            cleanseBuff.isDebuff = false;
-            cleanseBuff.isCooldown = true;
-
         }
 
         public static void Hooks()

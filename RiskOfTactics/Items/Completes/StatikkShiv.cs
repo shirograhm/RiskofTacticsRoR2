@@ -1,12 +1,7 @@
 using R2API;
-using R2API.Networking;
-using R2API.Networking.Interfaces;
 using RoR2;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace RiskOfTactics
 {
@@ -17,7 +12,7 @@ namespace RiskOfTactics
         public static BuffDef shockCooldown;
         public static BuffDef shredDebuff;
 
-        // Gain attack speed, flat damage, and cooldown reduction. Every 10 seconds, your next attack deals an additional 18 damage and reduces nearby enemy armor by 10.
+        // Gain attack speed, flat damage, and cooldown reduction. Every 10 seconds, your next attack deals an additional 18 damage and reduces armor by 10.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Statikk Shiv",
             "Enabled",
@@ -78,30 +73,20 @@ namespace RiskOfTactics
                 "ITEM_STATIKKSHIV_DESC"
             }
         );
-        public static ConfigurableValue<int> armorReduction = new(
-            "Item: Statikk Shiv",
-            "Armor Reduction",
-            10,
-            "Armor reduction applied to enemies hit by this item's effect.",
-            new List<string>()
-            {
-                "ITEM_STATIKKSHIV_DESC"
-            }
-        );
         private static readonly float percentAttackSpeedBonus = attackSpeedBonus.Value / 100f;
         private static readonly float percentCooldownReductionBonus = cooldownReductionBonus.Value / 100f;
 
         internal static void Init()
         {
             GenerateItem();
-            GenerateBuff();
 
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
 
+            shockBuff = Utils.GenerateBuffDef("Shock", AssetHandler.bundle.LoadAsset<Sprite>("Shock.png"), false, false, false, false);
             ContentAddition.AddBuffDef(shockBuff);
+            shockCooldown = Utils.GenerateBuffDef("Shock Cooldown", AssetHandler.bundle.LoadAsset<Sprite>("ShockCD.png"), false, false, false, true);
             ContentAddition.AddBuffDef(shockCooldown);
-            ContentAddition.AddBuffDef(shredDebuff);
 
             Hooks();
         }
@@ -122,15 +107,9 @@ namespace RiskOfTactics
 
             itemDef.tags = new ItemTag[]
             {
-                ItemTag.Damage
+                ItemTag.Damage,
+                ItemTag.Utility
             };
-        }
-
-        private static void GenerateBuff()
-        {
-            shockBuff = Utils.GenerateBuffDef("Shock", AssetHandler.bundle.LoadAsset<Sprite>("Shock.png"), false, false, false, false);
-            shockCooldown = Utils.GenerateBuffDef("Shock Cooldown", AssetHandler.bundle.LoadAsset<Sprite>("ShockCD.png"), false, false, false, true);
-            shredDebuff = Utils.GenerateBuffDef("Shred", AssetHandler.bundle.LoadAsset<Sprite>("Shred.png"), false, false, true, false);
         }
 
         public static void Hooks()
@@ -142,15 +121,9 @@ namespace RiskOfTactics
                     int count = sender.inventory.GetItemCount(itemDef);
                     if (count > 0)
                     {
-
                         args.attackSpeedMultAdd += percentAttackSpeedBonus;
                         args.baseDamageAdd += damageBonus.Value;
                         args.cooldownMultAdd -= percentCooldownReductionBonus;
-                    }
-
-                    if (sender.GetBuffCount(shredDebuff) > 0)
-                    {
-                        args.armorAdd -= armorReduction.Value;
                     }
                 }
             };
@@ -169,16 +142,16 @@ namespace RiskOfTactics
 
             On.RoR2.Inventory.GiveItem_ItemIndex_int += (orig, self, index, count) =>
             {
+                orig(self, index, count);
+              
                 if (index == itemDef.itemIndex)
                 {
                     CharacterMaster master = self.GetComponent<CharacterMaster>();
-                    if (master && master.GetBody() && master.GetBody().inventory && master.GetBody().inventory.GetItemCount(itemDef) > 0)
+                    if (master && master.GetBody() && self.GetItemCount(itemDef) > 0)
                     {
                         master.GetBody().AddBuff(shockBuff);
                     }
                 }
-
-                orig(self, index, count);
             };
 
             On.RoR2.CharacterBody.OnBuffFinalStackLost += (orig, self, buffDef) =>
@@ -204,27 +177,8 @@ namespace RiskOfTactics
                         bool hasShockBuff = atkBody.GetBuffCount(shockBuff) > 0;
                         if (hasShockBuff && vicBody.teamComponent.teamIndex != atkBody.teamComponent.teamIndex)
                         {
-                            // Get area of enemies impacted
-                            HurtBox[] hurtboxes = new SphereSearch
-                            {
-                                mask = LayerIndex.entityPrecise.mask,
-                                origin = vicBody.corePosition,
-                                queryTriggerInteraction = QueryTriggerInteraction.Collide,
-                                radius = 5f
-                            }.RefreshCandidates().FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes();
-
-                            foreach (HurtBox hb in hurtboxes)
-                            {
-                                CharacterBody parent = hb.healthComponent.body;
-
-                                if (parent && parent.teamComponent && parent.teamComponent.teamIndex != atkBody.teamComponent.teamIndex)
-                                {
-                                    for (int i = 0; i < armorReduction; i++)
-                                    {
-                                        parent.AddBuff(shredDebuff);
-                                    }
-                                }
-                            }
+                            vicBody.AddBuff(Sunder.buffDef);
+                            
                             // Remove the shock buff and add cooldown buff
                             atkBody.RemoveBuff(shockBuff);
                             atkBody.AddTimedBuff(shockCooldown, effectCooldown);

@@ -38,7 +38,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> damageAmp = new(
             "Item: Rabadons Deathcap",
             "Damage Amp",
-            20f,
+            10f,
             "Percent damage amp when holding this item.",
             new List<string>()
             {

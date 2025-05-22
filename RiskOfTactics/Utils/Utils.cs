@@ -163,64 +163,83 @@ namespace RiskOfTactics
             return null;
         }
 
-        public static ItemDef GetCompletedItemFromParts(ItemDef itemDef, ItemDef i)
+        public static ItemIndex GetCompletedItemFromParts(ItemIndex index1, ItemIndex index2)
         {
-            List<ItemDef> list = new List<ItemDef>();
-            list.Append(itemDef);
-            list.Append(i);
-
+            List<ItemIndex> list = new List<ItemIndex>();
+            list.Append(index1);
+            list.Append(index2);
             list.Sort();
 
             Log.Debug("list sorted: " + list.ToArray().ToString());
 
-            if (itemDef == TearOfTheGoddess.itemDef && i == NegatronCloak.itemDef ||
-                i == TearOfTheGoddess.itemDef && itemDef == NegatronCloak.itemDef)
-            {
-                return AdaptiveHelm.itemDef;
-            }
-            if (itemDef == NeedlesslyLargeRod.itemDef && i == TearOfTheGoddess.itemDef ||
-                i == NeedlesslyLargeRod.itemDef && itemDef == TearOfTheGoddess.itemDef)
-            {
-                return ArchangelsStaff.itemDef;
-            }
-            if (itemDef == BFSword.itemDef && i == BFSword.itemDef ||
-                i == BFSword.itemDef && itemDef == BFSword.itemDef)
-            {
-                return Deathblade.itemDef;
-            }
-            if (itemDef == NegatronCloak.itemDef && i == NegatronCloak.itemDef ||
-                i == NegatronCloak.itemDef && itemDef == NegatronCloak.itemDef)
-            {
-                return DragonsClaw.itemDef;
-            }
-            if (itemDef == TearOfTheGoddess.itemDef && i == SparringGloves.itemDef ||
-                i == TearOfTheGoddess.itemDef && itemDef == SparringGloves.itemDef)
-            {
-                return HandOfJustice.itemDef;
-            }
-            if (itemDef == NeedlesslyLargeRod.itemDef && i == SparringGloves.itemDef ||
-                i == NeedlesslyLargeRod.itemDef && itemDef == SparringGloves.itemDef)
-            {
-                return JeweledGauntlet.itemDef;
-            }
-            if (itemDef == NegatronCloak.itemDef && i == SparringGloves.itemDef ||
-                i == NegatronCloak.itemDef && itemDef == SparringGloves.itemDef)
-            {
-                return Quicksilver.itemDef;
-            }
-            if (itemDef == NeedlesslyLargeRod.itemDef && i == NeedlesslyLargeRod.itemDef ||
-                i == NeedlesslyLargeRod.itemDef && itemDef == NeedlesslyLargeRod.itemDef)
-            {
-                return RabadonsDeathcap.itemDef;
-            }
-            if (itemDef == ChainVest.itemDef && i == SparringGloves.itemDef ||
-                i == ChainVest.itemDef && itemDef == SparringGloves.itemDef)
-            {
-                return SteadfastHeart.itemDef;
-            }
+            // Adaptive Helm
+            if (list.Contains(TearOfTheGoddess.itemDef.itemIndex) && 
+                list.Contains(NegatronCloak.itemDef.itemIndex))
+                return AdaptiveHelm.itemDef.itemIndex;
+            // Archangel's Staff
+            if (list.Contains(TearOfTheGoddess.itemDef.itemIndex) &&
+                list.Contains(NeedlesslyLargeRod.itemDef.itemIndex))
+                return ArchangelsStaff.itemDef.itemIndex;
+            // Bloodthirster
+            if (list.Contains(BFSword.itemDef.itemIndex) &&
+                list.Contains(NegatronCloak.itemDef.itemIndex))
+                return Bloodthirster.itemDef.itemIndex;
+            // Crownguard
+            if (list.Contains(NeedlesslyLargeRod.itemDef.itemIndex) &&
+                list.Contains(ChainVest.itemDef.itemIndex))
+                return Crownguard.itemDef.itemIndex;
+            // Deathblade
+            if (list.Contains(BFSword.itemDef.itemIndex) &&
+                list.IndexOf(BFSword.itemDef.itemIndex) != list.LastIndexOf(BFSword.itemDef.itemIndex))
+                return Deathblade.itemDef.itemIndex;
+            // Dragon's Claw
+            if (list.Contains(NegatronCloak.itemDef.itemIndex) &&
+                list.IndexOf(NegatronCloak.itemDef.itemIndex) != list.LastIndexOf(NegatronCloak.itemDef.itemIndex))
+                return DragonsClaw.itemDef.itemIndex;
+            // Giant Slayer
+            if (list.Contains(BFSword.itemDef.itemIndex) &&
+                list.Contains(RecurveBow.itemDef.itemIndex))
+                return GiantSlayer.itemDef.itemIndex;
+            // Guardbreaker
+            if (list.Contains(GiantsBelt.itemDef.itemIndex) &&
+                list.Contains(SparringGloves.itemDef.itemIndex))
+                return Guardbreaker.itemDef.itemIndex;
+            // Hand of Justice
+            if (list.Contains(TearOfTheGoddess.itemDef.itemIndex) &&
+                list.Contains(SparringGloves.itemDef.itemIndex))
+                return HandOfJustice.itemDef.itemIndex;
+            // Jeweled Gauntlet
+            if (list.Contains(NeedlesslyLargeRod.itemDef.itemIndex) &&
+                list.Contains(SparringGloves.itemDef.itemIndex))
+                return JeweledGauntlet.itemDef.itemIndex;
+            // Quicksilver
+            if (list.Contains(SparringGloves.itemDef.itemIndex) &&
+                list.Contains(NegatronCloak.itemDef.itemIndex))
+                return Quicksilver.itemDef.itemIndex;
+            // Rabadon's Deathcap
+            if (list.Contains(NeedlesslyLargeRod.itemDef.itemIndex) &&
+                list.IndexOf(NeedlesslyLargeRod.itemDef.itemIndex) != list.LastIndexOf(NeedlesslyLargeRod.itemDef.itemIndex))
+                return RabadonsDeathcap.itemDef.itemIndex;
+            // Spear of Shojin
+            if (list.Contains(BFSword.itemDef.itemIndex) &&
+                list.Contains(TearOfTheGoddess.itemDef.itemIndex))
+                return SpearOfShojin.itemDef.itemIndex;
+            // Statikk Shiv
+            if (list.Contains(TearOfTheGoddess.itemDef.itemIndex) &&
+                list.Contains(RecurveBow.itemDef.itemIndex))
+                return StatikkShiv.itemDef.itemIndex;
+            // Steadfast Heart
+            if (list.Contains(ChainVest.itemDef.itemIndex) &&
+                list.Contains(SparringGloves.itemDef.itemIndex))
+                return SteadfastHeart.itemDef.itemIndex;
+            // Warmog's Armor
+            if (list.Contains(GiantsBelt.itemDef.itemIndex) &&
+                list.IndexOf(GiantsBelt.itemDef.itemIndex) != list.LastIndexOf(GiantsBelt.itemDef.itemIndex))
+                return WarmogsArmor.itemDef.itemIndex;
 
-            // Return poop item if the item is missing
-            return RoR2Content.Items.Bandolier;
+
+            // Return none item if no recipes (should never reach this... i hope)
+            return ItemIndex.None;
         }
 
         public static ItemDef GetRandomItemOfTier(ItemTier tier)

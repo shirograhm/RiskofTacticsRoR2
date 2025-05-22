@@ -57,8 +57,6 @@ namespace RiskOfTactics
             ItemCatalog.availability.CallWhenAvailable(Integrations.Init);
             //ItemCatalog.availability.CallWhenAvailable(InjectVoidItemTramsforms);
 
-            InjectTFTItemCompletion();
-
             // Components
             if (BFSword.isEnabled.Value)
                 BFSword.Init();
@@ -77,6 +75,8 @@ namespace RiskOfTactics
             if (TearOfTheGoddess.isEnabled.Value)
                 TearOfTheGoddess.Init();
 
+            InjectTFTItemCompletion();
+
             // Completes
             if (AdaptiveHelm.isEnabled.Value)
                 AdaptiveHelm.Init();
@@ -90,6 +90,8 @@ namespace RiskOfTactics
                 Deathblade.Init();
             if (DragonsClaw.isEnabled.Value)
                 DragonsClaw.Init();
+            if (Guardbreaker.isEnabled.Value)
+                Guardbreaker.Init();
             if (GiantSlayer.isEnabled.Value)
                 GiantSlayer.Init();
             if (HandOfJustice.isEnabled.Value)
@@ -108,6 +110,7 @@ namespace RiskOfTactics
                 SteadfastHeart.Init();
             if (WarmogsArmor.isEnabled.Value)
                 WarmogsArmor.Init();
+
             // Radiants
 
             // Supports
@@ -118,45 +121,49 @@ namespace RiskOfTactics
 
         private void InjectTFTItemCompletion()
         {
-            ItemDef[] componentList =
+            On.RoR2.Inventory.GiveItem_ItemIndex_int += (orig, self, itemIndex, count) =>
             {
-                BFSword.itemDef,
-                ChainVest.itemDef,
-                GiantsBelt.itemDef,
-                NeedlesslyLargeRod.itemDef,
-                NegatronCloak.itemDef,
-                RecurveBow.itemDef,
-                SparringGloves.itemDef,
-                TearOfTheGoddess.itemDef
-            };
+                ItemIndex[] componentList =
+                {
+                    BFSword.itemDef.itemIndex,
+                    ChainVest.itemDef.itemIndex,
+                    GiantsBelt.itemDef.itemIndex,
+                    NeedlesslyLargeRod.itemDef.itemIndex,
+                    NegatronCloak.itemDef.itemIndex,
+                    RecurveBow.itemDef.itemIndex,
+                    SparringGloves.itemDef.itemIndex,
+                    TearOfTheGoddess.itemDef.itemIndex
+                };
 
-            On.RoR2.Inventory.GiveItem_ItemDef_int += (orig, self, itemDef, count) =>
-            {
-                if (componentList.Contains(itemDef))
+                if (componentList.Contains(itemIndex))
                 {
                     CharacterMaster master = self.GetComponent<CharacterMaster>();
-                    if (master && master.GetBody() && master.GetBody().inventory)
+                    if (master && master.inventory)
                     {
-                        Inventory inv = master.GetBody().inventory;
-                        foreach (ItemDef i in componentList)
+                        Inventory inv = master.inventory;
+                        foreach (ItemIndex dex in componentList)
                         {
-                            if (inv.GetItemCount(i) > 0)
+                            if (inv.GetItemCount(dex) > 0)
                             {
-                                ItemDef completeItem = Utils.GetCompletedItemFromParts(itemDef, i);
+                                ItemIndex completeItem = Utils.GetCompletedItemFromParts(itemIndex, dex);
+                                if (completeItem == ItemIndex.None) continue;
+
                                 // Remove components
-                                inv.RemoveItem(itemDef);
-                                inv.RemoveItem(i);
+                                inv.RemoveItem(itemIndex);
+                                inv.RemoveItem(dex);
                                 // Add new full item
                                 inv.GiveItem(completeItem);
                                 // Notify player
                                 CharacterMasterNotificationQueue.PushItemNotification(
-                                    master, completeItem.itemIndex);
+                                    master, completeItem);
+
+                                break;
                             }
                         }
                     }
                 }
 
-                orig(self, itemDef, count);
+                orig(self, itemIndex, count);
             };
         }
 

@@ -10,75 +10,84 @@ using UnityEngine.Networking;
 
 namespace RiskOfTactics
 {
-    class GiantSlayer
+    class Guardbreaker
     {
         public static ItemDef itemDef;
 
-        // Gain percent damage, attack speed, flat damage, and damage amp. Gain additional damage amp against bosses.
+        // Gain base damage, attack speed, crit, health, and damage amp. Deal 30% more damage to enemies with active shields.
         public static ConfigurableValue<bool> isEnabled = new(
-            "Item: Giant Slayer",
+            "Item: Guardbreaker",
             "Enabled",
             true,
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_GIANTSLAYER_DESC"
-            }
-        );
-        public static ConfigurableValue<float> damageBonus = new(
-            "Item: Giant Slayer",
-            "Percent Damage",
-            12f,
-            "Percent damage bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_GIANTSLAYER_DESC"
-            }
-        );
-        public static ConfigurableValue<float> attackSpeedBonus = new(
-            "Item: Giant Slayer",
-            "Attack Speed",
-            20f,
-            "Percent attack speed bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_GIANTSLAYER_DESC"
+                "ITEM_GUARDBREAKER_DESC"
             }
         );
         public static ConfigurableValue<float> flatDamageBonus = new(
-            "Item: Giant Slayer",
+            "Item: Guardbreaker",
             "Flat Damage",
-            6f,
+            4f,
             "Flat damage bonus when holding this item.",
             new List<string>()
             {
-                "ITEM_GIANTSLAYER_DESC"
+                "ITEM_GUARDBREAKER_DESC"
+            }
+        );
+        public static ConfigurableValue<float> attackSpeedBonus = new(
+            "Item: Guardbreaker",
+            "Attack Speed",
+            12f,
+            "Percent attack speed bonus when holding this item.",
+            new List<string>()
+            {
+                "ITEM_GUARDBREAKER_DESC"
+            }
+        );
+        public static ConfigurableValue<float> critBonus = new(
+            "Item: Guardbreaker",
+            "Crit Chance",
+            12f,
+            "Crit chance bonus when holding this item.",
+            new List<string>()
+            {
+                "ITEM_GUARDBREAKER_DESC"
+            }
+        );
+        public static ConfigurableValue<float> healthBonus = new(
+            "Item: Guardbreaker",
+            "Flat Health",
+            100f,
+            "Flat health bonus when holding this item.",
+            new List<string>()
+            {
+                "ITEM_GUARDBREAKER_DESC"
             }
         );
         public static ConfigurableValue<float> damageAmp = new(
-            "Item: Giant Slayer",
+            "Item: Guardbreaker",
             "Damage Amp",
             5f,
-            "Percent damage amp bonus when holding this item.",
+            "Damage amp bonus when holding this item.",
             new List<string>()
             {
-                "ITEM_GIANTSLAYER_DESC"
+                "ITEM_GUARDBREAKER_DESC"
             }
         );
-        public static ConfigurableValue<float> damageAmpBosses = new(
-            "Item: Giant Slayer",
-            "Damage Amp Bosses",
-            10f,
-            "Percent additional dmaage amp gained when fighting bosses.",
+        public static ConfigurableValue<float> bonusShieldDamage = new(
+            "Item: Guardbreaker",
+            "Shield Damage",
+            30f,
+            "Damage bonus to shields when holding this item.",
             new List<string>()
             {
-                "ITEM_GIANTSLAYER_DESC"
+                "ITEM_GUARDBREAKER_DESC"
             }
         );
-        public static readonly float percentDamageBonus = damageBonus.Value / 100f;
         public static readonly float percentAttackSpeedBonus = attackSpeedBonus.Value / 100f;
         public static readonly float percentDamageAmp = damageAmp.Value / 100f;
-        public static readonly float percentDamageAmpBosses = damageAmpBosses.Value / 100f;
+        public static readonly float percentBonusShieldDamage = bonusShieldDamage.Value / 100f;
 
         internal static void Init()
         {
@@ -94,19 +103,20 @@ namespace RiskOfTactics
         {
             itemDef = ScriptableObject.CreateInstance<ItemDef>();
 
-            itemDef.name = "GIANTSLAYER";
+            itemDef.name = "GUARDBREAKER";
             itemDef.AutoPopulateTokens();
 
             Utils.SetItemTier(itemDef, ItemTier.Tier3);
 
-            itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("GiantSlayer.png");
-            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("GiantSlayer.prefab");
+            itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("Guardbreaker.png");
+            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("Guardbreaker.prefab");
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
             itemDef.tags = new ItemTag[]
             {
-                ItemTag.Damage
+                ItemTag.Damage,
+                ItemTag.Utility
             };
         }
 
@@ -120,8 +130,9 @@ namespace RiskOfTactics
                     if (count > 0)
                     {
                         args.baseDamageAdd += flatDamageBonus.Value;
-                        args.damageMultAdd += percentDamageBonus;
                         args.attackSpeedMultAdd += percentAttackSpeedBonus;
+                        args.critAdd += critBonus.Value;
+                        args.baseHealthAdd += healthBonus.Value;
                     }
                 }
             };
@@ -137,8 +148,8 @@ namespace RiskOfTactics
                     {
                         damageInfo.damage *= 1 + percentDamageAmp;
 
-                        if (victimBody.isBoss)
-                            damageInfo.damage *= 1 + percentDamageAmpBosses;
+                        if (victimBody.healthComponent && victimBody.healthComponent.shield > 0)
+                            damageInfo.damage *= 1 + percentBonusShieldDamage;
                     }
                 }
             };

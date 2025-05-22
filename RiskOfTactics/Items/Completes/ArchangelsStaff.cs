@@ -133,12 +133,13 @@ namespace RiskOfTactics
         internal static void Init()
         {
             GenerateItem();
-            GenerateBuff();
 
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
+
+            foresightBuff = Utils.GenerateBuffDef("Foresight", AssetHandler.bundle.LoadAsset<Sprite>("Foresight.png"), true, false, false, false);
             ContentAddition.AddBuffDef(foresightBuff);
 
             Hooks();
@@ -162,11 +163,6 @@ namespace RiskOfTactics
             {
                 ItemTag.Damage
             };
-        }
-
-        private static void GenerateBuff()
-        {
-            foresightBuff = Utils.GenerateBuffDef("Foresight", AssetHandler.bundle.LoadAsset<Sprite>("Foresight.png"), true, false, false, false);
         }
 
         public static void Hooks()

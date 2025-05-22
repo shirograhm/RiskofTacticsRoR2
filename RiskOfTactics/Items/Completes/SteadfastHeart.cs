@@ -11,7 +11,6 @@ namespace RiskOfTactics
     {
         public static ItemDef itemDef;
 
-        //
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Steadfast Heart",
             "Enabled",

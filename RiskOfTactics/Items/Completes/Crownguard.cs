@@ -92,13 +92,13 @@ namespace RiskOfTactics
         internal static void Init()
         {
             GenerateItem();
-            guardedBuff = Utils.GenerateBuffDef("Guarded", AssetHandler.bundle.LoadAsset<Sprite>("Guarded.png"), false, false, false, true);
-            crownedBuff = Utils.GenerateBuffDef("Crowned", AssetHandler.bundle.LoadAsset<Sprite>("Crowned.png"), false, false, false, false);
 
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
 
+            guardedBuff = Utils.GenerateBuffDef("Guarded", AssetHandler.bundle.LoadAsset<Sprite>("Guarded.png"), false, false, false, true);
             ContentAddition.AddBuffDef(guardedBuff);
+            crownedBuff = Utils.GenerateBuffDef("Crowned", AssetHandler.bundle.LoadAsset<Sprite>("Crowned.png"), false, false, false, false);
             ContentAddition.AddBuffDef(crownedBuff);
 
             Hooks();

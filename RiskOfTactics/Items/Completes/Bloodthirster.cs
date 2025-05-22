@@ -105,11 +105,11 @@ namespace RiskOfTactics
         internal static void Init()
         {
             GenerateItem();
-            GenerateBuff();
 
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
 
+            satedBuff = Utils.GenerateBuffDef("Sated", AssetHandler.bundle.LoadAsset<Sprite>("Sated.png"), false, false, false, true);
             ContentAddition.AddBuffDef(satedBuff);
 
             Hooks();
@@ -137,18 +137,6 @@ namespace RiskOfTactics
 
                 ItemTag.LowHealth
             };
-        }
-
-        private static void GenerateBuff()
-        {
-            satedBuff = ScriptableObject.CreateInstance<BuffDef>();
-
-            satedBuff.name = "Sated";
-            satedBuff.iconSprite = AssetHandler.bundle.LoadAsset<Sprite>("Sated.png");
-            satedBuff.canStack = false;
-            satedBuff.isHidden = false;
-            satedBuff.isDebuff = false;
-            satedBuff.isCooldown = true;
         }
 
         public static void Hooks()
