@@ -12,7 +12,6 @@ namespace RiskOfTactics
 
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                /* TODO: Add items here for testing purposes. */
                 DropItem(BFSword.itemDef);
                 DropItem(ChainVest.itemDef);
                 DropItem(GiantsBelt.itemDef);
@@ -22,20 +21,24 @@ namespace RiskOfTactics
                 DropItem(SparringGloves.itemDef);
                 DropItem(TearOfTheGoddess.itemDef);
 
-                DropItem(AdaptiveHelm.itemDef);
-                DropItem(ArchangelsStaff.itemDef);
-                DropItem(Bloodthirster.itemDef);
-                DropItem(Crownguard.itemDef);
-                DropItem(Deathblade.itemDef);
-                DropItem(DragonsClaw.itemDef);
-                DropItem(HandOfJustice.itemDef);
-                DropItem(JeweledGauntlet.itemDef);
-                DropItem(RabadonsDeathcap.itemDef);
-                DropItem(SpearOfShojin.itemDef);
+                //DropItem(AdaptiveHelm.itemDef);
+                //DropItem(ArchangelsStaff.itemDef);
+                //DropItem(Bloodthirster.itemDef);
+                //DropItem(Crownguard.itemDef);
+                //DropItem(Deathblade.itemDef);
+                //DropItem(DragonsClaw.itemDef);
+                DropItem(GiantSlayer.itemDef);
+                DropItem(Guardbreaker.itemDef);
+                DropItem(GuinsoosRageblade.itemDef);
+                //DropItem(HandOfJustice.itemDef);
+                //DropItem(JeweledGauntlet.itemDef);
+                //DropItem(Quicksilver.itemDef);
+                //DropItem(RabadonsDeathcap.itemDef);
+                //DropItem(SpearOfShojin.itemDef);
                 DropItem(StatikkShiv.itemDef);
-                DropItem(SteadfastHeart.itemDef);
-                DropItem(Quicksilver.itemDef);
-                DropItem(WarmogsArmor.itemDef);
+                //DropItem(SteadfastHeart.itemDef);
+                DropItem(SunfireCape.itemDef);
+                //DropItem(WarmogsArmor.itemDef);
             }
         }
 

@@ -17,6 +17,25 @@ namespace RiskOfTactics
         {
             public static void RegisterStats()
             {
+                // Bramble Vest
+                if (BrambleVest.isEnabled.Value)
+                {
+                    ItemStatsDef stats = new ItemStatsDef();
+                    stats.descriptions.Add("Damage Reflected: ");
+                    stats.valueTypes.Add(ItemStatsDef.ValueType.Damage);
+                    stats.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Number);
+                    stats.calculateValues = (master, itemCount) =>
+                    {
+                        var values = new List<float> { };
+                        if (master && master.inventory && master.inventory.GetComponent<BrambleVest.Statistics>())
+                            values.Add(master.inventory.GetComponent<BrambleVest.Statistics>().DamageReflected);
+                        else
+                            values.Add(0f);
+
+                        return values;
+                    };
+                    ItemDefinitions.allItemDefinitions.Add((int)BrambleVest.itemDef.itemIndex, stats);
+                }
                 //// Ancient Coin
                 //if (AncientCoin.isEnabled.Value)
                 //{

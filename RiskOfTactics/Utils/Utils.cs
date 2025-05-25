@@ -62,11 +62,9 @@ namespace RiskOfTactics
             {
                 try
                 {
-#pragma warning disable Publicizer001 // Accessing a member that was not originally public
 #pragma warning disable CS0618 // Type or member is obsolete
                     itemDef.deprecatedTier = tier;
 #pragma warning restore CS0618 // Type or member is obsolete
-#pragma warning restore Publicizer001 // Accessing a member that was not originally public
                 }
                 catch (Exception e)
                 {
@@ -121,53 +119,22 @@ namespace RiskOfTactics
             return 1f - 1f / (1f + percent * count);
         }
 
-        public static ItemTier? GetLowestAvailableItemTier(Inventory inventory)
-        {
-            if (inventory.GetTotalItemCountOfTier(ItemTier.Tier1) > 0)
-            {
-                return ItemTier.Tier1;
-            }
-            else if (inventory.GetTotalItemCountOfTier(ItemTier.VoidTier1) > 0)
-            {
-                return ItemTier.VoidTier1;
-            }
-            else if (inventory.GetTotalItemCountOfTier(ItemTier.Tier2) > 0)
-            {
-                return ItemTier.Tier2;
-            }
-            else if (inventory.GetTotalItemCountOfTier(ItemTier.VoidTier2) > 0)
-            {
-                return ItemTier.VoidTier2;
-            }
-            else if (inventory.GetTotalItemCountOfTier(ItemTier.Tier3) > 0)
-            {
-                return ItemTier.Tier3;
-            }
-            else if (inventory.GetTotalItemCountOfTier(ItemTier.VoidTier3) > 0)
-            {
-                return ItemTier.VoidTier3;
-            }
-            else if (inventory.GetTotalItemCountOfTier(ItemTier.Boss) > 0)
-            {
-                return ItemTier.Boss;
-            }
-            else if (inventory.GetTotalItemCountOfTier(ItemTier.VoidBoss) > 0)
-            {
-                return ItemTier.VoidBoss;
-            }
-            else if (inventory.GetTotalItemCountOfTier(ItemTier.Lunar) > 0)
-            {
-                return ItemTier.Lunar;
-            }
+        private const int SWORD_INDEX = 0;
+        private const int VEST_INDEX = 1;
+        private const int BELT_INDEX = 2;
+        private const int ROD_INDEX = 3;
+        private const int CLOAK_INDEX = 4;
+        private const int BOW_INDEX = 5;
+        private const int GLOVES_INDEX = 6;
+        private const int TEAR_INDEX = 7;
 
-            return null;
-        }
-
-        public static ItemIndex GetCompletedItemFromParts(ItemIndex index1, ItemIndex index2)
+        public static ItemIndex GetCompletedItemFromParts(ItemIndex[] indices, ItemIndex index1, ItemIndex index2)
         {
             List<ItemIndex> list = new List<ItemIndex>();
             list.Append(index1);
+            Log.Debug("appending index1: " + index1);
             list.Append(index2);
+            Log.Debug("appending index2: " + index2);
             list.Sort();
 
             Log.Debug("list sorted: " + list.ToArray().ToString());
@@ -181,8 +148,8 @@ namespace RiskOfTactics
                 list.Contains(NeedlesslyLargeRod.itemDef.itemIndex))
                 return ArchangelsStaff.itemDef.itemIndex;
             // Bloodthirster
-            if (list.Contains(BFSword.itemDef.itemIndex) &&
-                list.Contains(NegatronCloak.itemDef.itemIndex))
+            if (list.Contains(indices[SWORD_INDEX]) &&
+                list.Contains(indices[CLOAK_INDEX]))
                 return Bloodthirster.itemDef.itemIndex;
             // Crownguard
             if (list.Contains(NeedlesslyLargeRod.itemDef.itemIndex) &&

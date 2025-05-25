@@ -69,7 +69,7 @@ namespace RiskOfTactics
             spawnCard.nodeGraphType = MapNodeGroup.GraphType.Ground;
             spawnCard.requiredFlags = NodeFlags.None;
             spawnCard.forbiddenFlags = NodeFlags.None;
-            spawnCard.directorCreditCost = 3;
+            spawnCard.directorCreditCost = 0;
             spawnCard.occupyPosition = true;
             spawnCard.orientToFloor = true;
             spawnCard.slightlyRandomizeOrientation = true;

@@ -53,17 +53,17 @@ namespace RiskOfTactics
                 "ITEM_STATIKKSHIV_DESC"
             }
         );
-        public static ConfigurableValue<int> effectCooldown = new(
+        public static ConfigurableValue<float> effectCooldown = new(
             "Item: Statikk Shiv",
             "Effect Cooldown",
-            20,
+            20f,
             "Cooldown of this item's effect.",
             new List<string>()
             {
                 "ITEM_STATIKKSHIV_DESC"
             }
         );
-        public static ConfigurableValue<float> onHitDamage = new(
+        public static ConfigurableValue<float> effectOnHitDamage = new(
             "Item: Statikk Shiv",
             "Bonus On-Hit",
             20f,
@@ -143,7 +143,7 @@ namespace RiskOfTactics
             On.RoR2.Inventory.GiveItem_ItemIndex_int += (orig, self, index, count) =>
             {
                 orig(self, index, count);
-              
+
                 if (index == itemDef.itemIndex)
                 {
                     CharacterMaster master = self.GetComponent<CharacterMaster>();
@@ -160,7 +160,7 @@ namespace RiskOfTactics
 
                 if (buffDef == shockCooldown)
                 {
-                    if (self && self.inventory && self.inventory.GetItemCount(itemDef) > 0)
+                    if (self && self.inventory && self.inventory.GetItemCount(itemDef) > 0 && self.GetBuffCount(shockBuff) == 0)
                     {
                         self.AddBuff(shockBuff);
                     }
@@ -168,23 +168,37 @@ namespace RiskOfTactics
             };
 
             GenericGameEvents.OnTakeDamage += (damageReport) =>
-                {
-                    CharacterBody vicBody = damageReport.victimBody;
-                    CharacterBody atkBody = damageReport.attackerBody;
+            {
+                CharacterBody vicBody = damageReport.victimBody;
+                CharacterBody atkBody = damageReport.attackerBody;
 
-                    if (vicBody && atkBody && atkBody.inventory)
+                if (vicBody && atkBody && atkBody.inventory)
+                {
+                    bool hasShockBuff = atkBody.GetBuffCount(shockBuff) > 0;
+                    if (hasShockBuff && vicBody.teamComponent.teamIndex != atkBody.teamComponent.teamIndex)
                     {
-                        bool hasShockBuff = atkBody.GetBuffCount(shockBuff) > 0;
-                        if (hasShockBuff && vicBody.teamComponent.teamIndex != atkBody.teamComponent.teamIndex)
+                        vicBody.AddBuff(Sunder.buffDef);
+
+                        DamageInfo shockProc = new DamageInfo
                         {
-                            vicBody.AddBuff(Sunder.buffDef);
-                            
-                            // Remove the shock buff and add cooldown buff
-                            atkBody.RemoveBuff(shockBuff);
-                            atkBody.AddTimedBuff(shockCooldown, effectCooldown);
-                        }
+                            damage = effectOnHitDamage.Value,
+                            damageColorIndex = DamageColorIndex.WeakPoint,
+                            damageType = DamageType.Generic,
+                            attacker = atkBody.gameObject,
+                            inflictor = atkBody.gameObject,
+                            crit = atkBody.RollCrit(),
+                            procCoefficient = 1.0f,
+                            procChainMask = new ProcChainMask(),
+                            position = vicBody.corePosition
+                        };
+                        vicBody.healthComponent.TakeDamage(shockProc);
+
+                        // Remove the shock buff and add cooldown buff
+                        atkBody.RemoveBuff(shockBuff);
+                        atkBody.AddTimedBuff(shockCooldown, effectCooldown);
                     }
-                };
+                }
+            };
         }
     }
 }

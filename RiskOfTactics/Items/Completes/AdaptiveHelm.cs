@@ -241,7 +241,7 @@ namespace RiskOfTactics
             //            {
             //                foreach (GenericSkill skill in vicBody.skillLocator.allSkills)
             //                {
-            //                    skill.rechargeStopwatch += skill.baseRechargeStopwatch * percentCooldownReductionBonus;
+            //                    skill.rechargeStopwatch -= skill.baseRechargeStopwatch * percentCooldownReductionBonus;
             //                }
             //            }
             //        }

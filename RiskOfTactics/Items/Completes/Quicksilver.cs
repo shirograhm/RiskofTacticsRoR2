@@ -251,6 +251,15 @@ namespace RiskOfTactics
                     }
                 }
             };
+
+            GenericGameEvents.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
+            {
+                // CC immunity
+                if (victimInfo.body && victimInfo.body.GetBuffCount(cleanseBuff) > 0)
+                {
+                    damageInfo.force = Vector3.zero;
+                }
+            };
         }
     }
 }

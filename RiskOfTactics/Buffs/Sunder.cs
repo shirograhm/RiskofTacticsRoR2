@@ -13,12 +13,12 @@ namespace RiskOfTactics
 
         public static ConfigurableValue<int> armorReduction = new(
             "Buff: Sunder",
-            "Armor Reduction",
+            "Sunder Reduction",
             10,
             "Armor reduction applied to enemies hit by this effect.",
             new List<string>()
             {
-                "BUFF_SHRED_DESC"
+                "BUFF_SUNDER_DESC"
             }
         );
 

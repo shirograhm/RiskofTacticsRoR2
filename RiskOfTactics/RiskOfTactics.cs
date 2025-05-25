@@ -57,6 +57,11 @@ namespace RiskOfTactics
             ItemCatalog.availability.CallWhenAvailable(Integrations.Init);
             //ItemCatalog.availability.CallWhenAvailable(InjectVoidItemTramsforms);
 
+            // Buffs
+            Burn.Init();
+            Wound.Init();
+            Sunder.Init();
+
             // Components
             if (BFSword.isEnabled.Value)
                 BFSword.Init();
@@ -84,16 +89,20 @@ namespace RiskOfTactics
                 ArchangelsStaff.Init();
             if (Bloodthirster.isEnabled.Value)
                 Bloodthirster.Init();
+            if (BrambleVest.isEnabled.Value)
+                BrambleVest.Init();
             if (Crownguard.isEnabled.Value)
                 Crownguard.Init();
             if (Deathblade.isEnabled.Value)
                 Deathblade.Init();
             if (DragonsClaw.isEnabled.Value)
                 DragonsClaw.Init();
-            if (Guardbreaker.isEnabled.Value)
-                Guardbreaker.Init();
             if (GiantSlayer.isEnabled.Value)
                 GiantSlayer.Init();
+            if (Guardbreaker.isEnabled.Value)
+                Guardbreaker.Init();
+            if (GuinsoosRageblade.isEnabled.Value)
+                GuinsoosRageblade.Init();
             if (HandOfJustice.isEnabled.Value)
                 HandOfJustice.Init();
             if (JeweledGauntlet.isEnabled.Value)
@@ -108,6 +117,8 @@ namespace RiskOfTactics
                 StatikkShiv.Init();
             if (SteadfastHeart.isEnabled.Value)
                 SteadfastHeart.Init();
+            if (SunfireCape.isEnabled.Value)
+                SunfireCape.Init();
             if (WarmogsArmor.isEnabled.Value)
                 WarmogsArmor.Init();
 
@@ -137,6 +148,7 @@ namespace RiskOfTactics
 
                 if (componentList.Contains(itemIndex))
                 {
+                    Log.Debug("Stage 1");
                     CharacterMaster master = self.GetComponent<CharacterMaster>();
                     if (master && master.inventory)
                     {
@@ -145,9 +157,11 @@ namespace RiskOfTactics
                         {
                             if (inv.GetItemCount(dex) > 0)
                             {
-                                ItemIndex completeItem = Utils.GetCompletedItemFromParts(itemIndex, dex);
+                                ItemIndex completeItem = Utils.GetCompletedItemFromParts(componentList, itemIndex, dex);
+                                Log.Debug("Stage 2");
                                 if (completeItem == ItemIndex.None) continue;
 
+                                Log.Debug("Stage 3");
                                 // Remove components
                                 inv.RemoveItem(itemIndex);
                                 inv.RemoveItem(dex);
@@ -163,6 +177,7 @@ namespace RiskOfTactics
                     }
                 }
 
+                Log.Debug("Stage 4");
                 orig(self, itemIndex, count);
             };
         }

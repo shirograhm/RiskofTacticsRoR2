@@ -67,10 +67,10 @@ namespace RiskOfTactics
                 "ITEM_CROWNGUARD_DESC"
             }
         );
-        public static ConfigurableValue<int> effectDuration = new(
+        public static ConfigurableValue<float> effectDuration = new(
             "Item: Crownguard",
             "Effect Duration",
-            10,
+            10f,
             "How long the shield effect lasts when teleporter is activated.",
             new List<string>()
             {

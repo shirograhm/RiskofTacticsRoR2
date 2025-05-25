@@ -218,7 +218,7 @@ namespace RiskOfTactics
                         {
                             Statistics component = self.inventory.GetComponent<Statistics>();
                             // Check time elapsed 
-                            if (component && Environment.TickCount - component.LastTick > tickDuration * 1000)
+                            if (component && Environment.TickCount - component.LastTick > tickDuration.Value * 1000)
                             {
                                 self.AddBuff(foresightBuff);
                                 component.LastTick = Environment.TickCount;
