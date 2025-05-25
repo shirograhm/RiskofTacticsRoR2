@@ -192,7 +192,7 @@ namespace RiskOfTactics
                     if (atkBody.inventory.GetItemCount(itemDef) > 0 && vicBody.teamComponent.teamIndex != atkBody.teamComponent.teamIndex)
                     {
                         Statistics component = atkBody.inventory.GetComponent<Statistics>();
-                        if (component.LastTarget = vicBody.gameObject)
+                        if (component && vicBody.gameObject.Equals(component.LastTarget))
                         {
                             atkBody.AddBuff(wrathBuff);
                         }
