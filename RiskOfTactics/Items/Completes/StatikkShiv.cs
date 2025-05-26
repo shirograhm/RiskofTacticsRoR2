@@ -177,8 +177,6 @@ namespace RiskOfTactics
                     bool hasShockBuff = atkBody.GetBuffCount(shockBuff) > 0;
                     if (hasShockBuff && vicBody.teamComponent.teamIndex != atkBody.teamComponent.teamIndex)
                     {
-                        vicBody.AddBuff(Sunder.buffDef);
-
                         DamageInfo shockProc = new DamageInfo
                         {
                             damage = effectOnHitDamage.Value,
@@ -187,12 +185,13 @@ namespace RiskOfTactics
                             attacker = atkBody.gameObject,
                             inflictor = atkBody.gameObject,
                             crit = atkBody.RollCrit(),
-                            procCoefficient = 1.0f,
+                            procCoefficient = 0.0f,
                             procChainMask = new ProcChainMask(),
                             position = vicBody.corePosition
                         };
                         vicBody.healthComponent.TakeDamage(shockProc);
 
+                        vicBody.AddBuff(Sunder.buffDef);
                         // Remove the shock buff and add cooldown buff
                         atkBody.RemoveBuff(shockBuff);
                         atkBody.AddTimedBuff(shockCooldown, effectCooldown);

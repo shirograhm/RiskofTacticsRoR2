@@ -12,33 +12,35 @@ namespace RiskOfTactics
 
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                DropItem(BFSword.itemDef);
-                DropItem(ChainVest.itemDef);
-                DropItem(GiantsBelt.itemDef);
-                DropItem(NeedlesslyLargeRod.itemDef);
-                DropItem(NegatronCloak.itemDef);
-                DropItem(RecurveBow.itemDef);
-                DropItem(SparringGloves.itemDef);
-                DropItem(TearOfTheGoddess.itemDef);
+                //DropItem(BFSword.itemDef);
+                //DropItem(ChainVest.itemDef);
+                //DropItem(GiantsBelt.itemDef);
+                //DropItem(NeedlesslyLargeRod.itemDef);
+                //DropItem(NegatronCloak.itemDef);
+                //DropItem(RecurveBow.itemDef);
+                //DropItem(SparringGloves.itemDef);
+                //DropItem(TearOfTheGoddess.itemDef);
 
                 //DropItem(AdaptiveHelm.itemDef);
                 //DropItem(ArchangelsStaff.itemDef);
                 //DropItem(Bloodthirster.itemDef);
                 //DropItem(Crownguard.itemDef);
                 //DropItem(Deathblade.itemDef);
-                //DropItem(DragonsClaw.itemDef);
+                DropItem(DragonsClaw.itemDef);
                 DropItem(GiantSlayer.itemDef);
-                DropItem(Guardbreaker.itemDef);
+                //DropItem(Guardbreaker.itemDef);
                 DropItem(GuinsoosRageblade.itemDef);
                 //DropItem(HandOfJustice.itemDef);
                 //DropItem(JeweledGauntlet.itemDef);
                 //DropItem(Quicksilver.itemDef);
                 //DropItem(RabadonsDeathcap.itemDef);
                 //DropItem(SpearOfShojin.itemDef);
-                DropItem(StatikkShiv.itemDef);
+                //DropItem(StatikkShiv.itemDef);
                 //DropItem(SteadfastHeart.itemDef);
-                DropItem(SunfireCape.itemDef);
+                //DropItem(SunfireCape.itemDef);
                 //DropItem(WarmogsArmor.itemDef);
+
+                DropItem(GamblersBlade.itemDef);
             }
         }
 

@@ -89,8 +89,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Items\Radiants\" />
-  </ItemGroup>
-
 </Project>

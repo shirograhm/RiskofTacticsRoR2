@@ -30,7 +30,7 @@ namespace RiskOfTactics
             "Item: Bloodthirster",
             "Flat Damage",
             4f,
-            "Percent damage bonus when holding this item.",
+            "Flat damage bonus when holding this item.",
             new List<string>()
             {
                 "ITEM_BLOODTHIRSTER_DESC"

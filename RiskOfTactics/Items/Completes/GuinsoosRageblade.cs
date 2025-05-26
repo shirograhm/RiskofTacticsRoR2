@@ -198,7 +198,7 @@ namespace RiskOfTactics
                         }
                         else
                         {
-                            atkBody.SetBuffCount(wrathBuff.buffIndex, 0);
+                            atkBody.SetBuffCount(wrathBuff.buffIndex, 1);
                             component.LastTarget = vicBody.gameObject;
                         }
                     }

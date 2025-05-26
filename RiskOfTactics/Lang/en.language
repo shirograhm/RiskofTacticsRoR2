@@ -140,6 +140,12 @@
     "ITEM_WARMOGSARMOR_NAME": "Warmog's Armor",
     "ITEM_WARMOGSARMOR_PICKUP": "<style=cIsHealth>+{Flat Health} max HP</style>\n\nGain <style=cIsHealth>{Percent Health}% max HP</style>.",
     "ITEM_WARMOGSARMOR_DESC": "<style=cIsHealth>+{Flat Health} max HP</style>\n\nGain <style=cIsHealth>{Percent Health}% max HP</style>.",
-    "ITEM_WARMOGSARMOR_LORE": ""
+    "ITEM_WARMOGSARMOR_LORE": "",
+
+    "GAMBLERSBLADE": "Gambler's Blade",
+    "ITEM_GAMBLERSBLADE_NAME": "Gambler's Blade",
+    "ITEM_GAMBLERSBLADE_PICKUP": "<style=cIsDamage>+{Flat Damage} base damage</style>\n<style=cIsDamage>+{Attack Speed}% attack speed</style>\n\nGain <style=cIsDamage>0%</style>-<style=cIsDamage>{Attack Speed Effect Cap}%</style> additional <style=cIsDamage>attack speed</style> based on your <style=cHumanObjective>current gold</style> (<style=cHumanObjective>$0</style>-<style=cHumanObjective>${Money Cap}</style>). On-hit, <style=cIsUtility>{Drop Chance}%</style> chance to gain <style=cHumanObjective>$1</style>.",
+    "ITEM_GAMBLERSBLADE_DESC": "<style=cIsDamage>+{Flat Damage} base damage</style>\n<style=cIsDamage>+{Attack Speed}% attack speed</style>\n\nGain <style=cIsDamage>0%</style>-<style=cIsDamage>{Attack Speed Effect Cap}%</style> additional <style=cIsDamage>attack speed</style> based on your <style=cHumanObjective>current gold</style> (<style=cHumanObjective>$0</style>-<style=cHumanObjective>${Money Cap}</style>). On-hit, <style=cIsUtility>{Drop Chance}%</style> chance to gain <style=cHumanObjective>$1</style>.",
+    "ITEM_GAMBLERSBLADE_LORE": ""
   }
 }

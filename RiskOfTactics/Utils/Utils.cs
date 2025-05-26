@@ -209,13 +209,6 @@ namespace RiskOfTactics
             return ItemIndex.None;
         }
 
-        public static ItemDef GetRandomItemOfTier(ItemTier tier)
-        {
-            ItemDef[] tierItems = ItemCatalog.allItemDefs.Where(itemDef => itemDef.tier == tier).ToArray();
-
-            return tierItems[RiskOfTactics.RandGen.Next(0, tierItems.Length)];
-        }
-
         internal static BuffDef GenerateBuffDef(string name, Sprite sprite, bool canStack, bool isHidden, bool isDebuff, bool isCooldown)
         {
             BuffDef returnable = ScriptableObject.CreateInstance<BuffDef>();

@@ -40,6 +40,7 @@ namespace RiskOfTactics
         public static PluginInfo PInfo { get; private set; }
 
         public static System.Random RandGen = new();
+        public static Xoroshiro128Plus xoroshiro = new Xoroshiro128Plus((ulong) RandGen.Next());
 
         public static ExpansionDef voidDLC;
 
@@ -124,8 +125,9 @@ namespace RiskOfTactics
 
             // Radiants
 
-            // Supports
-
+            // Artifacts
+            if (GamblersBlade.isEnabled.Value)
+                GamblersBlade.Init();
 
             Log.Message("Finished initializations.");
         }
