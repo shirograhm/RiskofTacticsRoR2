@@ -1,14 +1,10 @@
 ﻿using RoR2;
-using RoR2.Hologram;
-using RoR2.Networking;
-using R2API;
-using R2API.Utils;
-using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.Events;
-using System.Collections.Generic;
-using System.Linq;
 using RoR2.Navigation;
+using RoR2.Networking;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Networking;
 
 namespace RiskOfTactics
 {
@@ -21,7 +17,7 @@ namespace RiskOfTactics
         public static Transform modelTransform;
         public static GameObject meshObject;
         public static string genericDisplayNameToken;
-        
+
         public static InteractableSpawnCard spawnCard;
         public static DirectorCard directorCard;
 
@@ -36,7 +32,7 @@ namespace RiskOfTactics
         {
             PrepareModel();
             AddPurchasable();
-         
+
             SetSpawnCards();
         }
 
@@ -193,51 +189,51 @@ namespace RiskOfTactics
 
 
 
-                int addReds = 0;
-                int[] itemStacks = component.inventory.itemStacks;
-                for (int i = 0; i < itemStacks.Length; i++)
-                {
-                    ItemIndex itemIndex = (ItemIndex)i;
-                    if (itemStacks[i] > 0)
-                    {
-                        switch (ItemCatalog.GetItemDef(itemIndex).tier)
-                        {
-                            case ItemTier.Tier1:
-                            case ItemTier.Tier2:
-                            case ItemTier.Lunar:
-                            case ItemTier.Boss:
-                                addReds += itemStacks[i];
-                                component.inventory.itemAcquisitionOrder.Remove(itemIndex);
-                                component.inventory.ResetItem(itemIndex);
-                                break;
-                        }
-                    }
-                }
-                for (var i = 0; i < addReds; i++)
-                {
-                    var rolledRed = rng.NextElementUniform<ItemIndex>(availableItems);
-                    component.inventory.GiveItem(rolledRed);
-                }
-                component.inventory.SetDirtyBit(8U);
+                //int addReds = 0;
+                //int[] itemStacks = component.inventory.itemStacks;
+                //for (int i = 0; i < itemStacks.Length; i++)
+                //{
+                //    ItemIndex itemIndex = (ItemIndex)i;
+                //    if (itemStacks[i] > 0)
+                //    {
+                //        switch (ItemCatalog.GetItemDef(itemIndex).tier)
+                //        {
+                //            case ItemTier.Tier1:
+                //            case ItemTier.Tier2:
+                //            case ItemTier.Lunar:
+                //            case ItemTier.Boss:
+                //                addReds += itemStacks[i];
+                //                component.inventory.itemAcquisitionOrder.Remove(itemIndex);
+                //                component.inventory.ResetItem(itemIndex);
+                //                break;
+                //        }
+                //    }
+                //}
+                //for (var i = 0; i < addReds; i++)
+                //{
+                //    var rolledRed = rng.NextElementUniform<ItemIndex>(availableItems);
+                //    component.inventory.GiveItem(rolledRed);
+                //}
+                //component.inventory.SetDirtyBit(8U);
 
-                Chat.SendBroadcastChat(new Chat.SubjectFormatChatMessage
-                {
-                    subjectAsCharacterBody = component,
-                    baseToken = "RISKOFTACTICS_SHRINEOFRADIANCE_USE_MESSAGE"
-                });
-                EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ShrineUseEffect"), new EffectData
-                {
-                    origin = transform.position,
-                    rotation = Quaternion.identity,
-                    scale = 1f,
-                    color = new Color32(255, 97, 84, 255)
-                }, true);
-                purchaseCount++;
-                refreshTimer = refreshDuration;
-                if (purchaseCount >= maxPurchaseCount)
-                {
-                    symbolTransform.gameObject.SetActive(false);
-                }
+                //Chat.SendBroadcastChat(new Chat.SubjectFormatChatMessage
+                //{
+                //    subjectAsCharacterBody = component,
+                //    baseToken = "RISKOFTACTICS_SHRINEOFRADIANCE_USE_MESSAGE"
+                //});
+                //EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ShrineUseEffect"), new EffectData
+                //{
+                //    origin = transform.position,
+                //    rotation = Quaternion.identity,
+                //    scale = 1f,
+                //    color = new Color32(255, 97, 84, 255)
+                //}, true);
+                //purchaseCount++;
+                //refreshTimer = refreshDuration;
+                //if (purchaseCount >= maxPurchaseCount)
+                //{
+                //    symbolTransform.gameObject.SetActive(false);
+                //}
             }
 
             public override int GetNetworkChannel()

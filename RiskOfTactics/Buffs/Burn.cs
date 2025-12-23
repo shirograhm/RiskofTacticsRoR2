@@ -4,7 +4,6 @@ using R2API.Networking.Interfaces;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -19,6 +18,16 @@ namespace RiskOfTactics
             "Burn Per Second",
             1f,
             "Percent max HP lost per second for all enemies hit by this effect.",
+            new List<string>()
+            {
+                "BUFF_WOUND_DESC"
+            }
+        );
+        public static ConfigurableValue<float> burnProcCoeff = new(
+            "Debuff: Burn",
+            "Burn Proc Coefficient",
+            0.5f,
+            "Proc coefficient for this effect.",
             new List<string>()
             {
                 "BUFF_WOUND_DESC"
@@ -116,7 +125,7 @@ namespace RiskOfTactics
                             attacker = null,
                             inflictor = null,
                             crit = false,
-                            procCoefficient = 0f,
+                            procCoefficient = burnProcCoeff.Value,
                             procChainMask = new ProcChainMask(),
                             position = self.corePosition
                         };

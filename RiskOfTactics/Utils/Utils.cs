@@ -2,7 +2,6 @@
 using R2API.Networking.Interfaces;
 using RoR2;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -104,109 +103,73 @@ namespace RiskOfTactics
             return percent;
         }
 
+        public static bool IsMeleeBodyPrefab(GameObject bodyPrefab)
+        {
+            if (!bodyPrefab) return false;
+
+            string name = bodyPrefab.name;
+            if (name.Contains("(Clone)"))
+                name = name.Replace("(Clone)", "");
+
+            string[] meleeBodies = ConfigManager.Scaling.meleeCharactersList.Value.Split(',');
+            return meleeBodies.Contains(name);
+        }
+
+        public static bool IsRangedBodyPrefab(GameObject bodyPrefab)
+        {
+            if (!bodyPrefab) return false;
+
+            string name = bodyPrefab.name;
+            if (name.Contains("(Clone)"))
+                name = name.Replace("(Clone)", "");
+
+            string[] rangedBodies = ConfigManager.Scaling.rangedCharactersList.Value.Split(',');
+            return rangedBodies.Contains(name);
+        }
+
         public static float GetDifficultyAsPercentage()
         {
             return (Stage.instance.entryDifficultyCoefficient - 1f) / 98f;
         }
 
+        public static float GetDifficultyAsMultiplier()
+        {
+            return (Stage.instance.entryDifficultyCoefficient);
+        }
+
+        public static float GetLinearStacking(float baseValue, int count)
+        {
+            return GetLinearStacking(baseValue, baseValue, count);
+        }
+
+        public static float GetLinearStacking(float baseValue, float extraValue, int count)
+        {
+            return baseValue + extraValue * (count - 1);
+        }
+
         public static float GetExponentialStacking(float percent, int count)
         {
-            return 1f - Mathf.Pow(1f - percent, count);
+            return GetExponentialStacking(percent, percent, count);
+        }
+
+        public static float GetExponentialStacking(float percent, float stackPercent, int count)
+        {
+            return 1f - (1 - percent) * Mathf.Pow(1f - stackPercent, count - 1);
+        }
+
+        public static float GetReverseExponentialStacking(float baseValue, float reducePercent, int count)
+        {
+            return baseValue * Mathf.Pow(1 - reducePercent, count - 1);
         }
 
         public static float GetHyperbolicStacking(float percent, int count)
         {
-            return 1f - 1f / (1f + percent * count);
+            return GetHyperbolicStacking(percent, percent, count);
         }
 
-        private const int SWORD_INDEX = 0;
-        private const int VEST_INDEX = 1;
-        private const int BELT_INDEX = 2;
-        private const int ROD_INDEX = 3;
-        private const int CLOAK_INDEX = 4;
-        private const int BOW_INDEX = 5;
-        private const int GLOVES_INDEX = 6;
-        private const int TEAR_INDEX = 7;
-
-        public static ItemIndex GetCompletedItemFromParts(ItemIndex[] indices, ItemIndex index1, ItemIndex index2)
+        public static float GetHyperbolicStacking(float percent, float extraPercent, int count)
         {
-            List<ItemIndex> list = new List<ItemIndex>();
-            list.Append(index1);
-            Log.Debug("appending index1: " + index1);
-            list.Append(index2);
-            Log.Debug("appending index2: " + index2);
-            list.Sort();
-
-            Log.Debug("list sorted: " + list.ToArray().ToString());
-
-            // Adaptive Helm
-            if (list.Contains(TearOfTheGoddess.itemDef.itemIndex) && 
-                list.Contains(NegatronCloak.itemDef.itemIndex))
-                return AdaptiveHelm.itemDef.itemIndex;
-            // Archangel's Staff
-            if (list.Contains(TearOfTheGoddess.itemDef.itemIndex) &&
-                list.Contains(NeedlesslyLargeRod.itemDef.itemIndex))
-                return ArchangelsStaff.itemDef.itemIndex;
-            // Bloodthirster
-            if (list.Contains(indices[SWORD_INDEX]) &&
-                list.Contains(indices[CLOAK_INDEX]))
-                return Bloodthirster.itemDef.itemIndex;
-            // Crownguard
-            if (list.Contains(NeedlesslyLargeRod.itemDef.itemIndex) &&
-                list.Contains(ChainVest.itemDef.itemIndex))
-                return Crownguard.itemDef.itemIndex;
-            // Deathblade
-            if (list.Contains(BFSword.itemDef.itemIndex) &&
-                list.IndexOf(BFSword.itemDef.itemIndex) != list.LastIndexOf(BFSword.itemDef.itemIndex))
-                return Deathblade.itemDef.itemIndex;
-            // Dragon's Claw
-            if (list.Contains(NegatronCloak.itemDef.itemIndex) &&
-                list.IndexOf(NegatronCloak.itemDef.itemIndex) != list.LastIndexOf(NegatronCloak.itemDef.itemIndex))
-                return DragonsClaw.itemDef.itemIndex;
-            // Giant Slayer
-            if (list.Contains(BFSword.itemDef.itemIndex) &&
-                list.Contains(RecurveBow.itemDef.itemIndex))
-                return GiantSlayer.itemDef.itemIndex;
-            // Guardbreaker
-            if (list.Contains(GiantsBelt.itemDef.itemIndex) &&
-                list.Contains(SparringGloves.itemDef.itemIndex))
-                return Guardbreaker.itemDef.itemIndex;
-            // Hand of Justice
-            if (list.Contains(TearOfTheGoddess.itemDef.itemIndex) &&
-                list.Contains(SparringGloves.itemDef.itemIndex))
-                return HandOfJustice.itemDef.itemIndex;
-            // Jeweled Gauntlet
-            if (list.Contains(NeedlesslyLargeRod.itemDef.itemIndex) &&
-                list.Contains(SparringGloves.itemDef.itemIndex))
-                return JeweledGauntlet.itemDef.itemIndex;
-            // Quicksilver
-            if (list.Contains(SparringGloves.itemDef.itemIndex) &&
-                list.Contains(NegatronCloak.itemDef.itemIndex))
-                return Quicksilver.itemDef.itemIndex;
-            // Rabadon's Deathcap
-            if (list.Contains(NeedlesslyLargeRod.itemDef.itemIndex) &&
-                list.IndexOf(NeedlesslyLargeRod.itemDef.itemIndex) != list.LastIndexOf(NeedlesslyLargeRod.itemDef.itemIndex))
-                return RabadonsDeathcap.itemDef.itemIndex;
-            // Spear of Shojin
-            if (list.Contains(BFSword.itemDef.itemIndex) &&
-                list.Contains(TearOfTheGoddess.itemDef.itemIndex))
-                return SpearOfShojin.itemDef.itemIndex;
-            // Statikk Shiv
-            if (list.Contains(TearOfTheGoddess.itemDef.itemIndex) &&
-                list.Contains(RecurveBow.itemDef.itemIndex))
-                return StatikkShiv.itemDef.itemIndex;
-            // Steadfast Heart
-            if (list.Contains(ChainVest.itemDef.itemIndex) &&
-                list.Contains(SparringGloves.itemDef.itemIndex))
-                return SteadfastHeart.itemDef.itemIndex;
-            // Warmog's Armor
-            if (list.Contains(GiantsBelt.itemDef.itemIndex) &&
-                list.IndexOf(GiantsBelt.itemDef.itemIndex) != list.LastIndexOf(GiantsBelt.itemDef.itemIndex))
-                return WarmogsArmor.itemDef.itemIndex;
-
-
-            // Return none item if no recipes (should never reach this... i hope)
-            return ItemIndex.None;
+            return 1f - 1f / (1f + percent * extraPercent * (count - 1));
         }
 
         internal static BuffDef GenerateBuffDef(string name, Sprite sprite, bool canStack, bool isHidden, bool isDebuff, bool isCooldown)
@@ -221,6 +184,19 @@ namespace RiskOfTactics
             returnable.isCooldown = isCooldown;
 
             return returnable;
+        }
+
+        /**
+         * <summary>Returns true if the victim and attacker bodies are on the same team.</summary>
+         * 
+         * <param name="body1">Cannot be null.</param>
+         * <param name="body2">Cannot be null.</param>
+         */
+        internal static bool OnSameTeam(CharacterBody body1, CharacterBody body2)
+        {
+            if (body1 == null) throw new ArgumentNullException("body1");
+            if (body2 == null) throw new ArgumentNullException("body2");
+            return body1.teamComponent && body2.teamComponent && body1.teamComponent.teamIndex == body2.teamComponent.teamIndex;
         }
     }
 }

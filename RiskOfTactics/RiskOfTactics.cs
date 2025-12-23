@@ -1,13 +1,9 @@
 using BepInEx;
 using R2API;
 using R2API.Utils;
+using RiskOfTactics.Items.Artifacts;
 using RoR2;
 using RoR2.ExpansionManagement;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.Networking;
 
 namespace RiskOfTactics
 {
@@ -20,15 +16,6 @@ namespace RiskOfTactics
     // Compatibility
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
 
-    /// Attack Damage -> Percent Damage
-    /// Ability Power -> Flat Damage
-    /// Attack Speed  -> Attack Speed
-    /// Armor         -> Armor
-    /// Health        -> Health
-    /// Magic Resist  -> Shield
-    /// Crit Chance   -> Crit Chance
-    /// Mana          -> Cooldown Reduction
-
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     public class RiskOfTactics : BaseUnityPlugin
     {
@@ -40,7 +27,7 @@ namespace RiskOfTactics
         public static PluginInfo PInfo { get; private set; }
 
         public static System.Random RandGen = new();
-        public static Xoroshiro128Plus xoroshiro = new Xoroshiro128Plus((ulong) RandGen.Next());
+        public static Xoroshiro128Plus xoroshiro = new Xoroshiro128Plus((ulong)RandGen.Next());
 
         public static ExpansionDef voidDLC;
 
@@ -54,34 +41,13 @@ namespace RiskOfTactics
             GenericGameEvents.Init();
             ConfigOptions.Init();
 
-            ItemCatalog.availability.CallWhenAvailable(ItemRemover.Init);
             ItemCatalog.availability.CallWhenAvailable(Integrations.Init);
             //ItemCatalog.availability.CallWhenAvailable(InjectVoidItemTramsforms);
 
             // Buffs
-            Burn.Init();
-            Wound.Init();
+            //Burn.Init();
+            //Wound.Init();
             Sunder.Init();
-
-            // Components
-            if (BFSword.isEnabled.Value)
-                BFSword.Init();
-            if (ChainVest.isEnabled.Value)
-                ChainVest.Init();
-            if (GiantsBelt.isEnabled.Value)
-                GiantsBelt.Init();
-            if (NeedlesslyLargeRod.isEnabled.Value)
-                NeedlesslyLargeRod.Init();
-            if (NegatronCloak.isEnabled.Value)
-                NegatronCloak.Init();
-            if (RecurveBow.isEnabled.Value)
-                RecurveBow.Init();
-            if (SparringGloves.isEnabled.Value)
-                SparringGloves.Init();
-            if (TearOfTheGoddess.isEnabled.Value)
-                TearOfTheGoddess.Init();
-
-            InjectTFTItemCompletion();
 
             // Completes
             if (AdaptiveHelm.isEnabled.Value)
@@ -94,34 +60,26 @@ namespace RiskOfTactics
                 BrambleVest.Init();
             if (Crownguard.isEnabled.Value)
                 Crownguard.Init();
-            if (Deathblade.isEnabled.Value)
-                Deathblade.Init();
             if (DragonsClaw.isEnabled.Value)
                 DragonsClaw.Init();
-            if (GiantSlayer.isEnabled.Value)
-                GiantSlayer.Init();
-            if (Guardbreaker.isEnabled.Value)
-                Guardbreaker.Init();
             if (GuinsoosRageblade.isEnabled.Value)
                 GuinsoosRageblade.Init();
             if (HandOfJustice.isEnabled.Value)
                 HandOfJustice.Init();
-            if (JeweledGauntlet.isEnabled.Value)
-                JeweledGauntlet.Init();
-            if (Quicksilver.isEnabled.Value)
-                Quicksilver.Init();
-            if (RabadonsDeathcap.isEnabled.Value)
-                RabadonsDeathcap.Init();
-            if (SpearOfShojin.isEnabled.Value)
-                SpearOfShojin.Init();
+            //if (JeweledGauntlet.isEnabled.Value)
+            //    JeweledGauntlet.Init();
+            //if (Quicksilver.isEnabled.Value)
+            //    Quicksilver.Init();
+            //if (SpearOfShojin.isEnabled.Value)
+            //    SpearOfShojin.Init();
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
-            if (SteadfastHeart.isEnabled.Value)
-                SteadfastHeart.Init();
-            if (SunfireCape.isEnabled.Value)
-                SunfireCape.Init();
-            if (WarmogsArmor.isEnabled.Value)
-                WarmogsArmor.Init();
+            //if (SteadfastHeart.isEnabled.Value)
+            //    SteadfastHeart.Init();
+            //if (SunfireCape.isEnabled.Value)
+            //    SunfireCape.Init();
+            //if (WarmogsArmor.isEnabled.Value)
+            //    WarmogsArmor.Init();
 
             // Radiants
 
@@ -130,58 +88,6 @@ namespace RiskOfTactics
                 GamblersBlade.Init();
 
             Log.Message("Finished initializations.");
-        }
-
-        private void InjectTFTItemCompletion()
-        {
-            On.RoR2.Inventory.GiveItem_ItemIndex_int += (orig, self, itemIndex, count) =>
-            {
-                ItemIndex[] componentList =
-                {
-                    BFSword.itemDef.itemIndex,
-                    ChainVest.itemDef.itemIndex,
-                    GiantsBelt.itemDef.itemIndex,
-                    NeedlesslyLargeRod.itemDef.itemIndex,
-                    NegatronCloak.itemDef.itemIndex,
-                    RecurveBow.itemDef.itemIndex,
-                    SparringGloves.itemDef.itemIndex,
-                    TearOfTheGoddess.itemDef.itemIndex
-                };
-
-                if (componentList.Contains(itemIndex))
-                {
-                    Log.Debug("Stage 1");
-                    CharacterMaster master = self.GetComponent<CharacterMaster>();
-                    if (master && master.inventory)
-                    {
-                        Inventory inv = master.inventory;
-                        foreach (ItemIndex dex in componentList)
-                        {
-                            if (inv.GetItemCount(dex) > 0)
-                            {
-                                ItemIndex completeItem = Utils.GetCompletedItemFromParts(componentList, itemIndex, dex);
-                                Log.Debug("Stage 2");
-                                if (completeItem == ItemIndex.None) continue;
-
-                                Log.Debug("Stage 3");
-                                // Remove components
-                                inv.RemoveItem(itemIndex);
-                                inv.RemoveItem(dex);
-                                // Add new full item
-                                inv.GiveItem(completeItem);
-                                // Notify player
-                                CharacterMasterNotificationQueue.PushItemNotification(
-                                    master, completeItem);
-
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                Log.Debug("Stage 4");
-                orig(self, itemIndex, count);
-            };
         }
 
         //private void InjectVoidItemTramsforms()
@@ -210,7 +116,7 @@ namespace RiskOfTactics
 
         private void Update()
         {
-            Testing.RunUpdate();
+            //Testing.RunUpdate();
         }
     }
 }

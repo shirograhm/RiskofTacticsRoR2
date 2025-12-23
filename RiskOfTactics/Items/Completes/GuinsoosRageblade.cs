@@ -2,9 +2,7 @@
 using R2API.Networking;
 using R2API.Networking.Interfaces;
 using RoR2;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -25,37 +23,16 @@ namespace RiskOfTactics
                 "ITEM_GUINSOOSRAGEBLADE_DESC"
             }
         );
-        public static ConfigurableValue<float> flatDamageBonus = new(
-            "Item: Guinsoos Rageblade",
-            "Flat Damage",
-            10f,
-            "Flat damage bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_GUINSOOSRAGEBLADE_DESC"
-            }
-        );
-        public static ConfigurableValue<float> attackSpeedBonus = new(
-            "Item: Guinsoos Rageblade",
-            "Attack Speed",
-            15f,
-            "Percent attack speed bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_GUINSOOSRAGEBLADE_DESC"
-            }
-        );
         public static ConfigurableValue<float> attackSpeedOnHit = new(
             "Item: Guinsoos Rageblade",
             "Attack Speed On-Hit",
-            2f,
+            3f,
             "Percent attack speed gained on-hit.",
             new List<string>()
             {
                 "ITEM_GUINSOOSRAGEBLADE_DESC"
             }
         );
-        public static readonly float percentAttackSpeedBonus = attackSpeedBonus.Value / 100f;
         public static readonly float percentAttackSpeedOnHit = attackSpeedOnHit.Value / 100f;
 
         public class Statistics : MonoBehaviour
@@ -126,7 +103,7 @@ namespace RiskOfTactics
 
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
-            
+
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
             wrathBuff = Utils.GenerateBuffDef("Wrath", AssetHandler.bundle.LoadAsset<Sprite>("Wrath.png"), true, false, false, false);
@@ -144,15 +121,24 @@ namespace RiskOfTactics
 
             Utils.SetItemTier(itemDef, ItemTier.Tier3);
 
+            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("GuinsoosRageblade.prefab");
+            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = prefab.transform;
+            modelPanelParameters.cameraPositionTransform = prefab.transform;
+            modelPanelParameters.maxDistance = 10f;
+            modelPanelParameters.minDistance = 5f;
+
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("GuinsoosRageblade.png");
-            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("GuinsoosRageblade.prefab");
+            itemDef.pickupModelPrefab = prefab;
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
             itemDef.tags = new ItemTag[]
             {
                 ItemTag.Damage,
-                ItemTag.Utility
+                ItemTag.Utility,
+
+                ItemTag.CanBeTemporary
             };
         }
 
@@ -163,21 +149,28 @@ namespace RiskOfTactics
                 obj.inventory?.gameObject.AddComponent<Statistics>();
             };
 
+            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
+            {
+                orig(self);
+
+                if (self && self.HasBuff(wrathBuff) && self.inventory)
+                {
+                    if (self.inventory.GetItemCountEffective(itemDef) == 0)
+                    {
+                        self.SetBuffCount(wrathBuff.buffIndex, 0);
+                    }
+                }
+            };
+
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCount(itemDef);
-                    if (count > 0)
-                    {
-                        args.baseDamageAdd += flatDamageBonus.Value;
-                        args.attackSpeedMultAdd += percentAttackSpeedBonus;
-                    }
-
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     int buffCount = sender.GetBuffCount(wrathBuff);
                     if (buffCount > 0)
                     {
-                        args.attackSpeedMultAdd += percentAttackSpeedOnHit * buffCount;
+                        args.attackSpeedMultAdd += buffCount * Utils.GetHyperbolicStacking(percentAttackSpeedOnHit, count);
                     }
                 }
             };
@@ -189,7 +182,7 @@ namespace RiskOfTactics
 
                 if (vicBody && atkBody && atkBody.inventory)
                 {
-                    if (atkBody.inventory.GetItemCount(itemDef) > 0 && vicBody.teamComponent.teamIndex != atkBody.teamComponent.teamIndex)
+                    if (atkBody.inventory.GetItemCountEffective(itemDef) > 0 && vicBody.healthComponent && !Utils.OnSameTeam(vicBody, atkBody))
                     {
                         Statistics component = atkBody.inventory.GetComponent<Statistics>();
                         if (component && vicBody.gameObject.Equals(component.LastTarget))

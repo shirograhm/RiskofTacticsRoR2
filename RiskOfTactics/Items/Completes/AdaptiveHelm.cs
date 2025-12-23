@@ -1,19 +1,18 @@
 ﻿using R2API;
-using R2API.Networking;
-using R2API.Networking.Interfaces;
 using RoR2;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace RiskOfTactics
 {
     class AdaptiveHelm
     {
         public static ItemDef itemDef;
+        public static BuffDef rangedResetCooldownBuff;
 
+        // Gain armor and max HP shield. Gain additional effects based on your character class.
+        // Melee: Gain bonus armor and shield. When you take damage, reduce all active cooldowns.
+        // Ranged: Gain BASE damage. Periodically refresh all cooldowns.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Adaptive Helm",
             "Enabled",
@@ -24,31 +23,11 @@ namespace RiskOfTactics
                 "ITEM_ADAPTIVEHELM_DESC"
             }
         );
-        public static ConfigurableValue<float> flatDamageBonus = new(
+        public static ConfigurableValue<float> commonStatBoost = new(
             "Item: Adaptive Helm",
-            "Flat Damage",
+            "Common Stat Boost",
             10f,
-            "Flat damage bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_ADAPTIVEHELM_DESC"
-            }
-        );
-        public static ConfigurableValue<float> cooldownReductionBonus = new(
-            "Item: Adaptive Helm",
-            "Cooldown Reduction",
-            15f,
-            "Cooldown reduction gained when holding this item.",
-            new List<string>()
-            {
-                "ITEM_ADAPTIVEHELM_DESC"
-            }
-        );
-        public static ConfigurableValue<float> shieldBonus = new(
-            "Item: Adaptive Helm",
-            "Percent Shield",
-            20f,
-            "Percent shield gained when holding this item.",
+            "Base armor and % max HP shield for all users.",
             new List<string>()
             {
                 "ITEM_ADAPTIVEHELM_DESC"
@@ -56,9 +35,19 @@ namespace RiskOfTactics
         );
         public static ConfigurableValue<float> meleeResistBonus = new(
             "Item: Adaptive Helm - Melee",
-            "Bonus Resists",
+            "Bonus Resist",
             40f,
-            "Armor and % shield bonus for melee item users.",
+            "Melee: Armor and % shield bonus for melee users for the first stack.",
+            new List<string>()
+            {
+                "ITEM_ADAPTIVEHELM_DESC"
+            }
+        );
+        public static ConfigurableValue<float> meleeResistBonusExtraStacks = new(
+            "Item: Adaptive Helm - Melee",
+            "Bonus Resist Extra Stacks",
+            30f,
+            "Melee: Armor and % shield bonus for melee users with extra stacks.",
             new List<string>()
             {
                 "ITEM_ADAPTIVEHELM_DESC"
@@ -67,8 +56,8 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> cooldownRefundOnTakeDamage = new(
             "Item: Adaptive Helm - Melee",
             "Cooldown Refund",
-            1f,
-            "Percent cooldown refunded when taking damage as melee.",
+            0.5f,
+            "Melee: Seconds cooldown refunded when taking damage.",
             new List<string>()
             {
                 "ITEM_ADAPTIVEHELM_DESC"
@@ -77,8 +66,18 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> rangedDamageBonus = new(
             "Item: Adaptive Helm - Ranged",
             "Bonus Damage",
-            15f,
-            "Flat damage bonus for ranged item users.",
+            5f,
+            "Flat damage bonus for ranged users for the first stack.",
+            new List<string>()
+            {
+                "ITEM_ADAPTIVEHELM_DESC"
+            }
+        );
+        public static ConfigurableValue<float> rangedDamageBonusExtraStacks = new(
+            "Item: Adaptive Helm - Ranged",
+            "Bonus Damage Extra Stacks",
+            3f,
+            "Flat damage bonus for ranged users with extra stacks.",
             new List<string>()
             {
                 "ITEM_ADAPTIVEHELM_DESC"
@@ -86,80 +85,28 @@ namespace RiskOfTactics
         );
         public static ConfigurableValue<float> cooldownRefreshInterval = new(
             "Item: Adaptive Helm - Ranged",
-            "Cooldown Refresh Interval",
-            10f,
+            "Cooldown Interval",
+            20f,
             "All cooldowns are refunded on this interval for ranged item users.",
             new List<string>()
             {
                 "ITEM_ADAPTIVEHELM_DESC"
             }
         );
-        public static readonly float percentShieldBonus = shieldBonus.Value / 100f;
-        public static readonly float percentMeleeShieldBonus = meleeResistBonus.Value / 100f;
-        public static readonly float percentCooldownReductionBonus = cooldownReductionBonus.Value / 100f;
-        public static readonly float percentCooldownRefundedBonus = cooldownRefundOnTakeDamage.Value / 100f;
-
-        public class Statistics : MonoBehaviour
-        {
-            private float _lastTick;
-            public float LastTick
+        public static ConfigurableValue<float> cooldownRefreshIntervalReduction = new(
+            "Item: Adaptive Helm - Ranged",
+            "Cooldown Interval Reduction",
+            20f,
+            "Cooldown refund timer for this item is reduced by this percentage per stack for ranged users.",
+            new List<string>()
             {
-                get { return _lastTick; }
-                set
-                {
-                    _lastTick = value;
-                    if (NetworkServer.active)
-                    {
-                        new Sync(gameObject.GetComponent<NetworkIdentity>().netId, value).Send(NetworkDestination.Clients);
-                    }
-                }
+                "ITEM_ADAPTIVEHELM_DESC"
             }
-
-            public class Sync : INetMessage
-            {
-                NetworkInstanceId objId;
-                float lastTick;
-
-                public Sync()
-                {
-                }
-
-                public Sync(NetworkInstanceId objId, float tick)
-                {
-                    this.objId = objId;
-                    lastTick = tick;
-                }
-
-                public void Deserialize(NetworkReader reader)
-                {
-                    objId = reader.ReadNetworkId();
-                    lastTick = reader.ReadSingle();
-                }
-
-                public void OnReceived()
-                {
-                    if (NetworkServer.active) return;
-
-                    GameObject obj = Util.FindNetworkObject(objId);
-                    if (obj != null)
-                    {
-                        Statistics component = obj.GetComponent<Statistics>();
-                        if (component != null)
-                        {
-                            component.LastTick = lastTick;
-                        }
-                    }
-                }
-
-                public void Serialize(NetworkWriter writer)
-                {
-                    writer.Write(objId);
-                    writer.Write(lastTick);
-
-                    writer.FinishMessage();
-                }
-            }
-        }
+        );
+        public static readonly float percentCommonStatBoost = commonStatBoost.Value / 100f;
+        public static readonly float percentMeleeResistBonus = meleeResistBonus.Value / 100f;
+        public static readonly float percentMeleeResistBonusExtraStacks = meleeResistBonusExtraStacks.Value / 100f;
+        public static readonly float percentCooldownRefreshIntervalReduction = cooldownRefreshIntervalReduction.Value / 100f;
 
         internal static void Init()
         {
@@ -168,7 +115,8 @@ namespace RiskOfTactics
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
 
-            NetworkingAPI.RegisterMessageType<Statistics.Sync>();
+            rangedResetCooldownBuff = Utils.GenerateBuffDef("AdaptiveHelmRangedCooldown", AssetHandler.bundle.LoadAsset<Sprite>("AdaptiveHelm.png"), false, false, false, true);
+            ContentAddition.AddBuffDef(rangedResetCooldownBuff);
 
             Hooks();
         }
@@ -180,116 +128,108 @@ namespace RiskOfTactics
             itemDef.name = "ADAPTIVEHELM";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
+            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+
+            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("AdaptiveHelm.prefab");
+            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = prefab.transform;
+            modelPanelParameters.cameraPositionTransform = prefab.transform;
+            modelPanelParameters.maxDistance = 10f;
+            modelPanelParameters.minDistance = 5f;
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("AdaptiveHelm.png");
-            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("AdaptiveHelm.prefab");
+            itemDef.pickupModelPrefab = prefab;
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
             itemDef.tags = new ItemTag[]
             {
                 ItemTag.Damage,
-                ItemTag.Utility
+                ItemTag.Utility,
+
+                ItemTag.CanBeTemporary
             };
         }
 
         public static void Hooks()
         {
-            CharacterMaster.onStartGlobal += (obj) =>
+            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
             {
-                obj.inventory?.gameObject.AddComponent<Statistics>();
+                orig(self);
+
+                if (self && self.inventory && Utils.IsRangedBodyPrefab(self.gameObject))
+                {
+                    int itemCount = self.inventory.GetItemCountEffective(itemDef);
+                    if (itemCount > 0 && !self.HasBuff(rangedResetCooldownBuff))
+                    {
+                        self.AddTimedBuff(rangedResetCooldownBuff, Utils.GetReverseExponentialStacking(cooldownRefreshInterval.Value, percentCooldownRefreshIntervalReduction, itemCount));
+                    }
+                }
             };
 
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCount(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
-                        args.baseDamageAdd += flatDamageBonus.Value;
-                        args.cooldownMultAdd -= percentCooldownReductionBonus;
-                        args.baseShieldAdd += sender.healthComponent.fullHealth * percentShieldBonus;
+                        args.armorAdd += Utils.GetLinearStacking(commonStatBoost.Value, 0f, count);
+                        args.baseShieldAdd += sender.healthComponent.fullHealth * Utils.GetLinearStacking(percentCommonStatBoost, 0f, count);
 
-                        
-                        // TODO: Sort melee and ranged
+                        if (Utils.IsMeleeBodyPrefab(sender.gameObject))
+                        {
+                            args.armorTotalMult *= 1 + Utils.GetLinearStacking(percentMeleeResistBonus, percentMeleeResistBonusExtraStacks, count);
+                            args.shieldTotalMult *= 1 + Utils.GetLinearStacking(percentMeleeResistBonus, percentMeleeResistBonusExtraStacks, count);
+                        }
 
-                        //if (melee)
-                        //{
-                        //    args.armorAdd += meleeResistBonus;
-                        //    args.baseShieldAdd += sender.healthComponent.fullHealth * percentMeleeShieldBonus;
-                        //}
-
-                        //if (ranged) 
-                        //{
-                        //    args.baseDamageAdd += rangedDamageBonus.Value;
-                        //}
+                        if (Utils.IsRangedBodyPrefab(sender.gameObject))
+                        {
+                            args.baseDamageAdd += Utils.GetLinearStacking(rangedDamageBonus.Value, rangedDamageBonusExtraStacks.Value, count);
+                        }
                     }
                 }
             };
 
-            //GenericGameEvents.OnTakeDamage += (damageReport) =>
-            //{
-            //    if (melee)
-            //    {
-            //        CharacterBody vicBody = damageReport.victimBody;
-            //        if (vicBody && vicBody.inventory)
-            //        {
-            //            int count = vicBody.inventory.GetItemCount(itemDef);
-            //            if (count > 0)
-            //            {
-            //                foreach (GenericSkill skill in vicBody.skillLocator.allSkills)
-            //                {
-            //                    skill.rechargeStopwatch -= skill.baseRechargeStopwatch * percentCooldownReductionBonus;
-            //                }
-            //            }
-            //        }
-            //    }
-            //};
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += (orig, self, buffDef) =>
+            {
+                orig(self, buffDef);
 
-            //Stage.onStageStartGlobal += (stage) =>
-            //{
-            //    foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
-            //    {
-            //        CharacterMaster master = user.masterController.master ?? user.master;
-            //        if (master && master.inventory && master.inventory.GetItemCount(itemDef) > 0)
-            //        {
-            //            Statistics component = master.inventory.GetComponent<Statistics>();
-            //            if (component)
-            //            {
-            //                component.LastTick = Environment.TickCount;
-            //            }
-            //        }
-            //    }
-            //};
+                if (self && self.skillLocator && buffDef == rangedResetCooldownBuff)
+                {
+                    self.skillLocator.ResetSkills();
 
-            //On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
-            //{
-            //    orig(self);
+                    if (self.inventory)
+                    {
+                        int itemCount = self.inventory.GetItemCountEffective(itemDef);
+                        if (itemCount > 0 && Utils.IsRangedBodyPrefab(self.gameObject))
+                        {
+                            self.AddTimedBuff(rangedResetCooldownBuff, Utils.GetReverseExponentialStacking(cooldownRefreshInterval.Value, percentCooldownRefreshIntervalReduction, itemCount));
+                        }
+                    }
+                }
+            };
 
-            //    if (ranged)
-            //    {
-            //        if (self && self.inventory)
-            //        {
-            //            int itemCount = self.inventory.GetItemCount(itemDef);
-            //            if (itemCount > 0)
-            //            {
-            //                Statistics component = self.inventory.GetComponent<Statistics>();
-            //                // Check time elapsed 
-            //                if (component && Environment.TickCount - component.LastTick > cooldownRefreshInterval * 1000)
-            //                {
-            //                    foreach (GenericSkill skill in self.skillLocator.allSkills)
-            //                    {
-            //                        skill.rechargeStopwatch = 0;
-            //                    }
-            //                    component.LastTick = Environment.TickCount;
-            //                }
-            //            }
-
-            //        }
-            //    }
-            //};
+            GenericGameEvents.OnTakeDamage += (damageReport) =>
+            {
+                CharacterBody vicBody = damageReport.victimBody;
+                if (vicBody && vicBody.inventory && vicBody.skillLocator && Utils.IsMeleeBodyPrefab(vicBody.gameObject))
+                {
+                    int count = vicBody.inventory.GetItemCountEffective(itemDef);
+                    if (count > 0)
+                    {
+                        vicBody.skillLocator.DeductCooldownFromAllSkillsServer(cooldownRefundOnTakeDamage.Value);
+                        //if (vicBody.skillLocator.primary)
+                        //    vicBody.skillLocator.primary.rechargeStopwatch += cooldownRefundOnTakeDamage.Value;
+                        //if (vicBody.skillLocator.secondary)
+                        //    vicBody.skillLocator.secondary.rechargeStopwatch += cooldownRefundOnTakeDamage.Value;
+                        //if (vicBody.skillLocator.utility)
+                        //    vicBody.skillLocator.utility.rechargeStopwatch += cooldownRefundOnTakeDamage.Value;
+                        //if (vicBody.skillLocator.special)
+                        //    vicBody.skillLocator.special.rechargeStopwatch += cooldownRefundOnTakeDamage.Value;
+                    }
+                }
+            };
         }
     }
 }

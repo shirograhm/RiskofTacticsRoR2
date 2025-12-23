@@ -2,10 +2,8 @@ using R2API;
 using R2API.Networking;
 using R2API.Networking.Interfaces;
 using RoR2;
-using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -15,7 +13,7 @@ namespace RiskOfTactics
     {
         public static ItemDef itemDef;
 
-        // Gain armor and HP. Every 10 seconds, apply Burn and Wound nearby enemies.
+        // Gain max HP. Periodically apply Burn and Wound to nearby enemies.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Sunfire Cape",
             "Enabled",
@@ -26,31 +24,11 @@ namespace RiskOfTactics
                 "ITEM_SUNFIRECAPE_DESC"
             }
         );
-        public static ConfigurableValue<float> armorBonus = new(
-            "Item: Sunfire Cape",
-            "Armor",
-            15f,
-            "Percent armor gained when holding this item.",
-            new List<string>()
-            {
-                "ITEM_SUNFIRECAPE_DESC"
-            }
-        );
-        public static ConfigurableValue<float> flatHealthBonus = new(
-            "Item: Sunfire Cape",
-            "Flat Health",
-            100f,
-            "Flat health gained when holding this item.",
-            new List<string>()
-            {
-                "ITEM_SUNFIRECAPE_DESC"
-            }
-        );
         public static ConfigurableValue<float> healthBonus = new(
             "Item: Sunfire Cape",
-            "Percent Health", 
-            7f, 
-            "Percent health gained when holding this item.", 
+            "Percent Health",
+            7f,
+            "Percent health gained when holding this item.",
             new List<string>()
             {
                 "ITEM_SUNFIRECAPE_DESC"
@@ -146,7 +124,7 @@ namespace RiskOfTactics
 
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
-            
+
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
             Hooks();
@@ -179,11 +157,9 @@ namespace RiskOfTactics
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCount(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
-                        args.armorAdd += armorBonus.Value;
-                        args.baseHealthAdd += flatHealthBonus.Value;
                         args.healthMultAdd += percentHealthBonus;
                     }
                 }
@@ -191,7 +167,7 @@ namespace RiskOfTactics
 
             On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
             {
-                if (self && self.inventory && self.inventory.GetItemCount(itemDef) > 0)
+                if (self && self.inventory && self.inventory.GetItemCountEffective(itemDef) > 0)
                 {
                     Statistics component = self.inventory.GetComponent<Statistics>();
                     // Check time elapsed 
@@ -209,7 +185,7 @@ namespace RiskOfTactics
                         foreach (HurtBox h in hurtboxes)
                         {
                             HealthComponent hc = h.healthComponent;
-                            if (hc && hc.body && hc.body.teamComponent && hc.body.teamComponent.teamIndex != self.teamComponent.teamIndex)
+                            if (hc && hc.body && !Utils.OnSameTeam(hc.body, self))
                             {
                                 hc.body.AddBuff(Burn.buffDef);
                                 hc.body.AddBuff(Wound.buffDef);

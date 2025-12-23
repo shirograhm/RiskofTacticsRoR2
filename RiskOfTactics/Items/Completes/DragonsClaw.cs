@@ -4,7 +4,6 @@ using R2API.Networking.Interfaces;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -14,22 +13,12 @@ namespace RiskOfTactics
     {
         public static ItemDef itemDef;
 
-        // Gain base shield and percent health. Every 10 seconds, heal 2.5% max HP.
+        // Gain health. Periodically heal for a portion of your max HP.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Dragons Claw",
             "Enabled",
             true,
             "Whether or not the item is enabled.",
-            new List<string>()
-            {
-                "ITEM_DRAGONSCLAW_DESC"
-            }
-        );
-        public static ConfigurableValue<float> shieldBonus = new(
-            "Item: Dragons Claw",
-            "Percent Shield",
-            30f,
-            "Percent shield bonus when holding this item.",
             new List<string>()
             {
                 "ITEM_DRAGONSCLAW_DESC"
@@ -45,10 +34,20 @@ namespace RiskOfTactics
                 "ITEM_DRAGONSCLAW_DESC"
             }
         );
+        public static ConfigurableValue<float> maxHealthBonusExtraStacks = new(
+            "Item: Dragons Claw",
+            "Percent Health Per Stack",
+            9f,
+            "Percent max health bonus when holding extra stacks of this item.",
+            new List<string>()
+            {
+                "ITEM_DRAGONSCLAW_DESC"
+            }
+        );
         public static ConfigurableValue<float> healingPerTick = new(
             "Item: Dragons Claw",
             "Healing Per Tick",
-            3f,
+            9f,
             "Percent max health healing per item proc.",
             new List<string>()
             {
@@ -65,9 +64,9 @@ namespace RiskOfTactics
                 "ITEM_DRAGONSCLAW_DESC"
             }
         );
-        public static readonly float percentShieldBonus = shieldBonus.Value / 100f;
-        public static readonly float percentMaxHealthBonus = maxHealthBonus.Value / 100f;
         public static readonly float percentHealingPerTick = healingPerTick.Value / 100f;
+        public static readonly float percentMaxHealthBonus = maxHealthBonus.Value / 100f;
+        public static readonly float percentMaxHealthBonusExtraStacks = maxHealthBonusExtraStacks.Value / 100f;
 
         public class Statistics : MonoBehaviour
         {
@@ -152,15 +151,24 @@ namespace RiskOfTactics
 
             Utils.SetItemTier(itemDef, ItemTier.Tier3);
 
+            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("DragonsClaw.prefab");
+            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = prefab.transform;
+            modelPanelParameters.cameraPositionTransform = prefab.transform;
+            modelPanelParameters.maxDistance = 10f;
+            modelPanelParameters.minDistance = 5f;
+
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("DragonsClaw.png");
-            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("DragonsClaw.prefab");
+            itemDef.pickupModelPrefab = prefab;
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
             itemDef.tags = new ItemTag[]
             {
                 ItemTag.Healing,
-                ItemTag.Utility
+                ItemTag.Utility,
+
+                ItemTag.CanBeTemporary
             };
         }
 
@@ -175,11 +183,10 @@ namespace RiskOfTactics
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCount(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
-                        args.baseShieldAdd += sender.healthComponent.fullHealth * percentShieldBonus;
-                        args.healthMultAdd += percentMaxHealthBonus;
+                        args.healthTotalMult *= 1 + Utils.GetLinearStacking(percentMaxHealthBonus, percentMaxHealthBonusExtraStacks, count);
                     }
                 }
             };
@@ -188,8 +195,8 @@ namespace RiskOfTactics
             {
                 foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
                 {
-                    CharacterMaster master = user.masterController.master ?? user.master;
-                    if (master && master.inventory && master.inventory.GetItemCount(itemDef) > 0)
+                    CharacterMaster master = user.masterController?.master ?? user.master;
+                    if (master && master.inventory && master.inventory.GetItemCountEffective(itemDef) > 0)
                     {
                         Statistics component = master.inventory.GetComponent<Statistics>();
                         if (component)
@@ -206,7 +213,7 @@ namespace RiskOfTactics
 
                 if (self && self.inventory)
                 {
-                    int itemCount = self.inventory.GetItemCount(itemDef);
+                    int itemCount = self.inventory.GetItemCountEffective(itemDef);
                     if (itemCount > 0)
                     {
                         Statistics component = self.inventory.GetComponent<Statistics>();

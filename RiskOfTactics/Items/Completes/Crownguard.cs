@@ -1,57 +1,22 @@
 ﻿using R2API;
-using R2API.Networking;
-using R2API.Networking.Interfaces;
 using RoR2;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace RiskOfTactics
 {
     class Crownguard
-
     {
         public static ItemDef itemDef;
         public static BuffDef guardedBuff;
         public static BuffDef crownedBuff;
 
+        // Upon activation of the teleporter, gain a temporary shield. When the shield expires, gain permanent BASE damage.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Crownguard",
             "Enabled",
             true,
             "Whether or not the item is enabled.",
-            new List<string>()
-            {
-                "ITEM_CROWNGUARD_DESC"
-            }
-        );
-        public static ConfigurableValue<float> flatDamageBonus = new(
-            "Item: Crownguard",
-            "Flat Damage",
-            8f,
-            "Flat damage bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_CROWNGUARD_DESC"
-            }
-        );
-        public static ConfigurableValue<float> armorBonus = new(
-            "Item: Crownguard",
-            "Armor",
-            15f,
-            "Armor bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_CROWNGUARD_DESC"
-            }
-        );
-        public static ConfigurableValue<float> flatHealthBonus = new(
-            "Item: Crownguard",
-            "Flat Health",
-            50f,
-            "Flat health bonus when holding this item.",
             new List<string>()
             {
                 "ITEM_CROWNGUARD_DESC"
@@ -67,10 +32,20 @@ namespace RiskOfTactics
                 "ITEM_CROWNGUARD_DESC"
             }
         );
+        public static ConfigurableValue<float> effectShieldExtraStacks = new(
+            "Item: Crownguard",
+            "Effect Shield Extra Stacks",
+            25f,
+            "Percent max HP shield bonus with extra stacks when teleporter is activated.",
+            new List<string>()
+            {
+                "ITEM_CROWNGUARD_DESC"
+            }
+        );
         public static ConfigurableValue<float> effectDuration = new(
             "Item: Crownguard",
             "Effect Duration",
-            10f,
+            30f,
             "How long the shield effect lasts when teleporter is activated.",
             new List<string>()
             {
@@ -80,7 +55,17 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> effectDamage = new(
             "Item: Crownguard",
             "Effect Damage",
-            8f,
+            4f,
+            "Damage bonus given after the shield effect expires.",
+            new List<string>()
+            {
+                "ITEM_CROWNGUARD_DESC"
+            }
+        );
+        public static ConfigurableValue<float> effectDamageExtraStacks = new(
+            "Item: Crownguard",
+            "Effect Damage Extra Stacks",
+            1.5f,
             "Damage bonus given after the shield effect expires.",
             new List<string>()
             {
@@ -88,6 +73,7 @@ namespace RiskOfTactics
             }
         );
         private static readonly float percentEffectShield = effectShield.Value / 100f;
+        private static readonly float percentEffectShieldExtraStacks = effectShieldExtraStacks.Value / 100f;
 
         internal static void Init()
         {
@@ -113,8 +99,15 @@ namespace RiskOfTactics
 
             Utils.SetItemTier(itemDef, ItemTier.Tier3);
 
+            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("Crownguard.prefab");
+            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = prefab.transform;
+            modelPanelParameters.cameraPositionTransform = prefab.transform;
+            modelPanelParameters.maxDistance = 10f;
+            modelPanelParameters.minDistance = 5f;
+
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("Crownguard.png");
-            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("Crownguard.prefab");
+            itemDef.pickupModelPrefab = prefab;
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
@@ -131,19 +124,15 @@ namespace RiskOfTactics
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCount(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
-                        args.baseDamageAdd += flatDamageBonus.Value;
-                        args.armorAdd += armorBonus.Value;
-                        args.baseHealthAdd += flatHealthBonus.Value;
+                        if (sender.GetBuffCount(guardedBuff) > 0)
+                            args.baseShieldAdd += sender.healthComponent.fullHealth * Utils.GetLinearStacking(percentEffectShield, percentEffectShieldExtraStacks, count);
+
+                        if (sender.GetBuffCount(crownedBuff) > 0)
+                            args.baseDamageAdd += Utils.GetLinearStacking(effectDamage.Value, effectDamageExtraStacks.Value, count);
                     }
-
-                    if (sender.GetBuffCount(guardedBuff) > 0)
-                        args.baseShieldAdd += sender.healthComponent.fullHealth * percentEffectShield;
-
-                    if (sender.GetBuffCount(crownedBuff) > 0)
-                        args.baseDamageAdd += effectDamage.Value;
                 }
             };
 
@@ -151,7 +140,7 @@ namespace RiskOfTactics
             {
                 orig(self, buffDef);
 
-                if (buffDef == guardedBuff)
+                if (self && buffDef == guardedBuff)
                     self.AddBuff(crownedBuff);
             };
 
@@ -162,11 +151,10 @@ namespace RiskOfTactics
                 foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
                 {
                     CharacterMaster master = user.masterController.master ?? user.master;
-
                     if (master)
                     {
                         CharacterBody body = master.GetBody();
-                        if (body && body.inventory && body.inventory.GetItemCount(itemDef) > 0)
+                        if (body && body.inventory && body.inventory.GetItemCountEffective(itemDef) > 0)
                         {
                             body.AddTimedBuff(guardedBuff, effectDuration.Value);
                         }

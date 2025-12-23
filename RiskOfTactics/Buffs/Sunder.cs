@@ -1,8 +1,6 @@
 ﻿using R2API;
 using RoR2;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace RiskOfTactics
@@ -11,11 +9,14 @@ namespace RiskOfTactics
     {
         public static BuffDef buffDef;
 
+        public static DamageAPI.ModdedDamageType ApplySunder;
+
+        // Temporarily reduces a flat amount of armor. Can be stacked.
         public static ConfigurableValue<int> armorReduction = new(
             "Buff: Sunder",
             "Sunder Reduction",
             10,
-            "Armor reduction applied to enemies hit by this effect.",
+            "Armor reduction applied to enemies for each stack of this debuff.",
             new List<string>()
             {
                 "BUFF_SUNDER_DESC"
@@ -26,9 +27,11 @@ namespace RiskOfTactics
         {
             buffDef = Utils.GenerateBuffDef("Sunder",
                 AssetHandler.bundle.LoadAsset<Sprite>("Sunder.png"),
-                false, false, true, false
+                true, false, true, false
             );
             ContentAddition.AddBuffDef(buffDef);
+
+            ApplySunder = DamageAPI.ReserveDamageType();
 
             Hooks();
         }
@@ -39,8 +42,16 @@ namespace RiskOfTactics
             {
                 if (sender && sender.GetBuffCount(buffDef) > 0)
                 {
-                    args.armorAdd -= armorReduction.Value;
+                    args.armorAdd -= armorReduction.Value * sender.GetBuffCount(buffDef);
                 }
+            };
+
+            GenericGameEvents.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
+            {
+                CharacterBody vicBody = victimInfo.body;
+
+                if (vicBody && damageInfo.HasModdedDamageType(ApplySunder))
+                    vicBody.AddBuff(buffDef);
             };
         }
     }

@@ -1,12 +1,7 @@
 ﻿using R2API;
-using R2API.Networking;
-using R2API.Networking.Interfaces;
 using RoR2;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace RiskOfTactics
 {
@@ -14,6 +9,7 @@ namespace RiskOfTactics
     {
         public static ItemDef itemDef;
 
+        // Gain crit chance. Grants damage and omnivamp that scales with your current health.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Hand Of Justice",
             "Enabled",
@@ -24,31 +20,11 @@ namespace RiskOfTactics
                 "ITEM_HANDOFJUSTICE_DESC"
             }
         );
-        public static ConfigurableValue<float> cooldownReductionBonus = new(
-            "Item: Hand Of Justice",
-            "Cooldown Reduction",
-            8f,
-            "Cooldown reduction gained when holding this item.",
-            new List<string>()
-            {
-                "ITEM_HANDOFJUSTICE_DESC"
-            }
-        );
         public static ConfigurableValue<float> critChanceBonus = new(
             "Item: Hand Of Justice",
             "Crit Chance",
-            16f,
+            8f,
             "Crit chance gained when holding this item.",
-            new List<string>()
-            {
-                "ITEM_HANDOFJUSTICE_DESC"
-            }
-        );
-        public static ConfigurableValue<float> flatBonusDamageEffect = new(
-            "Item: Hand Of Justice",
-            "Bonus Damage Flat",
-            3f,
-            "Flat damage scaling effect gained for this item.",
             new List<string>()
             {
                 "ITEM_HANDOFJUSTICE_DESC"
@@ -57,8 +33,18 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> scaledBonusDamageEffect = new(
             "Item: Hand Of Justice",
             "Bonus Damage Percent",
-            5f,
-            "Percent damage scaling effect gained for this item.",
+            10f,
+            "Percent BASE damage scaling effect gained for this item.",
+            new List<string>()
+            {
+                "ITEM_HANDOFJUSTICE_DESC"
+            }
+        );
+        public static ConfigurableValue<float> scaledBonusDamageEffectExtraStacks = new(
+            "Item: Hand Of Justice",
+            "Bonus Damage Percent Per Stack",
+            10f,
+            "Percent BASE damage scaling effect gained for extra stacks of this item.",
             new List<string>()
             {
                 "ITEM_HANDOFJUSTICE_DESC"
@@ -67,16 +53,27 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> omnivampEffect = new(
             "Item: Hand Of Justice",
             "Omnivamp",
-            5f,
+            10f,
             "Percent omnivamp scaling effect gained for this item.",
             new List<string>()
             {
                 "ITEM_HANDOFJUSTICE_DESC"
             }
         );
-        private static readonly float percentCooldownReductionBonus = cooldownReductionBonus.Value / 100f;
+        public static ConfigurableValue<float> omnivampEffectExtraStacks = new(
+            "Item: Hand Of Justice",
+            "Omnivamp Per Stack",
+            10f,
+            "Percent omnivamp scaling effect gained for extra stacks of this item.",
+            new List<string>()
+            {
+                "ITEM_HANDOFJUSTICE_DESC"
+            }
+        );
         private static readonly float percentScaledBonusDamageEffect = scaledBonusDamageEffect.Value / 100f;
+        private static readonly float percentScaledBonusDamageEffectExtraStacks = scaledBonusDamageEffectExtraStacks.Value / 100f;
         private static readonly float percentOmnivampEffect = omnivampEffect.Value / 100f;
+        private static readonly float percentOmnivampEffectExtraStacks = omnivampEffectExtraStacks.Value / 100f;
 
         internal static void Init()
         {
@@ -95,10 +92,17 @@ namespace RiskOfTactics
             itemDef.name = "HANDOFJUSTICE";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
+            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+
+            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("HandOfJustice.prefab");
+            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = prefab.transform;
+            modelPanelParameters.cameraPositionTransform = prefab.transform;
+            modelPanelParameters.maxDistance = 10f;
+            modelPanelParameters.minDistance = 5f;
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("HandOfJustice.png");
-            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("HandOfJustice.prefab");
+            itemDef.pickupModelPrefab = prefab;
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
@@ -106,7 +110,8 @@ namespace RiskOfTactics
             {
                 ItemTag.Damage,
                 ItemTag.Healing,
-                ItemTag.Utility
+
+                ItemTag.CanBeTemporary
             };
         }
 
@@ -116,15 +121,13 @@ namespace RiskOfTactics
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCount(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
-                        args.cooldownMultAdd -= percentCooldownReductionBonus;
                         args.critAdd += critChanceBonus.Value;
 
                         int multiplier = sender.healthComponent.combinedHealthFraction >= 0.50f ? 2 : 1;
-                        args.baseDamageAdd += flatBonusDamageEffect.Value * multiplier;
-                        args.damageMultAdd += percentScaledBonusDamageEffect * multiplier;
+                        args.damageTotalMult *= 1 + Utils.GetLinearStacking(percentScaledBonusDamageEffect, percentScaledBonusDamageEffectExtraStacks, count) * multiplier;
                     }
                 }
             };
@@ -136,11 +139,11 @@ namespace RiskOfTactics
 
                 if (vicBody && atkBody && atkBody.inventory)
                 {
-                    int count = atkBody.inventory.GetItemCount(itemDef);
-                    if (count > 0 && vicBody.teamComponent.teamIndex != atkBody.teamComponent.teamIndex)
+                    int count = atkBody.inventory.GetItemCountEffective(itemDef);
+                    if (count > 0 && !Utils.OnSameTeam(vicBody, atkBody) && atkBody.healthComponent)
                     {
                         int multiplier = atkBody.healthComponent.combinedHealthFraction < 0.50f ? 2 : 1;
-                        atkBody.healthComponent.Heal(damageReport.damageInfo.damage * percentOmnivampEffect * multiplier, new ProcChainMask());
+                        atkBody.healthComponent.Heal(damageReport.damageInfo.damage * Utils.GetHyperbolicStacking(percentOmnivampEffect, percentOmnivampEffectExtraStacks, count) * multiplier, new ProcChainMask());
                     }
                 }
             };

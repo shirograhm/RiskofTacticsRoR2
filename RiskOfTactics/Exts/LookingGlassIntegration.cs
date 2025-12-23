@@ -1,8 +1,7 @@
 ﻿using LookingGlass.ItemStatsNameSpace;
-using R2API;
+using RiskOfTactics.Items.Artifacts;
 using RoR2;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace RiskOfTactics
 {
@@ -35,6 +34,19 @@ namespace RiskOfTactics
                         return values;
                     };
                     ItemDefinitions.allItemDefinitions.Add((int)BrambleVest.itemDef.itemIndex, stats);
+                }
+
+                if (GamblersBlade.isEnabled.Value)
+                {
+                    ItemStatsDef stats = new ItemStatsDef();
+                    stats.descriptions.Add("Max Money Threshold: ");
+                    stats.valueTypes.Add(ItemStatsDef.ValueType.Gold);
+                    stats.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Money);
+                    stats.calculateValues = (master, itemCount) =>
+                    {
+                        return [GamblersBlade.moneyEffectCap.Value * Utils.GetDifficultyAsMultiplier()];
+                    };
+                    ItemDefinitions.allItemDefinitions.Add((int)GamblersBlade.itemDef.itemIndex, stats);
                 }
                 //// Ancient Coin
                 //if (AncientCoin.isEnabled.Value)
@@ -97,7 +109,7 @@ namespace RiskOfTactics
                 //    };
                 //    ItemDefinitions.allItemDefinitions.Add((int)BottleCap.itemDef.itemIndex, stats);
                 //}
-                
+
                 //// Brass Knuckles
                 //if (BrassKnuckles.isEnabled.Value)
                 //{
@@ -114,7 +126,7 @@ namespace RiskOfTactics
                 //    ItemDefinitions.allItemDefinitions.Add((int)BrassKnuckles.itemDef.itemIndex, stats);
                 //}
 
-                
+
                 //// Bread
                 //if (BreadLoaf.isEnabled.Value)
                 //{
@@ -419,7 +431,7 @@ namespace RiskOfTactics
                 //        if (master && master.inventory && master.inventory.GetComponent<IronHeart.Statistics>())
                 //        {
                 //            var component = master.inventory.GetComponent<IronHeart.Statistics>();
-                            
+
                 //            values.Add(IronHeart.multiplierPerStack * itemCount);
                 //            values.Add(component.TotalDamageDealt);
                 //        }
@@ -508,7 +520,7 @@ namespace RiskOfTactics
                 //            values.Add(Utils.GetChanceAfterLuck(Utils.GetHyperbolicStacking(Permafrost.freezeChancePercent, itemCount), master.luck));
                 //        else
                 //            values.Add(Utils.GetHyperbolicStacking(Permafrost.freezeChancePercent, itemCount));
-                        
+
                 //        values.Add(Permafrost.frozenDamageMultiplierPercent * itemCount);
                 //        return values;
                 //    };
@@ -588,7 +600,7 @@ namespace RiskOfTactics
                 //        if (master && master.inventory && master.inventory.GetComponent<RustyTrowel.Statistics>())
                 //        {
                 //            var component = master.inventory.GetComponent<RustyTrowel.Statistics>();
-                            
+
                 //            values.Add(RustyTrowel.CalculateCooldownInSec(itemCount));
                 //            values.Add(component.TotalHealingDone);
                 //        }

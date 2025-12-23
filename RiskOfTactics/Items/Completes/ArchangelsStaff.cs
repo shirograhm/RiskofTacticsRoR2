@@ -4,7 +4,6 @@ using R2API.Networking.Interfaces;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -15,7 +14,7 @@ namespace RiskOfTactics
         public static ItemDef itemDef;
         public static BuffDef foresightBuff;
 
-        // Gain flat damage and cooldown reduction. Upon activation of the teleporter, gain 1 damage every 10 seconds.
+        // During the teleporter event, periodically gain BASE damage.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Archangels Staff",
             "Enabled",
@@ -26,30 +25,10 @@ namespace RiskOfTactics
                 "ITEM_ARCHANGELSSTAFF_DESC"
             }
         );
-        public static ConfigurableValue<float> flatDamageBonus = new(
-            "Item: Archangels Staff",
-            "Flat Damage",
-            8f,
-            "Flat damage bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_ARCHANGELSSTAFF_DESC"
-            }
-        );
-        public static ConfigurableValue<float> cooldownReductionBonus = new(
-            "Item: Archangels Staff",
-            "Cooldown Reduction",
-            8f,
-            "Cooldown reduction gained when holding this item.",
-            new List<string>()
-            {
-                "ITEM_ARCHANGELSSTAFF_DESC"
-            }
-        );
         public static ConfigurableValue<float> flatDamagePerTick = new(
             "Item: Archangels Staff",
             "Flat Damage Per Tick",
-            1f,
+            0.5f,
             "Flat damage gained per item proc.",
             new List<string>()
             {
@@ -59,14 +38,13 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> tickDuration = new(
             "Item: Archangels Staff",
             "Tick Duration",
-            10f,
+            5f,
             "Number of seconds between item procs.",
             new List<string>()
             {
                 "ITEM_ARCHANGELSSTAFF_DESC"
             }
         );
-        private static readonly float percentCooldownReductionBonus = cooldownReductionBonus.Value / 100f;
 
         public class Statistics : MonoBehaviour
         {
@@ -154,14 +132,23 @@ namespace RiskOfTactics
 
             Utils.SetItemTier(itemDef, ItemTier.Tier3);
 
+            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("ArchangelsStaff.prefab");
+            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = prefab.transform;
+            modelPanelParameters.cameraPositionTransform = prefab.transform;
+            modelPanelParameters.maxDistance = 10f;
+            modelPanelParameters.minDistance = 5f;
+
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("ArchangelsStaff.png");
-            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("ArchangelsStaff.prefab");
+            itemDef.pickupModelPrefab = prefab;
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
             itemDef.tags = new ItemTag[]
             {
-                ItemTag.Damage
+                ItemTag.Damage,
+
+                ItemTag.CanBeTemporary
             };
         }
 
@@ -176,13 +163,11 @@ namespace RiskOfTactics
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCount(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
                         int buffCount = sender.GetBuffCount(foresightBuff);
 
-                        args.cooldownMultAdd -= percentCooldownReductionBonus;
-                        args.baseDamageAdd += flatDamageBonus.Value;
                         args.baseDamageAdd += buffCount * flatDamagePerTick.Value;
                     }
                 }
@@ -193,7 +178,7 @@ namespace RiskOfTactics
                 foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
                 {
                     CharacterMaster master = user.masterController.master ?? user.master;
-                    if (master && master.inventory && master.inventory.GetItemCount(itemDef) > 0)
+                    if (master && master.inventory && master.inventory.GetItemCountEffective(itemDef) > 0)
                     {
                         Statistics component = master.inventory.GetComponent<Statistics>();
                         if (component)
@@ -212,7 +197,7 @@ namespace RiskOfTactics
                 {
                     if (self && self.inventory)
                     {
-                        int itemCount = self.inventory.GetItemCount(itemDef);
+                        int itemCount = self.inventory.GetItemCountEffective(itemDef);
 
                         if (itemCount > 0 && hzc.isActiveAndEnabled)
                         {

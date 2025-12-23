@@ -111,7 +111,7 @@ namespace RiskOfTactics
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCount(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
                         args.armorAdd += armorBonus.Value;
@@ -127,7 +127,7 @@ namespace RiskOfTactics
                 CharacterBody victimBody = victimInfo.body;
                 if (attackerBody && victimBody && victimBody.inventory)
                 {
-                    int count = victimBody.inventory.GetItemCount(itemDef);
+                    int count = victimBody.inventory.GetItemCountEffective(itemDef);
                     if (count > 0 && victimBody.master)
                     {
                         float durabilityPercent = victimBody.healthComponent.combinedHealthFraction >= 0.50f ? percentDurabilityBonusAboveHalf : percentDurabilityBonus;

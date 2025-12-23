@@ -107,7 +107,7 @@ namespace RiskOfTactics
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCount(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
                         args.baseDamageAdd += flatDamageBonus.Value;
@@ -122,7 +122,7 @@ namespace RiskOfTactics
                 CharacterBody vicBody = damageReport.victimBody;
                 CharacterBody atkBody = damageReport.attackerBody;
 
-                if (atkBody && atkBody.inventory && atkBody.inventory.GetItemCount(itemDef) > 0)
+                if (atkBody && atkBody.inventory && atkBody.inventory.GetItemCountEffective(itemDef) > 0)
                 {
                     foreach (GenericSkill skill in atkBody.skillLocator.allSkills)
                     {

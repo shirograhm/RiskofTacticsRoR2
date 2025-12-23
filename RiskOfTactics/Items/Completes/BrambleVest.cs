@@ -2,9 +2,7 @@
 using R2API.Networking;
 using R2API.Networking.Interfaces;
 using RoR2;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -14,7 +12,7 @@ namespace RiskOfTactics
     {
         public static ItemDef itemDef;
 
-        // +65 armor - Gain 7% max HP. Reduce all incoming damage by 10, and reflect 80% of the damage you take.
+        // Become tankier and reflect a portion of the damage you take.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Bramble Vest",
             "Enabled",
@@ -25,19 +23,9 @@ namespace RiskOfTactics
                 "ITEM_BRAMBLEVEST_DESC"
             }
         );
-        public static ConfigurableValue<float> armorBonus = new(
-            "Item: Bramble Vest",
-            "Armor",
-            30f,
-            "Armor bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_BRAMBLEVEST_DESC"
-            }
-        );
         public static ConfigurableValue<float> healthBonus = new(
             "Item: Bramble Vest",
-            "Percent Health",
+            "Health",
             7f,
             "Percent health bonus when holding this item.",
             new List<string>()
@@ -48,7 +36,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<int> flatDamageReduction = new(
             "Item: Bramble Vest",
             "Damage Reduction",
-            10,
+            12,
             "Flat damage reduction bonus when holding this item.",
             new List<string>()
             {
@@ -57,9 +45,19 @@ namespace RiskOfTactics
         );
         public static ConfigurableValue<float> reflectDamage = new(
             "Item: Bramble Vest",
-            "Reflect Damage",
+            "Reflect Percent",
             80f,
             "Percent damage reflected back to the attacker when holding this item.",
+            new List<string>()
+            {
+                "ITEM_BRAMBLEVEST_DESC"
+            }
+        );
+        public static ConfigurableValue<float> reflectProcCoefficient = new(
+            "Item: Bramble Vest",
+            "Reflect Proc Coefficient",
+            0.5f,
+            "Proc coefficient for the reflected damage hit when holding this item.",
             new List<string>()
             {
                 "ITEM_BRAMBLEVEST_DESC"
@@ -137,6 +135,8 @@ namespace RiskOfTactics
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
 
+            NetworkingAPI.RegisterMessageType<Statistics.Sync>();
+
             Hooks();
         }
 
@@ -147,31 +147,44 @@ namespace RiskOfTactics
             itemDef.name = "BRAMBLEVEST";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
+            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+
+            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("BrambleVest.prefab");
+            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = prefab.transform;
+            modelPanelParameters.cameraPositionTransform = prefab.transform;
+            modelPanelParameters.maxDistance = 10f;
+            modelPanelParameters.minDistance = 5f;
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("BrambleVest.png");
-            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("BrambleVest.prefab");
+            itemDef.pickupModelPrefab = prefab;
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
             itemDef.tags = new ItemTag[]
             {
                 ItemTag.Damage,
-                ItemTag.Utility
+                ItemTag.Utility,
+
+                ItemTag.CanBeTemporary
             };
         }
 
         public static void Hooks()
         {
+            CharacterMaster.onStartGlobal += (obj) =>
+            {
+                obj.inventory?.gameObject.AddComponent<Statistics>();
+            };
+
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCount(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
-                        args.armorAdd += armorBonus.Value;
-                        args.healthMultAdd += percentHealthBonus;
+                        args.healthTotalMult *= 1 + percentHealthBonus;
                     }
                 }
             };
@@ -181,7 +194,7 @@ namespace RiskOfTactics
                 CharacterBody victimBody = victimInfo.body;
                 if (victimBody && victimBody.inventory)
                 {
-                    int count = victimBody.inventory.GetItemCount(itemDef);
+                    int count = victimBody.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
                         // Cannot reduce damage below 1
@@ -195,22 +208,23 @@ namespace RiskOfTactics
                 CharacterBody vicBody = damageReport.victimBody;
                 CharacterBody atkBody = damageReport.attackerBody;
 
-                if (vicBody && atkBody && vicBody.inventory)
+                if (vicBody && vicBody.inventory && atkBody && atkBody.healthComponent)
                 {
-                    if (vicBody.inventory.GetItemCount(itemDef) > 0 && vicBody.teamComponent.teamIndex != atkBody.teamComponent.teamIndex)
+                    int count = vicBody.inventory.GetItemCountEffective(itemDef);
+                    if (count > 0 && !Utils.OnSameTeam(vicBody, atkBody))
                     {
                         DamageInfo brambleProc = new DamageInfo
                         {
-                            damage = percentReflectDamage * damageReport.damageInfo.damage,
+                            damage = damageReport.damageInfo.damage * Utils.GetLinearStacking(percentReflectDamage, count),
                             damageColorIndex = DamageColorIndex.Poison,
                             damageType = DamageType.Generic,
                             attacker = vicBody.gameObject,
                             crit = vicBody.RollCrit(),
                             inflictor = vicBody.gameObject,
-                            procCoefficient = 0.0f,
+                            procCoefficient = reflectProcCoefficient,
                             procChainMask = new ProcChainMask()
                         };
-                        vicBody.healthComponent.TakeDamage(brambleProc);
+                        atkBody.healthComponent.TakeDamage(brambleProc);
                         // Store damage numbers for user flavor
                         Statistics component = vicBody.inventory.GetComponent<Statistics>();
                         if (component) component.DamageReflected += brambleProc.damage;

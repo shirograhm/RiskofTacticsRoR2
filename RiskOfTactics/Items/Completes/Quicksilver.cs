@@ -196,7 +196,7 @@ namespace RiskOfTactics
                     if (buffCount > 0)
                         args.attackSpeedMultAdd += buffCount * percentAttackSpeedPerBuff;
 
-                    int count = sender.inventory.GetItemCount(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
                         args.damageMultAdd += percentDamageBonus;
@@ -211,7 +211,7 @@ namespace RiskOfTactics
                 foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
                 {
                     CharacterMaster master = user.masterController.master ?? user.master;
-                    if (master && master.inventory && master.inventory.GetItemCount(itemDef) > 0)
+                    if (master && master.inventory && master.inventory.GetItemCountEffective(itemDef) > 0)
                     {
                         Statistics component = master.inventory.GetComponent<Statistics>();
                         if (component)
@@ -230,7 +230,7 @@ namespace RiskOfTactics
                 {
                     if (self && self.inventory)
                     {
-                        int itemCount = self.inventory.GetItemCount(itemDef);
+                        int itemCount = self.inventory.GetItemCountEffective(itemDef);
 
                         if (itemCount > 0 && hzc.isActiveAndEnabled)
                         {

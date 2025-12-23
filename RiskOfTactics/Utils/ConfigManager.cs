@@ -22,6 +22,24 @@ namespace RiskOfTactics
                 false,
                 "Set to true to enable the custom config values below."
             );
+            public static ConfigOptions.ConfigurableValue<string> meleeCharactersList = ConfigOptions.ConfigurableValue.CreateString(
+                categoryGUID,
+                categoryName,
+                config,
+                "! Important !",
+                "Melee Characters",
+                "MercBody,LoaderBody,CrocoBody,FalseSonBody",
+                "List of melee characters. Add modded charater bodies here to enable selective item effects (e.g. Adaptive Helm)."
+            );
+            public static ConfigOptions.ConfigurableValue<string> rangedCharactersList = ConfigOptions.ConfigurableValue.CreateString(
+                categoryGUID,
+                categoryName,
+                config,
+                "! Important !",
+                "Ranged Characters",
+                "CommandoBody,HuntressBody,Bandit2Body,ToolbotBody,EngiBody,EngiTurretBody,MageBody,TreebotBody,CaptainBody,RailGunnerBody,VoidSurvivorBody,SeekerBody,ChefBody,ScavBody",
+                "List of ranged characters. Add modded charater bodies here to enable selective item effects (e.g. Adaptive Helm)."
+            );
         }
     }
 
