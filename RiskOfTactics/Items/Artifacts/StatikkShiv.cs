@@ -203,7 +203,6 @@ namespace RiskOfTactics.Items.Artifacts
                         float damageMultiplier = 1 + Utils.GetLinearStacking(percentEffectOnHitDamage, percentEffectOnHitDamageExtraStacks, count);
                         damageInfo.damage *= damageMultiplier;
                         damageInfo.damageColorIndex = DamageColorIndex.WeakPoint;
-                        damageInfo.AddModdedDamageType(Sunder.ApplySunder);
 
                         AddStatikkChainDamage(atkBody, vicBody, damageInfo, damageMultiplier);
 
