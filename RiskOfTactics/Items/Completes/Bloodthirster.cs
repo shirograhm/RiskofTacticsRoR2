@@ -3,7 +3,7 @@ using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Items.Completes
 {
     class Bloodthirster
     {
@@ -85,7 +85,7 @@ namespace RiskOfTactics
             itemDef.name = "BLOODTHIRSTER";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
+            Utils.SetItemTier(itemDef, ItemTier.Tier2);
 
             GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("Bloodthirster.prefab");
             ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();

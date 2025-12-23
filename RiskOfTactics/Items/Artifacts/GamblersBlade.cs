@@ -24,7 +24,7 @@ namespace RiskOfTactics.Items.Artifacts
         public static ConfigurableValue<float> attackSpeedEffectCap = new(
             "Item: Gamblers Blade",
             "Attack Speed Effect Cap",
-            30f,
+            75f,
             "Amount of attack speed granted at money cap.",
             new List<string>()
             {
@@ -34,7 +34,7 @@ namespace RiskOfTactics.Items.Artifacts
         public static ConfigurableValue<float> attackSpeedEffectCapExtraStacks = new(
             "Item: Gamblers Blade",
             "Attack Speed Effect Cap Extra Stacks",
-            30f,
+            75f,
             "Amount of attack speed granted at money cap for extra stacks.",
             new List<string>()
             {
@@ -64,7 +64,7 @@ namespace RiskOfTactics.Items.Artifacts
         public static ConfigurableValue<int> moneyGainOnDrop = new(
             "Item: Gamblers Blade",
             "Money Gain",
-            15,
+            30,
             "Money gained on drop.",
             new List<string>()
             {

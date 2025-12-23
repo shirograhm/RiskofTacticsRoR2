@@ -4,11 +4,10 @@ using R2API.Networking.Interfaces;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Items.Completes
 {
     class Quicksilver
     {
@@ -16,7 +15,7 @@ namespace RiskOfTactics
         public static BuffDef flowBuff;
         public static BuffDef cleanseBuff;
 
-        // Gain scaling damage, crit chance and shielding. When the teleporter is activated, gain immunity to crowd control for 30 seconds. During this time, gain 0.5% attack speed every second.
+        // When the teleporter is activated, gain immunity to crowd control for a duration. During this time, gain attack speed every second.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Quicksilver",
             "Enabled",
@@ -27,39 +26,19 @@ namespace RiskOfTactics
                 "ITEM_QUICKSILVER_DESC"
             }
         );
-        public static ConfigurableValue<float> damageBonus = new(
-            "Item: Quicksilver",
-            "Percent Damage",
-            10f,
-            "Percent damage bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_QUICKSILVER_DESC"
-            }
-        );
-        public static ConfigurableValue<float> critChanceBonus = new(
-            "Item: Quicksilver",
-            "Crit Chance",
-            15f,
-            "Crit chance gained when holding this item.",
-            new List<string>()
-            {
-                "ITEM_QUICKSILVER_DESC"
-            }
-        );
-        public static ConfigurableValue<float> shieldBonus = new(
-            "Item: Quicksilver",
-            "Percent Shield",
-            15f,
-            "Percent max health shield gained when holding this item.",
-            new List<string>()
-            {
-                "ITEM_QUICKSILVER_DESC"
-            }
-        );
         public static ConfigurableValue<float> ccImmunityDuration = new(
             "Item: Quicksilver",
             "CC Immunity Duration",
+            30f,
+            "Number of seconds immune to crowd control once the teleporter event starts.",
+            new List<string>()
+            {
+                "ITEM_QUICKSILVER_DESC"
+            }
+        );
+        public static ConfigurableValue<float> ccImmunityDurationExtraStacks = new(
+            "Item: Quicksilver",
+            "CC Immunity Duration Extra Stacks",
             30f,
             "Number of seconds immune to crowd control once the teleporter event starts.",
             new List<string>()
@@ -77,8 +56,6 @@ namespace RiskOfTactics
                 "ITEM_QUICKSILVER_DESC"
             }
         );
-        private static readonly float percentDamageBonus = damageBonus.Value / 100f;
-        private static readonly float percentShieldBonus = shieldBonus.Value / 100f;
         private static readonly float percentAttackSpeedPerBuff = attackSpeedPerBuff.Value / 100f;
 
         public class Statistics : MonoBehaviour
@@ -167,17 +144,26 @@ namespace RiskOfTactics
             itemDef.name = "QUICKSILVER";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
+            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+
+            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("Quicksilver.prefab");
+            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = prefab.transform;
+            modelPanelParameters.cameraPositionTransform = prefab.transform;
+            modelPanelParameters.maxDistance = 10f;
+            modelPanelParameters.minDistance = 5f;
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("Quicksilver.png");
-            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("Quicksilver.prefab");
+            itemDef.pickupModelPrefab = prefab;
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
             itemDef.tags = new ItemTag[]
             {
                 ItemTag.Damage,
-                ItemTag.Utility
+                ItemTag.Utility,
+
+                ItemTag.CanBeTemporary
             };
         }
 
@@ -195,14 +181,6 @@ namespace RiskOfTactics
                     int buffCount = sender.GetBuffCount(flowBuff);
                     if (buffCount > 0)
                         args.attackSpeedMultAdd += buffCount * percentAttackSpeedPerBuff;
-
-                    int count = sender.inventory.GetItemCountEffective(itemDef);
-                    if (count > 0)
-                    {
-                        args.damageMultAdd += percentDamageBonus;
-                        args.critAdd += critChanceBonus.Value;
-                        args.baseShieldAdd += sender.healthComponent.fullHealth * percentShieldBonus;
-                    }
                 }
             };
 
@@ -235,7 +213,7 @@ namespace RiskOfTactics
                         if (itemCount > 0 && hzc.isActiveAndEnabled)
                         {
                             if (self.GetBuffCount(flowBuff) == 0 && self.GetBuffCount(cleanseBuff) == 0)
-                                self.AddTimedBuff(cleanseBuff, ccImmunityDuration);
+                                self.AddTimedBuff(cleanseBuff, Utils.GetLinearStacking(ccImmunityDuration.Value, ccImmunityDurationExtraStacks.Value, itemCount));
 
                             if (self.GetBuffCount(cleanseBuff) > 0)
                             {

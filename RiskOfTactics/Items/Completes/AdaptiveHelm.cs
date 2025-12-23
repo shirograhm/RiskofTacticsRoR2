@@ -3,7 +3,7 @@ using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Items.Completes
 {
     class AdaptiveHelm
     {

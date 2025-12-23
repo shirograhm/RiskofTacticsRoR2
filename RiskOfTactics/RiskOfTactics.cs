@@ -2,6 +2,7 @@ using BepInEx;
 using R2API;
 using R2API.Utils;
 using RiskOfTactics.Items.Artifacts;
+using RiskOfTactics.Items.Completes;
 using RoR2;
 using RoR2.ExpansionManagement;
 
@@ -66,20 +67,14 @@ namespace RiskOfTactics
                 GuinsoosRageblade.Init();
             if (HandOfJustice.isEnabled.Value)
                 HandOfJustice.Init();
-            //if (JeweledGauntlet.isEnabled.Value)
-            //    JeweledGauntlet.Init();
-            //if (Quicksilver.isEnabled.Value)
-            //    Quicksilver.Init();
+            if (Quicksilver.isEnabled.Value)
+                Quicksilver.Init();
             //if (SpearOfShojin.isEnabled.Value)
             //    SpearOfShojin.Init();
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
-            //if (SteadfastHeart.isEnabled.Value)
-            //    SteadfastHeart.Init();
             //if (SunfireCape.isEnabled.Value)
             //    SunfireCape.Init();
-            //if (WarmogsArmor.isEnabled.Value)
-            //    WarmogsArmor.Init();
 
             // Radiants
 

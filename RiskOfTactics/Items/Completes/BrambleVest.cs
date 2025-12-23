@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Items.Completes
 {
     class BrambleVest
     {

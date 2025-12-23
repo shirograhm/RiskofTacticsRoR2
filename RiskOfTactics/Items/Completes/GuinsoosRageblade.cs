@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Items.Completes
 {
     class GuinsoosRageblade
     {
@@ -119,7 +119,7 @@ namespace RiskOfTactics
             itemDef.name = "GUINSOOSRAGEBLADE";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
+            Utils.SetItemTier(itemDef, ItemTier.Tier2);
 
             GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("GuinsoosRageblade.prefab");
             ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();

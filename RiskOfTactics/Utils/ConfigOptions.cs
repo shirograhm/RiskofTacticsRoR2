@@ -1,4 +1,5 @@
 using BepInEx.Configuration;
+using RiskOfTactics.Buffs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

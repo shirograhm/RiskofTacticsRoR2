@@ -1,5 +1,6 @@
 ﻿using LookingGlass.ItemStatsNameSpace;
 using RiskOfTactics.Items.Artifacts;
+using RiskOfTactics.Items.Completes;
 using RoR2;
 using System.Collections.Generic;
 

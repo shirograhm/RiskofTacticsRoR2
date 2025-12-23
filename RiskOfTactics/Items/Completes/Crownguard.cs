@@ -3,7 +3,7 @@ using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Items.Completes
 {
     class Crownguard
     {
@@ -97,7 +97,7 @@ namespace RiskOfTactics
             itemDef.name = "CROWNGUARD";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
+            Utils.SetItemTier(itemDef, ItemTier.Tier2);
 
             GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("Crownguard.prefab");
             ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();

@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Items.Completes
 {
     class DragonsClaw
     {
         public static ItemDef itemDef;
+
+        public static GameObject healTriggerEffect;
 
         // Gain health. Periodically heal for a portion of your max HP.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -149,7 +151,9 @@ namespace RiskOfTactics
             itemDef.name = "DRAGONSCLAW";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
+            Utils.SetItemTier(itemDef, ItemTier.Tier2);
+
+            healTriggerEffect = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/LevelUpEffect");
 
             GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("DragonsClaw.prefab");
             ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
@@ -222,6 +226,13 @@ namespace RiskOfTactics
                         {
                             self.healthComponent.Heal(self.healthComponent.fullHealth * percentHealingPerTick, new ProcChainMask());
                             component.LastTick = Environment.TickCount;
+
+                            EffectData effectData = new()
+                            {
+                                origin = self.transform.position,
+                                color = Color.blue
+                            };
+                            EffectManager.SpawnEffect(healTriggerEffect, effectData, transmit: true);
                         }
                     }
                 }

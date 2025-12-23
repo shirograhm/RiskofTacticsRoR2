@@ -3,7 +3,7 @@ using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Items.Completes
 {
     class HandOfJustice
     {
@@ -106,13 +106,13 @@ namespace RiskOfTactics
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
-            itemDef.tags = new ItemTag[]
-            {
+            itemDef.tags =
+            [
                 ItemTag.Damage,
                 ItemTag.Healing,
 
                 ItemTag.CanBeTemporary
-            };
+            ];
         }
 
         public static void Hooks()
@@ -143,7 +143,9 @@ namespace RiskOfTactics
                     if (count > 0 && !Utils.OnSameTeam(vicBody, atkBody) && atkBody.healthComponent)
                     {
                         int multiplier = atkBody.healthComponent.combinedHealthFraction < 0.50f ? 2 : 1;
-                        atkBody.healthComponent.Heal(damageReport.damageInfo.damage * Utils.GetHyperbolicStacking(percentOmnivampEffect, percentOmnivampEffectExtraStacks, count) * multiplier, new ProcChainMask());
+
+                        float healAmount = damageReport.damageInfo.damage * Utils.GetHyperbolicStacking(percentOmnivampEffect, percentOmnivampEffectExtraStacks, count) * multiplier;
+                        atkBody.healthComponent.Heal(healAmount, new ProcChainMask());
                     }
                 }
             };

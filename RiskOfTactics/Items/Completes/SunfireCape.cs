@@ -1,19 +1,20 @@
 using R2API;
 using R2API.Networking;
 using R2API.Networking.Interfaces;
+using RiskOfTactics.Buffs;
 using RoR2;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Items.Completes
 {
     class SunfireCape
     {
         public static ItemDef itemDef;
 
-        // Gain max HP. Periodically apply Burn and Wound to nearby enemies.
+        // Gain max HP. Periodically apply Wound and burn nearby enemies.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Sunfire Cape",
             "Enabled",
@@ -47,7 +48,7 @@ namespace RiskOfTactics
         public static ConfigurableValue<float> debuffRadius = new(
             "Item: Sunfire Cape",
             "Debuff Radius",
-            6f,
+            12f,
             "Radius of the debuff application zone (meters).",
             new List<string>()
             {
@@ -137,7 +138,7 @@ namespace RiskOfTactics
             itemDef.name = "SUNFIRECAPE";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
+            Utils.SetItemTier(itemDef, ItemTier.Tier2);
 
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("SunfireCape.png");
             itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("SunfireCape.prefab");
@@ -147,7 +148,9 @@ namespace RiskOfTactics
             itemDef.tags = new ItemTag[]
             {
                 ItemTag.Damage,
-                ItemTag.Utility
+                ItemTag.Utility,
+
+                ItemTag.CanBeTemporary
             };
         }
 
@@ -160,7 +163,7 @@ namespace RiskOfTactics
                     int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
-                        args.healthMultAdd += percentHealthBonus;
+                        args.healthTotalMult *= 1 + percentHealthBonus;
                     }
                 }
             };
@@ -169,6 +172,8 @@ namespace RiskOfTactics
             {
                 if (self && self.inventory && self.inventory.GetItemCountEffective(itemDef) > 0)
                 {
+                    int ignitionTankCount = self.inventory.GetItemCountEffective(DLC1Content.Items.StrengthenBurn);
+
                     Statistics component = self.inventory.GetComponent<Statistics>();
                     // Check time elapsed 
                     if (component && Environment.TickCount - component.LastTick > debuffTickDuration.Value * 1000)
@@ -187,8 +192,23 @@ namespace RiskOfTactics
                             HealthComponent hc = h.healthComponent;
                             if (hc && hc.body && !Utils.OnSameTeam(hc.body, self))
                             {
-                                hc.body.AddBuff(Burn.buffDef);
-                                hc.body.AddBuff(Wound.buffDef);
+                                InflictDotInfo dotInfo = new InflictDotInfo()
+                                {
+                                    attackerObject = self.gameObject,
+                                    maxStacksFromAttacker = 1,
+                                    totalDamage = hc.fullCombinedHealth * 0.15f
+                                };
+                                if (ignitionTankCount > 0)
+                                {
+                                    dotInfo.dotIndex = DotController.DotIndex.StrongerBurn;
+                                    dotInfo.damageMultiplier = 3f;
+                                }
+                                else
+                                {
+                                    dotInfo.dotIndex = DotController.DotIndex.Burn;
+                                    dotInfo.damageMultiplier = 1f;
+                                }
+                                hc.body.AddTimedBuff(Wound.buffDef, Wound.woundDuration);
                             }
                         }
                         component.LastTick = Environment.TickCount;

@@ -1,4 +1,5 @@
 ﻿using RiskOfTactics.Items.Artifacts;
+using RiskOfTactics.Items.Completes;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;

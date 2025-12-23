@@ -1,11 +1,9 @@
 ﻿using R2API;
 using RoR2;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Buffs
 {
     class Wound
     {
@@ -48,11 +46,14 @@ namespace RiskOfTactics
         {
             On.RoR2.HealthComponent.Heal += (orig, self, amount, procChainMask, nonRegen) =>
             {
-                CharacterBody body = self.GetComponentInParent<CharacterBody>();
-                if (body && body.GetBuffCount(buffDef) > 0)
+                if (self)
                 {
-                    // Cut both regen and heals
-                    amount *= percentHealingReduction;
+                    CharacterBody body = self.GetComponentInParent<CharacterBody>();
+                    if (body && body.GetBuffCount(buffDef) > 0)
+                    {
+                        // Cut both regen and heals
+                        amount *= 1 - percentHealingReduction;
+                    }
                 }
                 return orig(self, amount, procChainMask, nonRegen);
             };

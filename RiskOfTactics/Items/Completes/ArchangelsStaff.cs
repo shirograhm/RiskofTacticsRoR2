@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Items.Completes
 {
     class ArchangelsStaff
     {
@@ -130,7 +130,7 @@ namespace RiskOfTactics
             itemDef.name = "ARCHANGELSSTAFF";
             itemDef.AutoPopulateTokens();
 
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
+            Utils.SetItemTier(itemDef, ItemTier.Tier2);
 
             GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("ArchangelsStaff.prefab");
             ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
