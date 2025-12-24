@@ -153,7 +153,7 @@ namespace RiskOfTactics.Items.Completes
 
             Utils.SetItemTier(itemDef, ItemTier.Tier2);
 
-            healTriggerEffect = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/LevelUpEffect");
+            healTriggerEffect = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/MedkitHealEffect");
 
             GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("DragonsClaw.prefab");
             ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
