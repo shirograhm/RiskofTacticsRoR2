@@ -26,9 +26,6 @@ namespace RiskOfTactics.Helpers
                     SetItemTier(itemDef, ItemTier.Tier2);
                     break;
                 case TacticTier.Radiant:
-                    itemDef.pickupToken = itemDef.pickupToken.Replace("RADIANT_", "");
-                    itemDef.descriptionToken = itemDef.descriptionToken.Replace("RADIANT_", "");
-                    itemDef.loreToken = itemDef.loreToken.Replace("RADIANT_", "");
                     SetItemTier(itemDef, ItemTier.Boss);
                     break;
                 case TacticTier.Artifact:

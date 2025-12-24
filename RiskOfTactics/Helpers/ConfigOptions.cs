@@ -32,15 +32,6 @@ namespace RiskOfTactics.Helpers
             string result = orig(self, token);
 
             bool isRadiant = token.Contains("RADIANT_");
-            if (isRadiant)
-            {
-                result = orig(self, token.Replace("RADIANT_", ""));
-
-                if (token.Contains("_NAME"))
-                {
-                    result += " (Radiant)";
-                }
-            }
 
             foreach (ConfigurableValue configurableValue in ConfigurableValue.instancesList.FindAll(x => x.stringsToAffect.Contains(token.Replace("RADIANT_", ""))))
             {
