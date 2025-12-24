@@ -89,7 +89,7 @@ namespace RiskOfTactics.Items.Completes
         {
             itemDef = ScriptableObject.CreateInstance<ItemDef>();
 
-            itemDef.name = "HANDOFJUSTICE";
+            itemDef.name = "ROT_HANDOFJUSTICE";
             itemDef.AutoPopulateTokens();
 
             Utils.SetItemTier(itemDef, ItemTier.Tier2);

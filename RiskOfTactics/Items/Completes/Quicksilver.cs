@@ -141,7 +141,7 @@ namespace RiskOfTactics.Items.Completes
         {
             itemDef = ScriptableObject.CreateInstance<ItemDef>();
 
-            itemDef.name = "QUICKSILVER";
+            itemDef.name = "ROT_QUICKSILVER";
             itemDef.AutoPopulateTokens();
 
             Utils.SetItemTier(itemDef, ItemTier.Tier2);

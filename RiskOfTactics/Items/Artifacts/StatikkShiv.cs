@@ -106,7 +106,7 @@ namespace RiskOfTactics.Items.Artifacts
         {
             itemDef = ScriptableObject.CreateInstance<ItemDef>();
 
-            itemDef.name = "STATIKKSHIV";
+            itemDef.name = "ROT_STATIKKSHIV";
             itemDef.AutoPopulateTokens();
 
             Utils.SetItemTier(itemDef, ItemTier.Tier3);

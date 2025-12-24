@@ -87,7 +87,7 @@ namespace RiskOfTactics.Items.Artifacts
         {
             itemDef = ScriptableObject.CreateInstance<ItemDef>();
 
-            itemDef.name = "GAMBLERSBLADE";
+            itemDef.name = "ROT_GAMBLERSBLADE";
             itemDef.AutoPopulateTokens();
 
             Utils.SetItemTier(itemDef, ItemTier.Tier3);
