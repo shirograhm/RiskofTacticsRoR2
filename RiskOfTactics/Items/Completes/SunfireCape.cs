@@ -35,11 +35,31 @@ namespace RiskOfTactics.Items.Completes
                 "ITEM_SUNFIRECAPE_DESC"
             }
         );
+        public static ConfigurableValue<float> healthBonusExtraStacks = new(
+            "Item: Sunfire Cape",
+            "Percent Health Extra Stacks",
+            5f,
+            "Percent health gained when holding extra stacks of this item.",
+            new List<string>()
+            {
+                "ITEM_SUNFIRECAPE_DESC"
+            }
+        );
         public static ConfigurableValue<float> debuffTickDuration = new(
             "Item: Sunfire Cape",
             "Debuff Tick",
             10f,
             "Seconds between Burn and Wound reapplication.",
+            new List<string>()
+            {
+                "ITEM_SUNFIRECAPE_DESC"
+            }
+        );
+        public static ConfigurableValue<float> maxHealthBurn = new(
+            "Item: Sunfire Cape",
+            "Burn Percent",
+            15f,
+            "Total burn damage as a percentage of max HP.",
             new List<string>()
             {
                 "ITEM_SUNFIRECAPE_DESC"
@@ -56,6 +76,8 @@ namespace RiskOfTactics.Items.Completes
             }
         );
         private static readonly float percentHealthBonus = healthBonus.Value / 100f;
+        private static readonly float percentHealthBonusExtraStacks = healthBonusExtraStacks.Value / 100f;
+        private static readonly float percentMaxHealthBurn = maxHealthBurn.Value / 100f;
 
         public class Statistics : MonoBehaviour
         {
@@ -140,8 +162,15 @@ namespace RiskOfTactics.Items.Completes
 
             Utils.SetItemTier(itemDef, ItemTier.Tier2);
 
+            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("SunfireCape.prefab");
+            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = prefab.transform;
+            modelPanelParameters.cameraPositionTransform = prefab.transform;
+            modelPanelParameters.maxDistance = 10f;
+            modelPanelParameters.minDistance = 5f;
+
             itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("SunfireCape.png");
-            itemDef.pickupModelPrefab = AssetHandler.bundle.LoadAsset<GameObject>("SunfireCape.prefab");
+            itemDef.pickupModelPrefab = prefab;
             itemDef.canRemove = true;
             itemDef.hidden = false;
 
@@ -163,7 +192,7 @@ namespace RiskOfTactics.Items.Completes
                     int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
-                        args.healthTotalMult *= 1 + percentHealthBonus;
+                        args.healthTotalMult *= 1 + Utils.GetLinearStacking(percentHealthBonus, percentHealthBonusExtraStacks, count);
                     }
                 }
             };
@@ -196,7 +225,8 @@ namespace RiskOfTactics.Items.Completes
                                 {
                                     attackerObject = self.gameObject,
                                     maxStacksFromAttacker = 1,
-                                    totalDamage = hc.fullCombinedHealth * 0.15f
+                                    totalDamage = hc.fullCombinedHealth * percentMaxHealthBurn,
+                                    victimObject = hc.body.gameObject
                                 };
                                 if (ignitionTankCount > 0)
                                 {
