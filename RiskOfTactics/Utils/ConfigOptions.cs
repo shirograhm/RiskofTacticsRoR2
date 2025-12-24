@@ -36,7 +36,6 @@ namespace RiskOfTactics
                 result = result.Replace("{Sunder Reduction}", Sunder.armorReduction.Value.ToString());
                 result = result.Replace("{Wound Reduction}", Wound.healingReduction.Value.ToString());
                 result = result.Replace("{Wound Duration}", Wound.woundDuration.Value.ToString());
-                result = result.Replace("{Burn Per Second}", Burn.burnPerSecond.Value.ToString());
             }
             return result;
         }
