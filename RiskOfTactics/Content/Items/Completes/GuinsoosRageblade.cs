@@ -1,37 +1,34 @@
 ﻿using R2API;
 using R2API.Networking;
 using R2API.Networking.Interfaces;
+using RiskOfTactics.Helpers;
 using RoR2;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics.Items.Completes
+namespace RiskOfTactics.Content.Items.Completes
 {
     class GuinsoosRageblade
     {
         public static ItemDef itemDef;
         public static BuffDef wrathBuff;
 
+        public static ItemDef radiantDef;
+
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Guinsoos Rageblade",
             "Enabled",
             true,
             "Whether or not the item is enabled.",
-            new List<string>()
-            {
-                "ITEM_ROT_GUINSOOSRAGEBLADE_DESC"
-            }
+            ["ITEM_ROT_GUINSOOSRAGEBLADE_DESC"]
         );
         public static ConfigurableValue<float> attackSpeedOnHit = new(
             "Item: Guinsoos Rageblade",
             "Attack Speed On-Hit",
             3f,
             "Percent attack speed gained on-hit.",
-            new List<string>()
-            {
-                "ITEM_ROT_GUINSOOSRAGEBLADE_DESC"
-            }
+            ["ITEM_ROT_GUINSOOSRAGEBLADE_DESC"],
+            true
         );
         public static readonly float percentAttackSpeedOnHit = attackSpeedOnHit.Value / 100f;
 
@@ -99,51 +96,24 @@ namespace RiskOfTactics.Items.Completes
 
         internal static void Init()
         {
-            GenerateItem();
-
-            ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
-            ItemAPI.Add(new CustomItem(itemDef, displayRules));
+            itemDef = ItemHelper.GenerateItem("GuinsoosRageblade", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
+            radiantDef = ItemHelper.GenerateItem("Radiant_GuinsoosRageblade", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
-            wrathBuff = Utils.GenerateBuffDef("Wrath", AssetHandler.bundle.LoadAsset<Sprite>("Wrath.png"), true, false, false, false);
+            wrathBuff = Utilities.GenerateBuffDef("Wrath", AssetHandler.bundle.LoadAsset<Sprite>("Wrath.png"), true, false, false, false);
             ContentAddition.AddBuffDef(wrathBuff);
 
-            Hooks();
+            Utilities.RegisterVoidPair(itemDef, radiantDef);
+
+            Hooks(itemDef, ItemHelper.TacticTier.Normal);
+            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
         }
 
-        private static void GenerateItem()
+        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
         {
-            itemDef = ScriptableObject.CreateInstance<ItemDef>();
+            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
-            itemDef.name = "ROT_GUINSOOSRAGEBLADE";
-            itemDef.AutoPopulateTokens();
-
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
-
-            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("GuinsoosRageblade.prefab");
-            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
-            modelPanelParameters.focusPointTransform = prefab.transform;
-            modelPanelParameters.cameraPositionTransform = prefab.transform;
-            modelPanelParameters.maxDistance = 10f;
-            modelPanelParameters.minDistance = 5f;
-
-            itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("GuinsoosRageblade.png");
-            itemDef.pickupModelPrefab = prefab;
-            itemDef.canRemove = true;
-            itemDef.hidden = false;
-
-            itemDef.tags = new ItemTag[]
-            {
-                ItemTag.Damage,
-                ItemTag.Utility,
-
-                ItemTag.CanBeTemporary
-            };
-        }
-
-        public static void Hooks()
-        {
             CharacterMaster.onStartGlobal += (obj) =>
             {
                 obj.inventory?.gameObject.AddComponent<Statistics>();
@@ -155,7 +125,7 @@ namespace RiskOfTactics.Items.Completes
 
                 if (self && self.HasBuff(wrathBuff) && self.inventory)
                 {
-                    if (self.inventory.GetItemCountEffective(itemDef) == 0)
+                    if (self.inventory.GetItemCountEffective(def) == 0)
                     {
                         self.SetBuffCount(wrathBuff.buffIndex, 0);
                     }
@@ -166,11 +136,11 @@ namespace RiskOfTactics.Items.Completes
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCountEffective(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(def);
                     int buffCount = sender.GetBuffCount(wrathBuff);
                     if (buffCount > 0)
                     {
-                        args.attackSpeedMultAdd += buffCount * Utils.GetHyperbolicStacking(percentAttackSpeedOnHit, count);
+                        args.attackSpeedMultAdd += buffCount * Utilities.GetHyperbolicStacking(percentAttackSpeedOnHit * radiantMultiplier, count);
                     }
                 }
             };
@@ -182,7 +152,7 @@ namespace RiskOfTactics.Items.Completes
 
                 if (vicBody && atkBody && atkBody.inventory)
                 {
-                    if (atkBody.inventory.GetItemCountEffective(itemDef) > 0 && vicBody.healthComponent && !Utils.OnSameTeam(vicBody, atkBody))
+                    if (atkBody.inventory.GetItemCountEffective(def) > 0 && vicBody.healthComponent && !Utilities.OnSameTeam(vicBody, atkBody))
                     {
                         Statistics component = atkBody.inventory.GetComponent<Statistics>();
                         if (component && vicBody.gameObject.Equals(component.LastTarget))

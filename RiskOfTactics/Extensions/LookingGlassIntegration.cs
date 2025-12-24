@@ -1,10 +1,11 @@
 ﻿using LookingGlass.ItemStatsNameSpace;
-using RiskOfTactics.Items.Artifacts;
-using RiskOfTactics.Items.Completes;
+using RiskOfTactics.Content.Items.Artifacts;
+using RiskOfTactics.Content.Items.Completes;
+using RiskOfTactics.Helpers;
 using RoR2;
 using System.Collections.Generic;
 
-namespace RiskOfTactics.Exts
+namespace RiskOfTactics.Extensions
 {
     internal static class LookingGlassIntegration
     {
@@ -45,7 +46,7 @@ namespace RiskOfTactics.Exts
                     stats.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Money);
                     stats.calculateValues = (master, itemCount) =>
                     {
-                        return [GamblersBlade.moneyEffectCap.Value * Utils.GetDifficultyAsMultiplier()];
+                        return [GamblersBlade.moneyEffectCap.Value * Utilities.GetDifficultyAsMultiplier()];
                     };
                     ItemDefinitions.allItemDefinitions.Add((int)GamblersBlade.itemDef.itemIndex, stats);
                 }

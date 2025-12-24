@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Helpers
 {
     public static class AssetHandler
     {

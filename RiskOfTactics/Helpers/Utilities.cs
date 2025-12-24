@@ -2,13 +2,14 @@
 using R2API.Networking.Interfaces;
 using RoR2;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Helpers
 {
-    public static class Utils
+    public static class Utilities
     {
         internal static void Init()
         {
@@ -22,7 +23,7 @@ namespace RiskOfTactics
             public SyncForceRecalculate() { }
             public SyncForceRecalculate(NetworkInstanceId ID)
             {
-                this.netID = ID;
+                netID = ID;
             }
 
             public void Deserialize(NetworkReader reader)
@@ -34,7 +35,7 @@ namespace RiskOfTactics
             {
                 if (NetworkServer.active) return;
 
-                GameObject obj = RoR2.Util.FindNetworkObject(netID);
+                GameObject obj = Util.FindNetworkObject(netID);
                 if (obj)
                 {
                     CharacterBody body = obj.GetComponent<CharacterBody>();
@@ -53,28 +54,6 @@ namespace RiskOfTactics
         {
             body.RecalculateStats();
             if (NetworkServer.active) new SyncForceRecalculate(body.netId);
-        }
-
-        public static void SetItemTier(ItemDef itemDef, ItemTier tier)
-        {
-            if (tier == ItemTier.NoTier)
-            {
-                try
-                {
-#pragma warning disable CS0618 // Type or member is obsolete
-                    itemDef.deprecatedTier = tier;
-#pragma warning restore CS0618 // Type or member is obsolete
-                }
-                catch (Exception e)
-                {
-                    Log.Warning(String.Format("Error setting deprecatedTier for {0}: {1}", itemDef.name, e));
-                }
-            }
-
-            ItemTierCatalog.availability.CallWhenAvailable(() =>
-            {
-                if (itemDef) itemDef.tier = tier;
-            });
         }
 
         public static CharacterBody GetMinionOwnershipParentBody(CharacterBody body)
@@ -134,7 +113,7 @@ namespace RiskOfTactics
 
         public static float GetDifficultyAsMultiplier()
         {
-            return (Stage.instance.entryDifficultyCoefficient);
+            return Stage.instance.entryDifficultyCoefficient;
         }
 
         public static float GetLinearStacking(float baseValue, int count)
@@ -169,7 +148,8 @@ namespace RiskOfTactics
 
         public static float GetHyperbolicStacking(float percent, float extraPercent, int count)
         {
-            return 1f - 1f / (1f + percent * extraPercent * (count - 1));
+            float denominator = (1f + percent) * (1 + extraPercent * (count - 1));
+            return 1f - 1f / denominator;
         }
 
         internal static BuffDef GenerateBuffDef(string name, Sprite sprite, bool canStack, bool isHidden, bool isDebuff, bool isCooldown)
@@ -197,6 +177,39 @@ namespace RiskOfTactics
             if (body1 == null) throw new ArgumentNullException("body1");
             if (body2 == null) throw new ArgumentNullException("body2");
             return body1.teamComponent && body2.teamComponent && body1.teamComponent.teamIndex == body2.teamComponent.teamIndex;
+        }
+
+        internal static bool IsValidTargetBody(CharacterBody body)
+        {
+            return body && body.healthComponent;
+        }
+
+        internal static void SpawnHealEffect(CharacterBody self)
+        {
+            EffectData effectData = new()
+            {
+                origin = self.transform.position,
+                rootObject = self.gameObject
+            };
+            EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/MedkitHealEffect"), effectData, transmit: true);
+        }
+
+        internal static void RegisterVoidPair(ItemDef itemDef, ItemDef radiantDef)
+        {
+            On.RoR2.Items.ContagiousItemManager.Init += (orig) =>
+            {
+                List<ItemDef.Pair> newVoidPairs = [
+                    new ItemDef.Pair() { itemDef1 = itemDef, itemDef2 = radiantDef }];
+
+                ItemRelationshipType key = DLC1Content.ItemRelationshipTypes.ContagiousItem;
+                Debug.Log(key);
+
+                ItemDef.Pair[] voidPairs = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem];
+                ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = [.. voidPairs.Union(newVoidPairs)];
+
+                Debug.Log("Injected radiant item transformation for " + itemDef.name + ".");
+                orig();
+            };
         }
     }
 }

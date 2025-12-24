@@ -1,19 +1,19 @@
 ﻿using R2API;
 using R2API.Networking;
 using R2API.Networking.Interfaces;
+using RiskOfTactics.Helpers;
 using RoR2;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics.Items.Completes
+namespace RiskOfTactics.Content.Items.Completes
 {
     class DragonsClaw
     {
         public static ItemDef itemDef;
 
-        public static GameObject healTriggerEffect;
+        public static ItemDef radiantDef;
 
         // Gain health. Periodically heal for a portion of your max HP.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -21,50 +21,39 @@ namespace RiskOfTactics.Items.Completes
             "Enabled",
             true,
             "Whether or not the item is enabled.",
-            new List<string>()
-            {
-                "ITEM_ROT_DRAGONSCLAW_DESC"
-            }
+            ["ITEM_ROT_DRAGONSCLAW_DESC"]
         );
         public static ConfigurableValue<float> maxHealthBonus = new(
             "Item: Dragons Claw",
             "Percent Health",
             9f,
             "Percent max health bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_ROT_DRAGONSCLAW_DESC"
-            }
+            ["ITEM_ROT_DRAGONSCLAW_DESC"],
+            true
         );
         public static ConfigurableValue<float> maxHealthBonusExtraStacks = new(
             "Item: Dragons Claw",
             "Percent Health Per Stack",
             9f,
             "Percent max health bonus when holding extra stacks of this item.",
-            new List<string>()
-            {
-                "ITEM_ROT_DRAGONSCLAW_DESC"
-            }
+            ["ITEM_ROT_DRAGONSCLAW_DESC"],
+            true
         );
         public static ConfigurableValue<float> healingPerTick = new(
             "Item: Dragons Claw",
             "Healing Per Tick",
             9f,
             "Percent max health healing per item proc.",
-            new List<string>()
-            {
-                "ITEM_ROT_DRAGONSCLAW_DESC"
-            }
+            ["ITEM_ROT_DRAGONSCLAW_DESC"],
+            true
         );
         public static ConfigurableValue<float> tickDuration = new(
             "Item: Dragons Claw",
             "Tick Duration",
             9f,
             "Number of seconds between item procs.",
-            new List<string>()
-            {
-                "ITEM_ROT_DRAGONSCLAW_DESC"
-            }
+            ["ITEM_ROT_DRAGONSCLAW_DESC"],
+            false
         );
         public static readonly float percentHealingPerTick = healingPerTick.Value / 100f;
         public static readonly float percentMaxHealthBonus = maxHealthBonus.Value / 100f;
@@ -134,50 +123,21 @@ namespace RiskOfTactics.Items.Completes
 
         internal static void Init()
         {
-            GenerateItem();
-
-            ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
-            ItemAPI.Add(new CustomItem(itemDef, displayRules));
+            itemDef = ItemHelper.GenerateItem("DragonsClaw", [ItemTag.Healing, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
+            radiantDef = ItemHelper.GenerateItem("Radiant_DragonsClaw", [ItemTag.Healing, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
-            Hooks();
+            Utilities.RegisterVoidPair(itemDef, radiantDef);
+
+            Hooks(itemDef, ItemHelper.TacticTier.Normal);
+            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
         }
 
-        private static void GenerateItem()
+        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
         {
-            itemDef = ScriptableObject.CreateInstance<ItemDef>();
+            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
-            itemDef.name = "ROT_DRAGONSCLAW";
-            itemDef.AutoPopulateTokens();
-
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
-
-            healTriggerEffect = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/MedkitHealEffect");
-
-            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("DragonsClaw.prefab");
-            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
-            modelPanelParameters.focusPointTransform = prefab.transform;
-            modelPanelParameters.cameraPositionTransform = prefab.transform;
-            modelPanelParameters.maxDistance = 10f;
-            modelPanelParameters.minDistance = 5f;
-
-            itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("DragonsClaw.png");
-            itemDef.pickupModelPrefab = prefab;
-            itemDef.canRemove = true;
-            itemDef.hidden = false;
-
-            itemDef.tags = new ItemTag[]
-            {
-                ItemTag.Healing,
-                ItemTag.Utility,
-
-                ItemTag.CanBeTemporary
-            };
-        }
-
-        public static void Hooks()
-        {
             CharacterMaster.onStartGlobal += (obj) =>
             {
                 obj.inventory?.gameObject.AddComponent<Statistics>();
@@ -187,10 +147,10 @@ namespace RiskOfTactics.Items.Completes
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCountEffective(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(def);
                     if (count > 0)
                     {
-                        args.healthTotalMult *= 1 + Utils.GetLinearStacking(percentMaxHealthBonus, percentMaxHealthBonusExtraStacks, count);
+                        args.healthTotalMult *= 1 + Utilities.GetLinearStacking(percentMaxHealthBonus * radiantMultiplier, percentMaxHealthBonusExtraStacks * radiantMultiplier, count);
                     }
                 }
             };
@@ -200,7 +160,7 @@ namespace RiskOfTactics.Items.Completes
                 foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
                 {
                     CharacterMaster master = user.masterController?.master ?? user.master;
-                    if (master && master.inventory && master.inventory.GetItemCountEffective(itemDef) > 0)
+                    if (master && master.inventory && master.inventory.GetItemCountEffective(def) > 0)
                     {
                         Statistics component = master.inventory.GetComponent<Statistics>();
                         if (component)
@@ -217,22 +177,17 @@ namespace RiskOfTactics.Items.Completes
 
                 if (self && self.inventory)
                 {
-                    int itemCount = self.inventory.GetItemCountEffective(itemDef);
+                    int itemCount = self.inventory.GetItemCountEffective(def);
                     if (itemCount > 0)
                     {
                         Statistics component = self.inventory.GetComponent<Statistics>();
                         // Check time elapsed 
                         if (component && Environment.TickCount - component.LastTick > tickDuration * 1000)
                         {
-                            self.healthComponent.Heal(self.healthComponent.fullHealth * percentHealingPerTick, new ProcChainMask());
+                            self.healthComponent.Heal(self.healthComponent.fullHealth * percentHealingPerTick * radiantMultiplier, new ProcChainMask());
                             component.LastTick = Environment.TickCount;
 
-                            EffectData effectData = new()
-                            {
-                                origin = self.transform.position,
-                                color = Color.blue
-                            };
-                            EffectManager.SpawnEffect(healTriggerEffect, effectData, transmit: true);
+                            Utilities.SpawnHealEffect(self);
                         }
                     }
                 }

@@ -1,9 +1,7 @@
 ﻿using RoR2;
 using UnityEngine;
 
-using static RiskOfTactics.RiskOfTactics;
-
-namespace RiskOfTactics
+namespace RiskOfTactics.Helpers
 {
     class GenericGameEvents
     {
@@ -34,7 +32,7 @@ namespace RiskOfTactics
                 healthComponent = body ? body.healthComponent : null;
                 inventory = master ? master.inventory : null;
                 teamIndex = teamComponent ? teamComponent.teamIndex : TeamIndex.Neutral;
-                aimOrigin = body ? body.aimOrigin : UnityEngine.Random.insideUnitSphere.normalized;
+                aimOrigin = body ? body.aimOrigin : Random.insideUnitSphere.normalized;
             }
         }
 

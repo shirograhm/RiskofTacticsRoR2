@@ -1,11 +1,11 @@
 using R2API;
-using RiskOfTactics.Buffs;
+using RiskOfTactics.Content.Buffs;
+using RiskOfTactics.Helpers;
 using RoR2;
 using RoR2.Orbs;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace RiskOfTactics.Items.Artifacts
+namespace RiskOfTactics.Content.Items.Artifacts
 {
     class StatikkShiv
     {
@@ -19,117 +19,63 @@ namespace RiskOfTactics.Items.Artifacts
             "Enabled",
             true,
             "Whether or not the item is enabled.",
-            new List<string>()
-            {
-                "ITEM_ROT_STATIKKSHIV_DESC"
-            }
+            ["ITEM_ROT_STATIKKSHIV_DESC"]
         );
         public static ConfigurableValue<float> effectCooldown = new(
             "Item: Statikk Shiv",
             "Effect Cooldown",
             6f,
             "Cooldown of this item's effect.",
-            new List<string>()
-            {
-                "ITEM_ROT_STATIKKSHIV_DESC"
-            }
+            ["ITEM_ROT_STATIKKSHIV_DESC"]
         );
         public static ConfigurableValue<float> effectOnHitDamage = new(
             "Item: Statikk Shiv",
             "Bonus On-Hit",
             90f,
             "Bonus on-hit damage (as a percentage of TOTAL damage) dealt by this item's effect.",
-            new List<string>()
-            {
-                "ITEM_ROT_STATIKKSHIV_DESC"
-            }
+            ["ITEM_ROT_STATIKKSHIV_DESC"]
         );
         public static ConfigurableValue<float> effectOnHitDamageExtraStacks = new(
             "Item: Statikk Shiv",
             "Bonus On-Hit Per Stack",
             90f,
             "Bonus on-hit damage for extra stacks of this item.",
-            new List<string>()
-            {
-                "ITEM_ROT_STATIKKSHIV_DESC"
-            }
+            ["ITEM_ROT_STATIKKSHIV_DESC"]
         );
         public static ConfigurableValue<int> shivRange = new(
             "Item: Statikk Shiv",
             "Zap Range",
             30,
             "Zap range of the item's chain effect in meters.",
-            new List<string>()
-            {
-                "ITEM_ROT_STATIKKSHIV_DESC"
-            }
+            ["ITEM_ROT_STATIKKSHIV_DESC"]
         );
         public static ConfigurableValue<int> numberEnemiesChained = new(
             "Item: Statikk Shiv",
             "Number of Enemies Chained",
             3,
             "Number of additional enemies chained off the initial enemy with this effect.",
-            new List<string>()
-            {
-                "ITEM_ROT_STATIKKSHIV_DESC"
-            }
+            ["ITEM_ROT_STATIKKSHIV_DESC"]
         );
         public static ConfigurableValue<float> shivProcCoeff = new(
             "Item: Statikk Shiv",
             "Proc Coefficient",
-            0.5f,
+            0.9f,
             "Proc coefficient for the chain effect of this item.",
-            new List<string>()
-            {
-                "ITEM_ROT_STATIKKSHIV_DESC"
-            }
+            ["ITEM_ROT_STATIKKSHIV_DESC"]
         );
         public static float percentEffectOnHitDamage = effectOnHitDamage.Value / 100f;
         public static float percentEffectOnHitDamageExtraStacks = effectOnHitDamageExtraStacks.Value / 100f;
 
         internal static void Init()
         {
-            GenerateItem();
+            itemDef = ItemHelper.GenerateItem("StatikkShiv", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Artifact);
 
-            ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
-            ItemAPI.Add(new CustomItem(itemDef, displayRules));
-
-            shockBuff = Utils.GenerateBuffDef("Shock", AssetHandler.bundle.LoadAsset<Sprite>("Shock.png"), false, false, false, false);
+            shockBuff = Utilities.GenerateBuffDef("Shock", AssetHandler.bundle.LoadAsset<Sprite>("Shock.png"), false, false, false, false);
             ContentAddition.AddBuffDef(shockBuff);
-            shockCooldown = Utils.GenerateBuffDef("Shock Cooldown", AssetHandler.bundle.LoadAsset<Sprite>("ShockCD.png"), false, false, false, true);
+            shockCooldown = Utilities.GenerateBuffDef("Shock Cooldown", AssetHandler.bundle.LoadAsset<Sprite>("ShockCD.png"), false, false, false, true);
             ContentAddition.AddBuffDef(shockCooldown);
 
             Hooks();
-        }
-
-        private static void GenerateItem()
-        {
-            itemDef = ScriptableObject.CreateInstance<ItemDef>();
-
-            itemDef.name = "ROT_STATIKKSHIV";
-            itemDef.AutoPopulateTokens();
-
-            Utils.SetItemTier(itemDef, ItemTier.Tier3);
-
-            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("StatikkShiv.prefab");
-            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
-            modelPanelParameters.focusPointTransform = prefab.transform;
-            modelPanelParameters.cameraPositionTransform = prefab.transform;
-            modelPanelParameters.maxDistance = 10f;
-            modelPanelParameters.minDistance = 5f;
-
-            itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("StatikkShiv.png");
-            itemDef.pickupModelPrefab = prefab;
-            itemDef.canRemove = true;
-            itemDef.hidden = false;
-
-            itemDef.tags = new ItemTag[]
-            {
-                ItemTag.Damage,
-                ItemTag.Utility,
-
-                ItemTag.CanBeTemporary
-            };
         }
 
         public static void Hooks()
@@ -199,9 +145,9 @@ namespace RiskOfTactics.Items.Artifacts
                 {
                     int count = atkBody.inventory.GetItemCountEffective(itemDef);
                     bool hasShockBuff = atkBody.GetBuffCount(shockBuff) > 0;
-                    if (hasShockBuff && !Utils.OnSameTeam(vicBody, atkBody))
+                    if (hasShockBuff && !Utilities.OnSameTeam(vicBody, atkBody))
                     {
-                        float damageMultiplier = 1 + Utils.GetLinearStacking(percentEffectOnHitDamage, percentEffectOnHitDamageExtraStacks, count);
+                        float damageMultiplier = 1 + Utilities.GetLinearStacking(percentEffectOnHitDamage, percentEffectOnHitDamageExtraStacks, count);
                         damageInfo.damage *= damageMultiplier;
                         damageInfo.damageColorIndex = DamageColorIndex.WeakPoint;
 

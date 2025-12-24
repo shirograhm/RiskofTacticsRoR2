@@ -1,6 +1,7 @@
-﻿using System;
+﻿using RiskOfTactics.Helpers;
+using System;
 
-namespace RiskOfTactics.Exts
+namespace RiskOfTactics.Extensions
 {
     internal class Integrations
     {
@@ -14,13 +15,13 @@ namespace RiskOfTactics.Exts
             {
                 try
                 {
-                    Log.Debug("Running code injection for LookingGlass.");
+                    ROTLogger.Debug("Running code injection for LookingGlass.");
                     LookingGlassIntegration.Init();
                     lookingGlassEnabled = true;
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e);
+                    ROTLogger.Error(e);
                 }
             }
         }

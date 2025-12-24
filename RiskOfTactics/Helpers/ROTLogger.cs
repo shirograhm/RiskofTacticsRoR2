@@ -1,8 +1,8 @@
 ﻿using BepInEx.Logging;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Helpers
 {
-    internal static class Log
+    internal static class ROTLogger
     {
         private static ManualLogSource _logSource;
 

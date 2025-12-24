@@ -1,9 +1,10 @@
 ﻿using R2API;
+using RiskOfTactics.Helpers;
 using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RiskOfTactics.Buffs
+namespace RiskOfTactics.Content.Buffs
 {
     class Sunder
     {
@@ -25,7 +26,7 @@ namespace RiskOfTactics.Buffs
 
         internal static void Init()
         {
-            buffDef = Utils.GenerateBuffDef("Sunder",
+            buffDef = Utilities.GenerateBuffDef("Sunder",
                 AssetHandler.bundle.LoadAsset<Sprite>("Sunder.png"),
                 true, false, true, false
             );

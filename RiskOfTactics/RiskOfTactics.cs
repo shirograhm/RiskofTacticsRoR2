@@ -1,10 +1,11 @@
 using BepInEx;
 using R2API;
 using R2API.Utils;
-using RiskOfTactics.Buffs;
-using RiskOfTactics.Exts;
-using RiskOfTactics.Items.Artifacts;
-using RiskOfTactics.Items.Completes;
+using RiskOfTactics.Content.Buffs;
+using RiskOfTactics.Content.Items.Artifacts;
+using RiskOfTactics.Content.Items.Completes;
+using RiskOfTactics.Extensions;
+using RiskOfTactics.Helpers;
 using RoR2;
 using RoR2.ExpansionManagement;
 using UnityEngine.AddressableAssets;
@@ -40,16 +41,16 @@ namespace RiskOfTactics
             PInfo = Info;
 
             // Setup
-            Log.Init(Logger);
+            ROTLogger.Init(Logger);
             AssetHandler.Init();
             GenericGameEvents.Init();
             ConfigOptions.Init();
+            Utilities.Init();
 
             // Mod Integrations
             ItemCatalog.availability.CallWhenAvailable(Integrations.Init);
 
             // Buffs
-            Wound.Init();
             Sunder.Init();
 
             // Completes
@@ -73,18 +74,17 @@ namespace RiskOfTactics
                 Quicksilver.Init();
             if (SpearOfShojin.isEnabled.Value)
                 SpearOfShojin.Init();
-            if (StatikkShiv.isEnabled.Value)
-                StatikkShiv.Init();
             if (SunfireCape.isEnabled.Value)
                 SunfireCape.Init();
-
-            // Radiants
 
             // Artifacts
             if (GamblersBlade.isEnabled.Value)
                 GamblersBlade.Init();
+            if (StatikkShiv.isEnabled.Value)
+                StatikkShiv.Init();
 
-            Log.Message("Finished initializations.");
+
+            ROTLogger.Message("Finished initializations.");
         }
     }
 }

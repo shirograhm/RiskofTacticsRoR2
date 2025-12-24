@@ -1,18 +1,20 @@
 ﻿using R2API;
 using R2API.Networking;
 using R2API.Networking.Interfaces;
+using RiskOfTactics.Helpers;
 using RoR2;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics.Items.Completes
+namespace RiskOfTactics.Content.Items.Completes
 {
     class ArchangelsStaff
     {
         public static ItemDef itemDef;
         public static BuffDef foresightBuff;
+
+        public static ItemDef radiantDef;
 
         // During the teleporter event, periodically gain BASE damage.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -20,30 +22,23 @@ namespace RiskOfTactics.Items.Completes
             "Enabled",
             true,
             "Whether or not the item is enabled.",
-            new List<string>()
-            {
-                "ITEM_ROT_ARCHANGELSSTAFF_DESC"
-            }
+            ["ITEM_ROT_ARCHANGELSSTAFF_DESC"]
         );
         public static ConfigurableValue<float> flatDamagePerTick = new(
             "Item: Archangels Staff",
             "Flat Damage Per Tick",
             0.5f,
             "Flat damage gained per item proc.",
-            new List<string>()
-            {
-                "ITEM_ROT_ARCHANGELSSTAFF_DESC"
-            }
+            ["ITEM_ROT_ARCHANGELSSTAFF_DESC"],
+            true
         );
         public static ConfigurableValue<float> tickDuration = new(
             "Item: Archangels Staff",
             "Tick Duration",
             5f,
             "Number of seconds between item procs.",
-            new List<string>()
-            {
-                "ITEM_ROT_ARCHANGELSSTAFF_DESC"
-            }
+            ["ITEM_ROT_ARCHANGELSSTAFF_DESC"],
+            false
         );
 
         public class Statistics : MonoBehaviour
@@ -110,50 +105,25 @@ namespace RiskOfTactics.Items.Completes
 
         internal static void Init()
         {
-            GenerateItem();
-
-            ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
-            ItemAPI.Add(new CustomItem(itemDef, displayRules));
+            // Normal Variant
+            itemDef = ItemHelper.GenerateItem("ArchangelsStaff", [ItemTag.Damage, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
+            radiantDef = ItemHelper.GenerateItem("Radiant_ArchangelsStaff", [ItemTag.Damage, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
-            foresightBuff = Utils.GenerateBuffDef("Foresight", AssetHandler.bundle.LoadAsset<Sprite>("Foresight.png"), true, false, false, false);
+            foresightBuff = Utilities.GenerateBuffDef("Foresight", AssetHandler.bundle.LoadAsset<Sprite>("Foresight.png"), true, false, false, false);
             ContentAddition.AddBuffDef(foresightBuff);
 
-            Hooks();
+            Utilities.RegisterVoidPair(itemDef, radiantDef);
+
+            Hooks(itemDef, ItemHelper.TacticTier.Normal);
+            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
         }
 
-        private static void GenerateItem()
+        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
         {
-            itemDef = ScriptableObject.CreateInstance<ItemDef>();
+            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
-            itemDef.name = "ROT_ARCHANGELSSTAFF";
-            itemDef.AutoPopulateTokens();
-
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
-
-            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("ArchangelsStaff.prefab");
-            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
-            modelPanelParameters.focusPointTransform = prefab.transform;
-            modelPanelParameters.cameraPositionTransform = prefab.transform;
-            modelPanelParameters.maxDistance = 10f;
-            modelPanelParameters.minDistance = 5f;
-
-            itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("ArchangelsStaff.png");
-            itemDef.pickupModelPrefab = prefab;
-            itemDef.canRemove = true;
-            itemDef.hidden = false;
-
-            itemDef.tags = new ItemTag[]
-            {
-                ItemTag.Damage,
-
-                ItemTag.CanBeTemporary
-            };
-        }
-
-        public static void Hooks()
-        {
             CharacterMaster.onStartGlobal += (obj) =>
             {
                 obj.inventory?.gameObject.AddComponent<Statistics>();
@@ -163,12 +133,12 @@ namespace RiskOfTactics.Items.Completes
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCountEffective(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(def);
                     if (count > 0)
                     {
                         int buffCount = sender.GetBuffCount(foresightBuff);
 
-                        args.baseDamageAdd += buffCount * flatDamagePerTick.Value;
+                        args.baseDamageAdd += buffCount * flatDamagePerTick.Value * radiantMultiplier;
                     }
                 }
             };
@@ -178,7 +148,7 @@ namespace RiskOfTactics.Items.Completes
                 foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
                 {
                     CharacterMaster master = user.masterController.master ?? user.master;
-                    if (master && master.inventory && master.inventory.GetItemCountEffective(itemDef) > 0)
+                    if (master && master.inventory && master.inventory.GetItemCountEffective(def) > 0)
                     {
                         Statistics component = master.inventory.GetComponent<Statistics>();
                         if (component)
@@ -197,7 +167,7 @@ namespace RiskOfTactics.Items.Completes
                 {
                     if (self && self.inventory)
                     {
-                        int itemCount = self.inventory.GetItemCountEffective(itemDef);
+                        int itemCount = self.inventory.GetItemCountEffective(def);
 
                         if (itemCount > 0 && hzc.isActiveAndEnabled)
                         {

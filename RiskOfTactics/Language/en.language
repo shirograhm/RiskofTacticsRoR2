@@ -5,6 +5,31 @@
 // <style=cSub> <style=cMono> <style=cShrine> <style=cEvent>
 {
   "en": {
+    "ROT_RADIANT_ADAPTIVEHELM": "Adaptive Helm (Radiant)",
+    "ITEM_ROT_RADIANT_ADAPTIVEHELM_NAME": "Adaptive Helm (Radiant)",
+    "ROT_RADIANT_ARCHANGELSSTAFF": "Archangel's Staff (Radiant)",
+    "ITEM_ROT_RADIANT_ARCHANGELSSTAFF_NAME": "Archangel's Staff (Radiant)",
+    "ROT_RADIANT_BLOODTHIRSTER": "Bloodthirster (Radiant)",
+    "ITEM_ROT_RADIANT_BLOODTHIRSTER_NAME": "Bloodthirster (Radiant)",
+    "ROT_RADIANT_BRAMBLEVEST": "Bramble Vest (Radiant)",
+    "ITEM_ROT_RADIANT_BRAMBLEVEST_NAME": "Bramble Vest (Radiant)",
+    "ROT_RADIANT_CROWNGUARD": "Crownguard (Radiant)",
+    "ITEM_ROT_RADIANT_CROWNGUARD_NAME": "Crownguard (Radiant)",
+    "ROT_RADIANT_DRAGONSCLAW": "Dragon's Claw (Radiant)",
+    "ITEM_ROT_RADIANT_DRAGONSCLAW_NAME": "Dragon's Claw (Radiant)",
+    "ROT_RADIANT_GUINSOOSRAGEBLADE": "Guinsoo's Rageblade (Radiant)",
+    "ITEM_ROT_RADIANT_GUINSOOSRAGEBLADE_NAME": "Guinsoo's Rageblade (Radiant)",
+    "ROT_RADIANT_HANDOFJUSTICE": "Hand Of Justice (Radiant)",
+    "ITEM_ROT_RADIANT_HANDOFJUSTICE_NAME": "Hand Of Justice (Radiant)",
+    "ROT_RADIANT_QUICKSILVER": "Quicksilver (Radiant)",
+    "ITEM_ROT_RADIANT_QUICKSILVER_NAME": "Quicksilver (Radiant)",
+    "ROT_RADIANT_SPEAROFSHOJIN": "Spear Of Shojin (Radiant)",
+    "ITEM_ROT_RADIANT_SPEAROFSHOJIN_NAME": "Spear Of Shojin (Radiant)",
+    "ROT_RADIANT_SUNFIRECAPE": "Sunfire Cape (Radiant)",
+    "ITEM_ROT_RADIANT_SUNFIRECAPE_NAME": "Sunfire Cape (Radiant)",
+
+
+
     "ROT_ADAPTIVEHELM": "Adaptive Helm",
     "ITEM_ROT_ADAPTIVEHELM_NAME": "Adaptive Helm",
     "ITEM_ROT_ADAPTIVEHELM_PICKUP": "Gain defenses. Gain additional effects based on your character class.",
@@ -62,8 +87,8 @@
     "ITEM_ROT_SPEAROFSHOJIN_LORE": "",
     "ROT_SUNFIRECAPE": "Sunfire Cape",
     "ITEM_ROT_SUNFIRECAPE_NAME": "Sunfire Cape",
-    "ITEM_ROT_SUNFIRECAPE_PICKUP": "Periodically <style=cUserSetting>Burn</style> and <style=cDeath>Wound</style> nearby enemies.",
-    "ITEM_ROT_SUNFIRECAPE_DESC": "Gain <style=cIsHealth>{Percent Health}% <style=cIsHealth>(+{Percent Health Extra Stacks}% per stack)</style> max HP</style>. Every <style=cIsUtility>{Debuff Tick} seconds</style>, <style=cUserSetting>Burn</style> and <style=cDeath>Wound</style> nearby enemies.\n\n<style=cDeath>Wound</style>: Reduces all <style=cIsHealing>healing and regneration</style> by <style=cDeath>{Wound Reduction}%</style> for <style=cIsUtility>{Wound Duration} seconds</style>.",
+    "ITEM_ROT_SUNFIRECAPE_PICKUP": "Periodically <style=cUserSetting>Burn</style> nearby enemies and <style=cDeath>disable their healing</style>.",
+    "ITEM_ROT_SUNFIRECAPE_DESC": "Gain <style=cIsHealth>{Percent Health}% <style=cStack>(+{Percent Health Extra Stacks}% per stack)</style> max HP</style>. Every <style=cIsUtility>{Debuff Tick} seconds</style>, <style=cUserSetting>Burn</style> nearby enemies for <style=cIsHealth>{Burn Percent}% max HP</style> and <style=cDeath>disable their healing for <style=cIsUtility>{Healing Disable Duration} seconds</style></style>.",
     "ITEM_ROT_SUNFIRECAPE_LORE": "",
 
     "ROT_GAMBLERSBLADE": "Gambler's Blade",

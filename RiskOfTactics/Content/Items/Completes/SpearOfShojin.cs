@@ -1,0 +1,78 @@
+using RiskOfTactics.Helpers;
+using RoR2;
+using System;
+
+namespace RiskOfTactics.Content.Items.Completes
+{
+    class SpearOfShojin
+    {
+        public static ItemDef itemDef;
+        public static ItemDef radiantDef;
+
+        // Refund a percentage of your active cooldowns on-hit.
+        public static ConfigurableValue<bool> isEnabled = new(
+            "Item: Spear Of Shojin",
+            "Enabled",
+            true,
+            "Whether or not the item is enabled.",
+            ["ITEM_ROT_SPEAROFSHOJIN_DESC"]
+        );
+        public static ConfigurableValue<float> cooldownOnHit = new(
+            "Item: Spear Of Shojin",
+            "On-Hit Cooldown",
+            15f,
+            "Percentage of remaining cooldown refunded on-hit.",
+            ["ITEM_ROT_SPEAROFSHOJIN_DESC"],
+            true
+        );
+        public static ConfigurableValue<float> cooldownOnHitExtraStacks = new(
+            "Item: Spear Of Shojin",
+            "On-Hit Cooldown Extra Stacks",
+            10f,
+            "Percentage of remaining cooldown refunded on-hit with extra stacks.",
+            ["ITEM_ROT_SPEAROFSHOJIN_DESC"],
+            true
+        );
+        private static readonly float percentCooldownOnHit = cooldownOnHit.Value / 100f;
+        private static readonly float percentCooldownOnHitExtraStacks = cooldownOnHitExtraStacks.Value / 100f;
+
+        internal static void Init()
+        {
+            itemDef = ItemHelper.GenerateItem("SpearOfShojin", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
+            radiantDef = ItemHelper.GenerateItem("Radiant_SpearOfShojin", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
+
+            Utilities.RegisterVoidPair(itemDef, radiantDef);
+
+            Hooks(itemDef, ItemHelper.TacticTier.Normal);
+            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
+        }
+
+        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
+        {
+            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
+
+            GenericGameEvents.OnHitEnemy += (damageInfo, attackerInfo, victimInfo) =>
+            {
+                CharacterBody vicBody = victimInfo.body;
+                CharacterBody atkBody = attackerInfo.body;
+
+                if (atkBody && atkBody.inventory && atkBody.skillLocator && Utilities.IsValidTargetBody(vicBody))
+                {
+                    int count = atkBody.inventory.GetItemCountEffective(def);
+                    if (count > 0)
+                    {
+                        foreach (SkillSlot slot in Enum.GetValues(typeof(SkillSlot)))
+                        {
+                            GenericSkill skill = atkBody.skillLocator.GetSkill(slot);
+                            if (skill && skill.stock < skill.maxStock)
+                            {
+                                float cooldownLeft = skill.finalRechargeInterval - skill.rechargeStopwatch;
+                                skill.rechargeStopwatch += cooldownLeft * Utilities.GetHyperbolicStacking(percentCooldownOnHit * radiantMultiplier, percentCooldownOnHitExtraStacks * radiantMultiplier, count);
+                            }
+                        }
+                    }
+                }
+            };
+        }
+    }
+}

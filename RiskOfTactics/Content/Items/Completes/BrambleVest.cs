@@ -1,16 +1,17 @@
 ﻿using R2API;
 using R2API.Networking;
 using R2API.Networking.Interfaces;
+using RiskOfTactics.Helpers;
 using RoR2;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RiskOfTactics.Items.Completes
+namespace RiskOfTactics.Content.Items.Completes
 {
     class BrambleVest
     {
         public static ItemDef itemDef;
+        public static ItemDef radiantDef;
 
         // Become tankier and reflect a portion of the damage you take.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -18,50 +19,39 @@ namespace RiskOfTactics.Items.Completes
             "Enabled",
             true,
             "Whether or not the item is enabled.",
-            new List<string>()
-            {
-                "ITEM_ROT_BRAMBLEVEST_DESC"
-            }
+            ["ITEM_ROT_BRAMBLEVEST_DESC"]
         );
         public static ConfigurableValue<float> healthBonus = new(
             "Item: Bramble Vest",
             "Health",
             7f,
             "Percent health bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_ROT_BRAMBLEVEST_DESC"
-            }
+            ["ITEM_ROT_BRAMBLEVEST_DESC"],
+            true
         );
         public static ConfigurableValue<int> flatDamageReduction = new(
             "Item: Bramble Vest",
             "Damage Reduction",
             12,
             "Flat damage reduction bonus when holding this item.",
-            new List<string>()
-            {
-                "ITEM_ROT_BRAMBLEVEST_DESC"
-            }
+            ["ITEM_ROT_BRAMBLEVEST_DESC"],
+            true
         );
         public static ConfigurableValue<float> reflectDamage = new(
             "Item: Bramble Vest",
             "Reflect Percent",
             80f,
             "Percent damage reflected back to the attacker when holding this item.",
-            new List<string>()
-            {
-                "ITEM_ROT_BRAMBLEVEST_DESC"
-            }
+            ["ITEM_ROT_BRAMBLEVEST_DESC"],
+            true
         );
         public static ConfigurableValue<float> reflectProcCoefficient = new(
             "Item: Bramble Vest",
             "Reflect Proc Coefficient",
             0.5f,
             "Proc coefficient for the reflected damage hit when holding this item.",
-            new List<string>()
-            {
-                "ITEM_ROT_BRAMBLEVEST_DESC"
-            }
+            ["ITEM_ROT_BRAMBLEVEST_DESC"],
+            false
         );
         public static readonly float percentHealthBonus = healthBonus.Value / 100f;
         public static readonly float percentReflectDamage = reflectDamage.Value / 100f;
@@ -130,48 +120,22 @@ namespace RiskOfTactics.Items.Completes
 
         internal static void Init()
         {
-            GenerateItem();
-
-            ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
-            ItemAPI.Add(new CustomItem(itemDef, displayRules));
+            // Normal Variant
+            itemDef = ItemHelper.GenerateItem("BrambleVest", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
+            radiantDef = ItemHelper.GenerateItem("Radiant_BrambleVest", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
-            Hooks();
+            Utilities.RegisterVoidPair(itemDef, radiantDef);
+
+            Hooks(itemDef, ItemHelper.TacticTier.Normal);
+            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
         }
 
-        private static void GenerateItem()
+        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
         {
-            itemDef = ScriptableObject.CreateInstance<ItemDef>();
+            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
-            itemDef.name = "ROT_BRAMBLEVEST";
-            itemDef.AutoPopulateTokens();
-
-            Utils.SetItemTier(itemDef, ItemTier.Tier2);
-
-            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>("BrambleVest.prefab");
-            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
-            modelPanelParameters.focusPointTransform = prefab.transform;
-            modelPanelParameters.cameraPositionTransform = prefab.transform;
-            modelPanelParameters.maxDistance = 10f;
-            modelPanelParameters.minDistance = 5f;
-
-            itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>("BrambleVest.png");
-            itemDef.pickupModelPrefab = prefab;
-            itemDef.canRemove = true;
-            itemDef.hidden = false;
-
-            itemDef.tags = new ItemTag[]
-            {
-                ItemTag.Damage,
-                ItemTag.Utility,
-
-                ItemTag.CanBeTemporary
-            };
-        }
-
-        public static void Hooks()
-        {
             CharacterMaster.onStartGlobal += (obj) =>
             {
                 obj.inventory?.gameObject.AddComponent<Statistics>();
@@ -181,10 +145,10 @@ namespace RiskOfTactics.Items.Completes
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCountEffective(itemDef);
+                    int count = sender.inventory.GetItemCountEffective(def);
                     if (count > 0)
                     {
-                        args.healthTotalMult *= 1 + percentHealthBonus;
+                        args.healthTotalMult *= 1 + percentHealthBonus * radiantMultiplier;
                     }
                 }
             };
@@ -194,11 +158,11 @@ namespace RiskOfTactics.Items.Completes
                 CharacterBody victimBody = victimInfo.body;
                 if (victimBody && victimBody.inventory)
                 {
-                    int count = victimBody.inventory.GetItemCountEffective(itemDef);
+                    int count = victimBody.inventory.GetItemCountEffective(def);
                     if (count > 0)
                     {
                         // Cannot reduce damage below 1
-                        damageInfo.damage = damageInfo.damage > flatDamageReduction.Value + 1 ? damageInfo.damage - flatDamageReduction.Value : 1;
+                        damageInfo.damage = damageInfo.damage > flatDamageReduction.Value * radiantMultiplier + 1 ? damageInfo.damage - flatDamageReduction.Value * radiantMultiplier : 1;
                     }
                 }
             };
@@ -210,12 +174,12 @@ namespace RiskOfTactics.Items.Completes
 
                 if (vicBody && vicBody.inventory && atkBody && atkBody.healthComponent)
                 {
-                    int count = vicBody.inventory.GetItemCountEffective(itemDef);
-                    if (count > 0 && !Utils.OnSameTeam(vicBody, atkBody))
+                    int count = vicBody.inventory.GetItemCountEffective(def);
+                    if (count > 0 && !Utilities.OnSameTeam(vicBody, atkBody))
                     {
                         DamageInfo brambleProc = new DamageInfo
                         {
-                            damage = damageReport.damageInfo.damage * Utils.GetLinearStacking(percentReflectDamage, count),
+                            damage = damageReport.damageInfo.damage * Utilities.GetLinearStacking(percentReflectDamage * radiantMultiplier, count),
                             damageColorIndex = DamageColorIndex.Poison,
                             damageType = DamageType.Generic,
                             attacker = vicBody.gameObject,
