@@ -18,7 +18,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_GAMBLERSBLADE_DESC"
+                "ITEM_ROT_GAMBLERSBLADE_DESC"
             }
         );
         public static ConfigurableValue<float> attackSpeedEffectCap = new(
@@ -28,7 +28,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Amount of attack speed granted at money cap.",
             new List<string>()
             {
-                "ITEM_GAMBLERSBLADE_DESC"
+                "ITEM_ROT_GAMBLERSBLADE_DESC"
             }
         );
         public static ConfigurableValue<float> attackSpeedEffectCapExtraStacks = new(
@@ -38,7 +38,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Amount of attack speed granted at money cap for extra stacks.",
             new List<string>()
             {
-                "ITEM_GAMBLERSBLADE_DESC"
+                "ITEM_ROT_GAMBLERSBLADE_DESC"
             }
         );
         public static ConfigurableValue<int> moneyEffectCap = new(
@@ -48,7 +48,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Amount of money required to gain the attack speed cap. Scales with difficulty.",
             new List<string>()
             {
-                "ITEM_GAMBLERSBLADE_DESC"
+                "ITEM_ROT_GAMBLERSBLADE_DESC"
             }
         );
         public static ConfigurableValue<float> moneyDropChance = new(
@@ -58,7 +58,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Percent chance on-hit to gain money.",
             new List<string>()
             {
-                "ITEM_GAMBLERSBLADE_DESC"
+                "ITEM_ROT_GAMBLERSBLADE_DESC"
             }
         );
         public static ConfigurableValue<int> moneyGainOnDrop = new(
@@ -68,7 +68,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Money gained on drop.",
             new List<string>()
             {
-                "ITEM_GAMBLERSBLADE_DESC"
+                "ITEM_ROT_GAMBLERSBLADE_DESC"
             }
         );
         public static readonly float percentMoneyDropChance = moneyDropChance.Value / 100f;

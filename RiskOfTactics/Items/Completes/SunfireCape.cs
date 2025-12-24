@@ -22,7 +22,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_SUNFIRECAPE_DESC"
+                "ITEM_ROT_SUNFIRECAPE_DESC"
             }
         );
         public static ConfigurableValue<float> healthBonus = new(
@@ -32,7 +32,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent health gained when holding this item.",
             new List<string>()
             {
-                "ITEM_SUNFIRECAPE_DESC"
+                "ITEM_ROT_SUNFIRECAPE_DESC"
             }
         );
         public static ConfigurableValue<float> healthBonusExtraStacks = new(
@@ -42,7 +42,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent health gained when holding extra stacks of this item.",
             new List<string>()
             {
-                "ITEM_SUNFIRECAPE_DESC"
+                "ITEM_ROT_SUNFIRECAPE_DESC"
             }
         );
         public static ConfigurableValue<float> debuffTickDuration = new(
@@ -52,7 +52,7 @@ namespace RiskOfTactics.Items.Completes
             "Seconds between Burn and Wound reapplication.",
             new List<string>()
             {
-                "ITEM_SUNFIRECAPE_DESC"
+                "ITEM_ROT_SUNFIRECAPE_DESC"
             }
         );
         public static ConfigurableValue<float> maxHealthBurn = new(
@@ -62,7 +62,7 @@ namespace RiskOfTactics.Items.Completes
             "Total burn damage as a percentage of max HP.",
             new List<string>()
             {
-                "ITEM_SUNFIRECAPE_DESC"
+                "ITEM_ROT_SUNFIRECAPE_DESC"
             }
         );
         public static ConfigurableValue<float> debuffRadius = new(
@@ -72,7 +72,7 @@ namespace RiskOfTactics.Items.Completes
             "Radius of the debuff application zone (meters).",
             new List<string>()
             {
-                "ITEM_SUNFIRECAPE_DESC"
+                "ITEM_ROT_SUNFIRECAPE_DESC"
             }
         );
         private static readonly float percentHealthBonus = healthBonus.Value / 100f;

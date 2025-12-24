@@ -23,7 +23,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_DRAGONSCLAW_DESC"
+                "ITEM_ROT_DRAGONSCLAW_DESC"
             }
         );
         public static ConfigurableValue<float> maxHealthBonus = new(
@@ -33,7 +33,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent max health bonus when holding this item.",
             new List<string>()
             {
-                "ITEM_DRAGONSCLAW_DESC"
+                "ITEM_ROT_DRAGONSCLAW_DESC"
             }
         );
         public static ConfigurableValue<float> maxHealthBonusExtraStacks = new(
@@ -43,7 +43,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent max health bonus when holding extra stacks of this item.",
             new List<string>()
             {
-                "ITEM_DRAGONSCLAW_DESC"
+                "ITEM_ROT_DRAGONSCLAW_DESC"
             }
         );
         public static ConfigurableValue<float> healingPerTick = new(
@@ -53,7 +53,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent max health healing per item proc.",
             new List<string>()
             {
-                "ITEM_DRAGONSCLAW_DESC"
+                "ITEM_ROT_DRAGONSCLAW_DESC"
             }
         );
         public static ConfigurableValue<float> tickDuration = new(
@@ -63,7 +63,7 @@ namespace RiskOfTactics.Items.Completes
             "Number of seconds between item procs.",
             new List<string>()
             {
-                "ITEM_DRAGONSCLAW_DESC"
+                "ITEM_ROT_DRAGONSCLAW_DESC"
             }
         );
         public static readonly float percentHealingPerTick = healingPerTick.Value / 100f;

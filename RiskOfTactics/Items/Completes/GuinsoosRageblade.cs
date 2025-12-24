@@ -20,7 +20,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_GUINSOOSRAGEBLADE_DESC"
+                "ITEM_ROT_GUINSOOSRAGEBLADE_DESC"
             }
         );
         public static ConfigurableValue<float> attackSpeedOnHit = new(
@@ -30,7 +30,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent attack speed gained on-hit.",
             new List<string>()
             {
-                "ITEM_GUINSOOSRAGEBLADE_DESC"
+                "ITEM_ROT_GUINSOOSRAGEBLADE_DESC"
             }
         );
         public static readonly float percentAttackSpeedOnHit = attackSpeedOnHit.Value / 100f;

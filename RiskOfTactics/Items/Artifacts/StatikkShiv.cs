@@ -21,7 +21,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_STATIKKSHIV_DESC"
+                "ITEM_ROT_STATIKKSHIV_DESC"
             }
         );
         public static ConfigurableValue<float> effectCooldown = new(
@@ -31,7 +31,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Cooldown of this item's effect.",
             new List<string>()
             {
-                "ITEM_STATIKKSHIV_DESC"
+                "ITEM_ROT_STATIKKSHIV_DESC"
             }
         );
         public static ConfigurableValue<float> effectOnHitDamage = new(
@@ -41,7 +41,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Bonus on-hit damage (as a percentage of TOTAL damage) dealt by this item's effect.",
             new List<string>()
             {
-                "ITEM_STATIKKSHIV_DESC"
+                "ITEM_ROT_STATIKKSHIV_DESC"
             }
         );
         public static ConfigurableValue<float> effectOnHitDamageExtraStacks = new(
@@ -51,7 +51,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Bonus on-hit damage for extra stacks of this item.",
             new List<string>()
             {
-                "ITEM_STATIKKSHIV_DESC"
+                "ITEM_ROT_STATIKKSHIV_DESC"
             }
         );
         public static ConfigurableValue<int> shivRange = new(
@@ -61,7 +61,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Zap range of the item's chain effect in meters.",
             new List<string>()
             {
-                "ITEM_STATIKKSHIV_DESC"
+                "ITEM_ROT_STATIKKSHIV_DESC"
             }
         );
         public static ConfigurableValue<int> numberEnemiesChained = new(
@@ -71,7 +71,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Number of additional enemies chained off the initial enemy with this effect.",
             new List<string>()
             {
-                "ITEM_STATIKKSHIV_DESC"
+                "ITEM_ROT_STATIKKSHIV_DESC"
             }
         );
         public static ConfigurableValue<float> shivProcCoeff = new(
@@ -81,7 +81,7 @@ namespace RiskOfTactics.Items.Artifacts
             "Proc coefficient for the chain effect of this item.",
             new List<string>()
             {
-                "ITEM_STATIKKSHIV_DESC"
+                "ITEM_ROT_STATIKKSHIV_DESC"
             }
         );
         public static float percentEffectOnHitDamage = effectOnHitDamage.Value / 100f;

@@ -22,7 +22,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_ARCHANGELSSTAFF_DESC"
+                "ITEM_ROT_ARCHANGELSSTAFF_DESC"
             }
         );
         public static ConfigurableValue<float> flatDamagePerTick = new(
@@ -32,7 +32,7 @@ namespace RiskOfTactics.Items.Completes
             "Flat damage gained per item proc.",
             new List<string>()
             {
-                "ITEM_ARCHANGELSSTAFF_DESC"
+                "ITEM_ROT_ARCHANGELSSTAFF_DESC"
             }
         );
         public static ConfigurableValue<float> tickDuration = new(
@@ -42,7 +42,7 @@ namespace RiskOfTactics.Items.Completes
             "Number of seconds between item procs.",
             new List<string>()
             {
-                "ITEM_ARCHANGELSSTAFF_DESC"
+                "ITEM_ROT_ARCHANGELSSTAFF_DESC"
             }
         );
 

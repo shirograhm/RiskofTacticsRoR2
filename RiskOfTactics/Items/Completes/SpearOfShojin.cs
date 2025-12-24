@@ -17,7 +17,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_SPEAROFSHOJIN_DESC"
+                "ITEM_ROT_SPEAROFSHOJIN_DESC"
             }
         );
         public static ConfigurableValue<float> cooldownOnHit = new(
@@ -27,7 +27,7 @@ namespace RiskOfTactics.Items.Completes
             "Percentage of remaining cooldown refunded on-hit.",
             new List<string>()
             {
-                "ITEM_SPEAROFSHOJIN_DESC"
+                "ITEM_ROT_SPEAROFSHOJIN_DESC"
             }
         );
         public static ConfigurableValue<float> cooldownOnHitExtraStacks = new(
@@ -37,7 +37,7 @@ namespace RiskOfTactics.Items.Completes
             "Percentage of remaining cooldown refunded on-hit.",
             new List<string>()
             {
-                "ITEM_SPEAROFSHOJIN_DESC"
+                "ITEM_ROT_SPEAROFSHOJIN_DESC"
             }
         );
         private static readonly float percentCooldownOnHit = cooldownOnHit.Value / 100f;

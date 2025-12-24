@@ -17,7 +17,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_HANDOFJUSTICE_DESC"
+                "ITEM_ROT_HANDOFJUSTICE_DESC"
             }
         );
         public static ConfigurableValue<float> critChanceBonus = new(
@@ -27,7 +27,7 @@ namespace RiskOfTactics.Items.Completes
             "Crit chance gained when holding this item.",
             new List<string>()
             {
-                "ITEM_HANDOFJUSTICE_DESC"
+                "ITEM_ROT_HANDOFJUSTICE_DESC"
             }
         );
         public static ConfigurableValue<float> scaledBonusDamageEffect = new(
@@ -37,7 +37,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent BASE damage scaling effect gained for this item.",
             new List<string>()
             {
-                "ITEM_HANDOFJUSTICE_DESC"
+                "ITEM_ROT_HANDOFJUSTICE_DESC"
             }
         );
         public static ConfigurableValue<float> scaledBonusDamageEffectExtraStacks = new(
@@ -47,7 +47,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent BASE damage scaling effect gained for extra stacks of this item.",
             new List<string>()
             {
-                "ITEM_HANDOFJUSTICE_DESC"
+                "ITEM_ROT_HANDOFJUSTICE_DESC"
             }
         );
         public static ConfigurableValue<float> omnivampEffect = new(
@@ -57,7 +57,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent omnivamp scaling effect gained for this item.",
             new List<string>()
             {
-                "ITEM_HANDOFJUSTICE_DESC"
+                "ITEM_ROT_HANDOFJUSTICE_DESC"
             }
         );
         public static ConfigurableValue<float> omnivampEffectExtraStacks = new(
@@ -67,7 +67,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent omnivamp scaling effect gained for extra stacks of this item.",
             new List<string>()
             {
-                "ITEM_HANDOFJUSTICE_DESC"
+                "ITEM_ROT_HANDOFJUSTICE_DESC"
             }
         );
         private static readonly float percentScaledBonusDamageEffect = scaledBonusDamageEffect.Value / 100f;

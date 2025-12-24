@@ -23,7 +23,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_QUICKSILVER_DESC"
+                "ITEM_ROT_QUICKSILVER_DESC"
             }
         );
         public static ConfigurableValue<float> ccImmunityDuration = new(
@@ -33,7 +33,7 @@ namespace RiskOfTactics.Items.Completes
             "Number of seconds immune to crowd control once the teleporter event starts.",
             new List<string>()
             {
-                "ITEM_QUICKSILVER_DESC"
+                "ITEM_ROT_QUICKSILVER_DESC"
             }
         );
         public static ConfigurableValue<float> ccImmunityDurationExtraStacks = new(
@@ -43,7 +43,7 @@ namespace RiskOfTactics.Items.Completes
             "Number of seconds immune to crowd control once the teleporter event starts.",
             new List<string>()
             {
-                "ITEM_QUICKSILVER_DESC"
+                "ITEM_ROT_QUICKSILVER_DESC"
             }
         );
         public static ConfigurableValue<float> attackSpeedPerBuff = new(
@@ -53,7 +53,7 @@ namespace RiskOfTactics.Items.Completes
             "Attack speed gained per second while immune to CC.",
             new List<string>()
             {
-                "ITEM_QUICKSILVER_DESC"
+                "ITEM_ROT_QUICKSILVER_DESC"
             }
         );
         private static readonly float percentAttackSpeedPerBuff = attackSpeedPerBuff.Value / 100f;

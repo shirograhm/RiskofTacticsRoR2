@@ -20,7 +20,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_ADAPTIVEHELM_DESC"
+                "ITEM_ROT_ADAPTIVEHELM_DESC"
             }
         );
         public static ConfigurableValue<float> commonStatBoost = new(
@@ -30,7 +30,7 @@ namespace RiskOfTactics.Items.Completes
             "Base armor and % max HP shield for all users.",
             new List<string>()
             {
-                "ITEM_ADAPTIVEHELM_DESC"
+                "ITEM_ROT_ADAPTIVEHELM_DESC"
             }
         );
         public static ConfigurableValue<float> meleeResistBonus = new(
@@ -40,7 +40,7 @@ namespace RiskOfTactics.Items.Completes
             "Melee: Armor and % shield bonus for melee users for the first stack.",
             new List<string>()
             {
-                "ITEM_ADAPTIVEHELM_DESC"
+                "ITEM_ROT_ADAPTIVEHELM_DESC"
             }
         );
         public static ConfigurableValue<float> meleeResistBonusExtraStacks = new(
@@ -50,7 +50,7 @@ namespace RiskOfTactics.Items.Completes
             "Melee: Armor and % shield bonus for melee users with extra stacks.",
             new List<string>()
             {
-                "ITEM_ADAPTIVEHELM_DESC"
+                "ITEM_ROT_ADAPTIVEHELM_DESC"
             }
         );
         public static ConfigurableValue<float> cooldownRefundOnTakeDamage = new(
@@ -60,7 +60,7 @@ namespace RiskOfTactics.Items.Completes
             "Melee: Seconds cooldown refunded when taking damage.",
             new List<string>()
             {
-                "ITEM_ADAPTIVEHELM_DESC"
+                "ITEM_ROT_ADAPTIVEHELM_DESC"
             }
         );
         public static ConfigurableValue<float> rangedDamageBonus = new(
@@ -70,7 +70,7 @@ namespace RiskOfTactics.Items.Completes
             "Flat damage bonus for ranged users for the first stack.",
             new List<string>()
             {
-                "ITEM_ADAPTIVEHELM_DESC"
+                "ITEM_ROT_ADAPTIVEHELM_DESC"
             }
         );
         public static ConfigurableValue<float> rangedDamageBonusExtraStacks = new(
@@ -80,7 +80,7 @@ namespace RiskOfTactics.Items.Completes
             "Flat damage bonus for ranged users with extra stacks.",
             new List<string>()
             {
-                "ITEM_ADAPTIVEHELM_DESC"
+                "ITEM_ROT_ADAPTIVEHELM_DESC"
             }
         );
         public static ConfigurableValue<float> cooldownRefreshInterval = new(
@@ -90,7 +90,7 @@ namespace RiskOfTactics.Items.Completes
             "All cooldowns are refunded on this interval for ranged item users.",
             new List<string>()
             {
-                "ITEM_ADAPTIVEHELM_DESC"
+                "ITEM_ROT_ADAPTIVEHELM_DESC"
             }
         );
         public static ConfigurableValue<float> cooldownRefreshIntervalReduction = new(
@@ -100,7 +100,7 @@ namespace RiskOfTactics.Items.Completes
             "Cooldown refund timer for this item is reduced by this percentage per stack for ranged users.",
             new List<string>()
             {
-                "ITEM_ADAPTIVEHELM_DESC"
+                "ITEM_ROT_ADAPTIVEHELM_DESC"
             }
         );
         public static readonly float percentCommonStatBoost = commonStatBoost.Value / 100f;
@@ -125,7 +125,7 @@ namespace RiskOfTactics.Items.Completes
         {
             itemDef = ScriptableObject.CreateInstance<ItemDef>();
 
-            itemDef.name = "ADAPTIVEHELM";
+            itemDef.name = "ROT_ADAPTIVEHELM";
             itemDef.AutoPopulateTokens();
 
             Utils.SetItemTier(itemDef, ItemTier.Tier2);

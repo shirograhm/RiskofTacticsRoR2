@@ -18,7 +18,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_BLOODTHIRSTER_DESC"
+                "ITEM_ROT_BLOODTHIRSTER_DESC"
             }
         );
         public static ConfigurableValue<float> effectCooldown = new(
@@ -28,7 +28,7 @@ namespace RiskOfTactics.Items.Completes
             "Cooldown of this item's effect.",
             new List<string>()
             {
-                "ITEM_BLOODTHIRSTER_DESC"
+                "ITEM_ROT_BLOODTHIRSTER_DESC"
             }
         );
         public static ConfigurableValue<float> barrierTriggerHP = new(
@@ -38,7 +38,7 @@ namespace RiskOfTactics.Items.Completes
             "Threshold needed to fall below in order to trigger this item's effect.",
             new List<string>()
             {
-                "ITEM_BLOODTHIRSTER_DESC"
+                "ITEM_ROT_BLOODTHIRSTER_DESC"
             }
         );
         public static ConfigurableValue<float> barrierSize = new(
@@ -48,7 +48,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent max HP barrier given when this item is procced.",
             new List<string>()
             {
-                "ITEM_BLOODTHIRSTER_DESC"
+                "ITEM_ROT_BLOODTHIRSTER_DESC"
             }
         );
         public static ConfigurableValue<float> barrierSizeExtraStacks = new(
@@ -58,7 +58,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent max HP barrier given when extra stacks of item are procced.",
             new List<string>()
             {
-                "ITEM_BLOODTHIRSTER_DESC"
+                "ITEM_ROT_BLOODTHIRSTER_DESC"
             }
         );
         private static readonly float percentBarrierTriggerHP = barrierTriggerHP.Value / 100f;

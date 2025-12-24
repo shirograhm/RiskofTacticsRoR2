@@ -19,7 +19,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_CROWNGUARD_DESC"
+                "ITEM_ROT_CROWNGUARD_DESC"
             }
         );
         public static ConfigurableValue<float> effectShield = new(
@@ -29,7 +29,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent max HP shield bonus when teleporter is activated.",
             new List<string>()
             {
-                "ITEM_CROWNGUARD_DESC"
+                "ITEM_ROT_CROWNGUARD_DESC"
             }
         );
         public static ConfigurableValue<float> effectShieldExtraStacks = new(
@@ -39,7 +39,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent max HP shield bonus with extra stacks when teleporter is activated.",
             new List<string>()
             {
-                "ITEM_CROWNGUARD_DESC"
+                "ITEM_ROT_CROWNGUARD_DESC"
             }
         );
         public static ConfigurableValue<float> effectDuration = new(
@@ -49,7 +49,7 @@ namespace RiskOfTactics.Items.Completes
             "How long the shield effect lasts when teleporter is activated.",
             new List<string>()
             {
-                "ITEM_CROWNGUARD_DESC"
+                "ITEM_ROT_CROWNGUARD_DESC"
             }
         );
         public static ConfigurableValue<float> effectDamage = new(
@@ -59,7 +59,7 @@ namespace RiskOfTactics.Items.Completes
             "Damage bonus given after the shield effect expires.",
             new List<string>()
             {
-                "ITEM_CROWNGUARD_DESC"
+                "ITEM_ROT_CROWNGUARD_DESC"
             }
         );
         public static ConfigurableValue<float> effectDamageExtraStacks = new(
@@ -69,7 +69,7 @@ namespace RiskOfTactics.Items.Completes
             "Damage bonus given after the shield effect expires.",
             new List<string>()
             {
-                "ITEM_CROWNGUARD_DESC"
+                "ITEM_ROT_CROWNGUARD_DESC"
             }
         );
         private static readonly float percentEffectShield = effectShield.Value / 100f;

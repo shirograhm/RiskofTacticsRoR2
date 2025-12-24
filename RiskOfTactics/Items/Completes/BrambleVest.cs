@@ -20,7 +20,7 @@ namespace RiskOfTactics.Items.Completes
             "Whether or not the item is enabled.",
             new List<string>()
             {
-                "ITEM_BRAMBLEVEST_DESC"
+                "ITEM_ROT_BRAMBLEVEST_DESC"
             }
         );
         public static ConfigurableValue<float> healthBonus = new(
@@ -30,7 +30,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent health bonus when holding this item.",
             new List<string>()
             {
-                "ITEM_BRAMBLEVEST_DESC"
+                "ITEM_ROT_BRAMBLEVEST_DESC"
             }
         );
         public static ConfigurableValue<int> flatDamageReduction = new(
@@ -40,7 +40,7 @@ namespace RiskOfTactics.Items.Completes
             "Flat damage reduction bonus when holding this item.",
             new List<string>()
             {
-                "ITEM_BRAMBLEVEST_DESC"
+                "ITEM_ROT_BRAMBLEVEST_DESC"
             }
         );
         public static ConfigurableValue<float> reflectDamage = new(
@@ -50,7 +50,7 @@ namespace RiskOfTactics.Items.Completes
             "Percent damage reflected back to the attacker when holding this item.",
             new List<string>()
             {
-                "ITEM_BRAMBLEVEST_DESC"
+                "ITEM_ROT_BRAMBLEVEST_DESC"
             }
         );
         public static ConfigurableValue<float> reflectProcCoefficient = new(
@@ -60,7 +60,7 @@ namespace RiskOfTactics.Items.Completes
             "Proc coefficient for the reflected damage hit when holding this item.",
             new List<string>()
             {
-                "ITEM_BRAMBLEVEST_DESC"
+                "ITEM_ROT_BRAMBLEVEST_DESC"
             }
         );
         public static readonly float percentHealthBonus = healthBonus.Value / 100f;
