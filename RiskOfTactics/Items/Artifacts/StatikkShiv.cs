@@ -1,4 +1,5 @@
 using R2API;
+using RiskOfTactics.Buffs;
 using RoR2;
 using RoR2.Orbs;
 using System.Collections.Generic;

@@ -4,7 +4,7 @@ using RiskOfTactics.Items.Completes;
 using RoR2;
 using System.Collections.Generic;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Exts
 {
     internal static class LookingGlassIntegration
     {

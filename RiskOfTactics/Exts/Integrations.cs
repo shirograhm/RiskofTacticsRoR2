@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RiskOfTactics
+namespace RiskOfTactics.Exts
 {
     internal class Integrations
     {
