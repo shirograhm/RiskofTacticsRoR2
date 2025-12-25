@@ -35,14 +35,14 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> attackSpeedPerPercent = new(
             "Item: Hellfire Hatchet",
             "Attack Speed Per Percent",
-            1.5f,
+            1f,
             "Percent attack speed gained for every 1% missing HP.",
             ["ITEM_ROT_HELLFIREHATCHET_DESC"]
         );
         public static ConfigurableValue<float> attackSpeedPerPercentExtraStacks = new(
             "Item: Hellfire Hatchet",
             "Attack Speed Per Percent Extra Stacks",
-            1.5f,
+            1f,
             "Percent attack speed gained for every 1% missing HP with extra stacks.",
             ["ITEM_ROT_HELLFIREHATCHET_DESC"]
         );
