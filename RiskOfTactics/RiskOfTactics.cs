@@ -35,7 +35,9 @@ namespace RiskOfTactics
         public static System.Random RandGen = new();
         public static Xoroshiro128Plus rng = new((ulong)RandGen.Next());
 
-        public static ExpansionDef voidDLC = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC1/Common/DLC1.asset").WaitForCompletion();
+        public static ExpansionDef sotvDLC = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC1/Common/DLC1.asset").WaitForCompletion();
+        public static ExpansionDef sotsDLC = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC2/Common/DLC2.asset").WaitForCompletion();
+        public static ExpansionDef acDLC = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC3/Common/DLC3.asset").WaitForCompletion();
 
         public void Awake()
         {

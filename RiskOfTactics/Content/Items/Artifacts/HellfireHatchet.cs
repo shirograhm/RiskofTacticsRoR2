@@ -19,14 +19,14 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> maxHealthDamage = new(
             "Item: Hellfire Hatchet",
             "Max Health Damage",
-            3f,
+            2f,
             "Percent of max HP dealt as damage on-hit.",
             ["ITEM_ROT_HELLFIREHATCHET_DESC"]
         );
         public static ConfigurableValue<float> maxHealthDamageExtraStacks = new(
             "Item: Hellfire Hatchet",
             "Max Health Damage Extra Stacks",
-            3f,
+            2f,
             "Percent of max HP dealt as damage on-hit with extra stacks.",
             ["ITEM_ROT_HELLFIREHATCHET_DESC"]
         );

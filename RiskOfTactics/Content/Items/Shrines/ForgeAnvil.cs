@@ -80,11 +80,51 @@ namespace RiskOfTactics.Content.Items.Shrines
                 forbiddenUnlockableDef = null
             };
 
+            List<string> baseStages = ["blackbeach", "golemplains", "lakes", "goolake", "foggyswamp", "frozenwall", "wispgraveyard", "dampcavesimple", "shipgraveyard", "rootjungle", "skymeadow", "moon2"];
+            List<string> sotvStages = ["snowyforest", "sulfurpools", "ancientloft"];
+            List<string> sotsStages = ["lakesnight", "village", "villagenight", "lemuriantemple", "habitat", "habitatfall", "meridian", "helminthroost"];
             if (isEnabled && directorCard != null)
-                AddDirectorCardTo("wispgraveyard", "Shrines", directorCard);
+            {
+                foreach (string s in baseStages)
+                {
+                    AddDirectorCardTo(s, "Shrines", directorCard);
+                }
+                if (RiskOfTactics.sotvDLC)
+                {
+                    foreach (string s in sotvStages)
+                    {
+                        AddDirectorCardTo(s, "Shrines", directorCard);
+                    }
+                }
+                if (RiskOfTactics.sotsDLC)
+                {
+                    foreach (string s in sotsStages)
+                    {
+                        AddDirectorCardTo(s, "Shrines", directorCard);
+                    }
+                }
+            }
             else
-                RemoveDirectorCardFrom("wispgraveyard", "Shrines", directorCard);
-
+            {
+                foreach (string s in baseStages)
+                {
+                    RemoveDirectorCardFrom(s, "Shrines", directorCard);
+                }
+                if (RiskOfTactics.sotvDLC)
+                {
+                    foreach (string s in sotvStages)
+                    {
+                        RemoveDirectorCardFrom(s, "Shrines", directorCard);
+                    }
+                }
+                if (RiskOfTactics.sotsDLC)
+                {
+                    foreach (string s in sotsStages)
+                    {
+                        RemoveDirectorCardFrom(s, "Shrines", directorCard);
+                    }
+                }
+            }
             // Add director cards
             SceneDirector.onGenerateInteractableCardSelection += (sceneDirector, dccs) =>
             {

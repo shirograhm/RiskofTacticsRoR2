@@ -24,7 +24,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> healthBonus = new(
             "Item: Bramble Vest",
             "Health",
-            7f,
+            8f,
             "Percent health bonus when holding this item.",
             ["ITEM_ROT_BRAMBLEVEST_DESC"],
             true
@@ -32,7 +32,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<int> flatDamageReduction = new(
             "Item: Bramble Vest",
             "Damage Reduction",
-            12,
+            5,
             "Flat damage reduction bonus when holding this item.",
             ["ITEM_ROT_BRAMBLEVEST_DESC"],
             true
