@@ -20,7 +20,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> cooldownOnHit = new(
             "Item: Spear Of Shojin",
             "On-Hit Cooldown",
-            15f,
+            10f,
             "Percentage of remaining cooldown refunded on-hit.",
             ["ITEM_ROT_SPEAROFSHOJIN_DESC"],
             true
@@ -28,7 +28,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> cooldownOnHitExtraStacks = new(
             "Item: Spear Of Shojin",
             "On-Hit Cooldown Extra Stacks",
-            10f,
+            6f,
             "Percentage of remaining cooldown refunded on-hit with extra stacks.",
             ["ITEM_ROT_SPEAROFSHOJIN_DESC"],
             true

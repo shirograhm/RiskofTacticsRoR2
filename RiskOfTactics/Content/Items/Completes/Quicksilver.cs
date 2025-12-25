@@ -15,6 +15,8 @@ namespace RiskOfTactics.Content.Items.Completes
         public static BuffDef flowBuff;
         public static BuffDef cleanseBuff;
 
+        public static GameObject ccShieldPrefab;
+
         public static ItemDef radiantDef;
 
         // When the teleporter is activated, gain immunity to crowd control for a duration. During this time, gain attack speed every second.
@@ -122,8 +124,10 @@ namespace RiskOfTactics.Content.Items.Completes
 
             flowBuff = Utilities.GenerateBuffDef("Flow", AssetHandler.bundle.LoadAsset<Sprite>("Flow.png"), true, false, false, false);
             ContentAddition.AddBuffDef(flowBuff);
-            cleanseBuff = Utilities.GenerateBuffDef("Cleanse", AssetHandler.bundle.LoadAsset<Sprite>("flowBuff.png"), false, false, false, true);
+            cleanseBuff = Utilities.GenerateBuffDef("Cleanse", AssetHandler.bundle.LoadAsset<Sprite>("Cleanse.png"), false, false, false, true);
             ContentAddition.AddBuffDef(cleanseBuff);
+
+            ccShieldPrefab = LegacyResourcesAPI.LoadAsync<GameObject>("Prefabs/TemporaryVisualEffects/BearVoidEffect").WaitForCompletion();
 
             Utilities.RegisterVoidPair(itemDef, radiantDef);
 
@@ -199,11 +203,63 @@ namespace RiskOfTactics.Content.Items.Completes
             GenericGameEvents.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
             {
                 // CC immunity
-                if (victimInfo.body && victimInfo.body.GetBuffCount(cleanseBuff) > 0)
+                if (victimInfo.body && victimInfo.body.HasBuff(cleanseBuff))
                 {
                     damageInfo.force = Vector3.zero;
                 }
             };
+
+            On.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects += (orig, self) =>
+            {
+                orig(self);
+
+                TemporaryVisualEffect ccShieldEffectInstance = new() { };
+                UpdateSingleTemporaryVisualEffect(ref ccShieldEffectInstance, ccShieldPrefab, self, self.HasBuff(cleanseBuff));
+            };
+        }
+
+        private static void UpdateSingleTemporaryVisualEffect(ref TemporaryVisualEffect tempEffect, GameObject tempEffectPrefab, CharacterBody userBody, bool active, string childLocatorOverride = "")
+        {
+            if (tempEffect != null != active)
+            {
+                if (active)
+                {
+                    if (tempEffectPrefab)
+                    {
+                        GameObject gameObject = UnityEngine.Object.Instantiate(tempEffectPrefab, userBody.corePosition, Quaternion.identity);
+                        tempEffect = gameObject.GetComponent<TemporaryVisualEffect>();
+                        tempEffect.parentTransform = userBody.coreTransform;
+                        tempEffect.visualState = TemporaryVisualEffect.VisualState.Enter;
+                        tempEffect.healthComponent = userBody.healthComponent;
+                        tempEffect.radius = 4f;
+                        LocalCameraEffect component = gameObject.GetComponent<LocalCameraEffect>();
+                        if (component)
+                        {
+                            component.targetCharacter = userBody.gameObject;
+                        }
+                        if (!string.IsNullOrEmpty(childLocatorOverride))
+                        {
+                            ChildLocator childLocator = userBody.modelLocator?.modelTransform?.GetComponent<ChildLocator>();
+                            if ((bool)childLocator)
+                            {
+                                Transform transform = childLocator.FindChild(childLocatorOverride);
+                                if ((bool)transform)
+                                {
+                                    tempEffect.parentTransform = transform;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Can't instantiate null temporary visual effect");
+                    }
+                }
+                else
+                {
+                    tempEffect.visualState = TemporaryVisualEffect.VisualState.Exit;
+                }
+            }
         }
     }
 }

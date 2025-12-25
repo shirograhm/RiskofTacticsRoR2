@@ -24,7 +24,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> critChanceBonus = new(
             "Item: Hand Of Justice",
             "Crit Chance",
-            8f,
+            5f,
             "Crit chance gained when holding this item.",
             ["ITEM_ROT_HANDOFJUSTICE_DESC"],
             false

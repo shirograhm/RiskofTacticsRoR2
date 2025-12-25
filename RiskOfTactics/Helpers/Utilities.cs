@@ -11,6 +11,10 @@ namespace RiskOfTactics.Helpers
 {
     public static class Utilities
     {
+        public static Color STRIKERS_FLAIL_COLOR = new(242f, 208f, 111f);
+        public static Color STRIKERS_FLAIL_STACKED_COLOR = new(252f, 186f, 3f);
+        public static Color HELLFIRE_HATCHET_COLOR = new(245f, 163f, 69f);
+
         internal static void Init()
         {
             NetworkingAPI.RegisterMessageType<SyncForceRecalculate>();
@@ -54,6 +58,23 @@ namespace RiskOfTactics.Helpers
         {
             body.RecalculateStats();
             if (NetworkServer.active) new SyncForceRecalculate(body.netId);
+        }
+
+        public static void AddRecalculateOnFrameHook(ItemDef def)
+        {
+            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
+            {
+                orig(self);
+
+                if (self && self.inventory)
+                {
+                    int count = self.inventory.GetItemCountEffective(def);
+                    if (count > 0)
+                    {
+                        ForceRecalculate(self);
+                    }
+                }
+            };
         }
 
         public static CharacterBody GetMinionOwnershipParentBody(CharacterBody body)
@@ -104,6 +125,14 @@ namespace RiskOfTactics.Helpers
 
             string[] rangedBodies = ConfigManager.Scaling.rangedCharactersList.Value.Split(',');
             return rangedBodies.Contains(name);
+        }
+
+        public static float GetMissingHealth(HealthComponent healthComponent, bool includeShield)
+        {
+            if (includeShield)
+                return healthComponent.fullCombinedHealth * (1 - healthComponent.combinedHealthFraction);
+            else
+                return healthComponent.fullHealth * (1 - healthComponent.healthFraction);
         }
 
         public static float GetDifficultyAsPercentage()

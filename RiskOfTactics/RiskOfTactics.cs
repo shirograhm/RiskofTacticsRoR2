@@ -45,6 +45,7 @@ namespace RiskOfTactics
             AssetHandler.Init();
             GenericGameEvents.Init();
             ConfigOptions.Init();
+            DamageColorAPI.Init();
             Utilities.Init();
 
             // Mod Integrations
@@ -72,6 +73,8 @@ namespace RiskOfTactics
                 HandOfJustice.Init();
             if (Quicksilver.isEnabled.Value)
                 Quicksilver.Init();
+            if (StrikersFlail.isEnabled.Value)
+                StrikersFlail.Init();
             if (SpearOfShojin.isEnabled.Value)
                 SpearOfShojin.Init();
             if (SunfireCape.isEnabled.Value)
@@ -80,6 +83,8 @@ namespace RiskOfTactics
             // Artifacts
             if (GamblersBlade.isEnabled.Value)
                 GamblersBlade.Init();
+            if (HellfireHatchet.isEnabled.Value)
+                HellfireHatchet.Init();
             if (HorizonFocus.isEnabled.Value)
                 HorizonFocus.Init();
             if (StatikkShiv.isEnabled.Value)
