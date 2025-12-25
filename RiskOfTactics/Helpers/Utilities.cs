@@ -135,6 +135,14 @@ namespace RiskOfTactics.Helpers
                 return healthComponent.fullHealth * (1 - healthComponent.healthFraction);
         }
 
+        public static float GetMissingHealthPercent(HealthComponent healthComponent, bool includeShield)
+        {
+            if (includeShield)
+                return 100f * (1 - healthComponent.combinedHealthFraction);
+            else
+                return 100f * (1 - healthComponent.healthFraction);
+        }
+
         public static float GetDifficultyAsPercentage()
         {
             return (Stage.instance.entryDifficultyCoefficient - 1f) / 98f;

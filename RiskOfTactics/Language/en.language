@@ -145,7 +145,7 @@
     "ROT_HELLFIREHATCHET": "Hellfire Hatchet",
     "ITEM_ROT_HELLFIREHATCHET_NAME": "Hellfire Hatchet",
     "ITEM_ROT_HELLFIREHATCHET_PICKUP": "Heavier than it should be.",
-    "ITEM_ROT_HELLFIREHATCHET_DESC": "Deal an additional <style=cIsDamage>{Max Health Damage}% <style=cStack>(+{Max Health Damage Extra Stacks}% per stack)</style></style> of your <style=cIsHealth>max health</style> on-hit. For every <style=cIsHealing>1% missing health</style>, gain <style=cIsDamage>{Attack Speed Per Percent}% <style=cStack>(+{Attack Speed Per Percent Extra Stacks}% per stack)</style> attack speed</style>.",
+    "ITEM_ROT_HELLFIREHATCHET_DESC": "Deal <style=cIsHealth>{Max Health Damage}% <style=cStack>(+{Max Health Damage Extra Stacks}% per stack)</style> of your max health</style> on-hit. For every <style=cIsHealing>1% missing health</style>, gain <style=cIsDamage>{Attack Speed Per Percent}% <style=cStack>(+{Attack Speed Per Percent Extra Stacks}% per stack)</style> attack speed</style>.",
     "ITEM_ROT_HELLFIREHATCHET_LORE": "",
     "ROT_HORIZONFOCUS": "Horizon Focus",
     "ITEM_ROT_HORIZONFOCUS_NAME": "Horizon Focus",
