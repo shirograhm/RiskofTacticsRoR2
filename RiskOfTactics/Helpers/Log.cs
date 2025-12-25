@@ -2,7 +2,7 @@
 
 namespace RiskOfTactics.Helpers
 {
-    internal static class ROTLogger
+    internal static class Log
     {
         private static ManualLogSource _logSource;
 

@@ -9,7 +9,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ItemDef itemDef;
         public static ItemDef radiantDef;
 
-        // Refund a percentage of your active cooldowns on-hit.
+        // Chance to refund a percentage of your active cooldowns on-hit.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Spear Of Shojin",
             "Enabled",
@@ -17,10 +17,18 @@ namespace RiskOfTactics.Content.Items.Completes
             "Whether or not the item is enabled.",
             ["ITEM_ROT_SPEAROFSHOJIN_DESC"]
         );
+        public static ConfigurableValue<float> chanceToProc = new(
+            "Item: Spear Of Shojin",
+            "On-Hit Chance",
+            60f,
+            "Percentage chance to trigger the cooldown refund.",
+            ["ITEM_ROT_SPEAROFSHOJIN_DESC"],
+            false
+        );
         public static ConfigurableValue<float> cooldownOnHit = new(
             "Item: Spear Of Shojin",
             "On-Hit Cooldown",
-            10f,
+            8f,
             "Percentage of remaining cooldown refunded on-hit.",
             ["ITEM_ROT_SPEAROFSHOJIN_DESC"],
             true
@@ -28,7 +36,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> cooldownOnHitExtraStacks = new(
             "Item: Spear Of Shojin",
             "On-Hit Cooldown Extra Stacks",
-            6f,
+            5f,
             "Percentage of remaining cooldown refunded on-hit with extra stacks.",
             ["ITEM_ROT_SPEAROFSHOJIN_DESC"],
             true
@@ -56,18 +64,21 @@ namespace RiskOfTactics.Content.Items.Completes
                 CharacterBody vicBody = victimInfo.body;
                 CharacterBody atkBody = attackerInfo.body;
 
-                if (atkBody && atkBody.inventory && atkBody.skillLocator && Utilities.IsValidTargetBody(vicBody))
+                if (atkBody && atkBody.inventory && Utilities.IsValidTargetBody(vicBody))
                 {
                     int count = atkBody.inventory.GetItemCountEffective(def);
-                    if (count > 0)
+                    if (count > 0 && atkBody.master && Util.CheckRoll(chanceToProc.Value, atkBody.master))
                     {
-                        foreach (SkillSlot slot in Enum.GetValues(typeof(SkillSlot)))
+                        if (atkBody.skillLocator)
                         {
-                            GenericSkill skill = atkBody.skillLocator.GetSkill(slot);
-                            if (skill && skill.stock < skill.maxStock)
+                            foreach (SkillSlot slot in Enum.GetValues(typeof(SkillSlot)))
                             {
-                                float cooldownLeft = skill.finalRechargeInterval - skill.rechargeStopwatch;
-                                skill.rechargeStopwatch += cooldownLeft * Utilities.GetHyperbolicStacking(percentCooldownOnHit * radiantMultiplier, percentCooldownOnHitExtraStacks * radiantMultiplier, count);
+                                GenericSkill skill = atkBody.skillLocator.GetSkill(slot);
+                                if (skill && skill.stock < skill.maxStock)
+                                {
+                                    float cooldownLeft = skill.finalRechargeInterval - skill.rechargeStopwatch;
+                                    skill.rechargeStopwatch += cooldownLeft * Utilities.GetHyperbolicStacking(percentCooldownOnHit * radiantMultiplier, percentCooldownOnHitExtraStacks * radiantMultiplier, count);
+                                }
                             }
                         }
                     }

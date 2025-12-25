@@ -11,10 +11,6 @@ namespace RiskOfTactics.Helpers
 {
     public static class Utilities
     {
-        public static Color STRIKERS_FLAIL_COLOR = new(242f, 208f, 111f);
-        public static Color STRIKERS_FLAIL_STACKED_COLOR = new(252f, 186f, 3f);
-        public static Color HELLFIRE_HATCHET_COLOR = new(245f, 163f, 69f);
-
         internal static void Init()
         {
             NetworkingAPI.RegisterMessageType<SyncForceRecalculate>();

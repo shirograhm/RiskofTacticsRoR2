@@ -15,13 +15,13 @@ namespace RiskOfTactics.Extensions
             {
                 try
                 {
-                    ROTLogger.Debug("Running code injection for LookingGlass.");
+                    Log.Debug("Running code injection for LookingGlass.");
                     LookingGlassIntegration.Init();
                     lookingGlassEnabled = true;
                 }
                 catch (Exception e)
                 {
-                    ROTLogger.Error(e);
+                    Log.Error(e);
                 }
             }
         }

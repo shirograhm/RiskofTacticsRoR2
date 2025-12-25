@@ -1,6 +1,7 @@
 ﻿using R2API;
 using RoR2;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -8,6 +9,10 @@ namespace RiskOfTactics.Helpers
 {
     public static class ItemHelper
     {
+        public static List<ItemDef> normalList = [];
+        public static List<ItemDef> radiantList = [];
+        public static List<ItemDef> artifactList = [];
+
         public enum TacticTier
         {
             Normal, Radiant, Artifact
@@ -36,7 +41,7 @@ namespace RiskOfTactics.Helpers
             GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>(name + ".prefab");
             if (prefab == null)
             {
-                ROTLogger.Warning("Missing prefab file for item " + itemDef.name + ". Substituting default...");
+                Log.Warning("Missing prefab file for item " + itemDef.name + ". Substituting default...");
                 prefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Mystery/PickupMystery.prefab").WaitForCompletion();
             }
             ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
@@ -56,6 +61,20 @@ namespace RiskOfTactics.Helpers
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
 
+            // Add item to personal dict
+            switch (tTier)
+            {
+                case TacticTier.Normal:
+                    normalList.Add(itemDef);
+                    break;
+                case TacticTier.Radiant:
+                    radiantList.Add(itemDef);
+                    break;
+                case TacticTier.Artifact:
+                    artifactList.Add(itemDef);
+                    break;
+            }
+
             return itemDef;
         }
 
@@ -71,7 +90,7 @@ namespace RiskOfTactics.Helpers
                 }
                 catch (Exception e)
                 {
-                    ROTLogger.Warning(string.Format("Error setting deprecatedTier for {0}: {1}", itemDef.name, e));
+                    Log.Warning(string.Format("Error setting deprecatedTier for {0}: {1}", itemDef.name, e));
                 }
             }
 

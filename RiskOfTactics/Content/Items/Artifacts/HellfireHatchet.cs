@@ -8,8 +8,6 @@ namespace RiskOfTactics.Content.Items.Artifacts
     {
         public static ItemDef itemDef;
 
-        public static DamageColorIndex hatchetDamageColor = DamageColorAPI.RegisterDamageColor(Utilities.HELLFIRE_HATCHET_COLOR);
-
         // Deal bonus damage based on max HP. Gain attack speed scaling with missing HP.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Hellfire Hatchet",
@@ -103,7 +101,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                             procCoefficient = onHitProcCoefficient.Value,
                             position = damageInfo.position,
                             crit = atkBody.RollCrit(),
-                            damageColorIndex = hatchetDamageColor,
+                            damageColorIndex = DamageColorIndex.DeathMark,
                             procChainMask = damageInfo.procChainMask,
                             damageType = DamageType.Silent
                         };

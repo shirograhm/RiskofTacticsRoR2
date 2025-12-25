@@ -28,7 +28,7 @@
     "ROT_RADIANT_CROWNGUARD": "Crownguard (Radiant)",
     "ITEM_ROT_RADIANT_CROWNGUARD_NAME": "Crownguard (Radiant)",
     "ITEM_ROT_RADIANT_CROWNGUARD_PICKUP": "Activating the teleporter grants a temporary shield. When the shield expires, gain permanent BASE damage until the next stage.",
-    "ITEM_ROT_RADIANT_CROWNGUARD_DESC": "Upon activation of the teleporter, gain a <style=cIsUtility>{Effect Shield}% <style=cStack>(+{Effect Shield Extra Stacks}% per stack)</style> max HP shield</style> for <style=cIsUtility>{Effect Duration} seconds</style>. When the shield expires, gain <style=cIsDamage>{Effect Damage} <style=cStack>(+{Effect Damage Extra Stacks}% per stack)</style> BASE damage</style>.",
+    "ITEM_ROT_RADIANT_CROWNGUARD_DESC": "Upon activation of the teleporter, gain a <style=cIsUtility>{Effect Shield}% <style=cStack>(+{Effect Shield Extra Stacks}% per stack)</style> max HP shield</style> for <style=cIsUtility>{Effect Duration} seconds</style>. When the shield expires, gain <style=cIsDamage>{Effect Damage} <style=cStack>(+{Effect Damage Extra Stacks} per stack)</style> BASE damage</style>.",
     "ITEM_ROT_RADIANT_CROWNGUARD_LORE": "",
     "ROT_RADIANT_DRAGONSCLAW": "Dragon's Claw (Radiant)",
     "ITEM_ROT_RADIANT_DRAGONSCLAW_NAME": "Dragon's Claw (Radiant)",
@@ -53,7 +53,7 @@
     "ROT_RADIANT_SPEAROFSHOJIN": "Spear Of Shojin (Radiant)",
     "ITEM_ROT_RADIANT_SPEAROFSHOJIN_NAME": "Spear Of Shojin (Radiant)",
     "ITEM_ROT_RADIANT_SPEAROFSHOJIN_PICKUP": "Refund a percentage of your active cooldowns on-hit.",
-    "ITEM_ROT_RADIANT_SPEAROFSHOJIN_DESC": "On-hit, reduce your remaining skill cooldowns by <style=cIsUtility>{On-Hit Cooldown}% <style=cStack>(+{On-Hit Cooldown Extra Stacks}% per stack)</style></style>.",
+    "ITEM_ROT_RADIANT_SPEAROFSHOJIN_DESC": "On-hit, <style=cIsUtility>{On-Hit Chance}% chance</style> reduce your remaining skill cooldowns by <style=cIsUtility>{On-Hit Cooldown}% <style=cStack>(+{On-Hit Cooldown Extra Stacks}% per stack)</style></style>.",
     "ITEM_ROT_RADIANT_SPEAROFSHOJIN_LORE": "",
     "ROT_RADIANT_STRIKERSFLAIL": "Striker's Flail (Radiant)",
     "ITEM_ROT_RADIANT_STRIKERSFLAIL_NAME": "Striker's Flail (Radiant)",
@@ -63,8 +63,15 @@
     "ROT_RADIANT_SUNFIRECAPE": "Sunfire Cape (Radiant)",
     "ITEM_ROT_RADIANT_SUNFIRECAPE_NAME": "Sunfire Cape (Radiant)",
     "ITEM_ROT_RADIANT_SUNFIRECAPE_PICKUP": "Periodically <style=cUserSetting>Burn</style> nearby enemies and <style=cDeath>disable their healing</style>.",
-    "ITEM_ROT_RADIANT_SUNFIRECAPE_DESC": "Gain <style=cIsHealth>{Percent Health}% <style=cStack>(+{Percent Health Extra Stacks}% per stack)</style> max HP</style>. Every <style=cIsUtility>{Debuff Tick} seconds</style>, <style=cUserSetting>Burn</style> nearby enemies for <style=cIsHealth>{Burn Percent}% max HP</style> and <style=cDeath>disable their healing for <style=cIsUtility>{Healing Disable Duration} seconds</style></style>.",
+    "ITEM_ROT_RADIANT_SUNFIRECAPE_DESC": "Gain <style=cIsHealth>{Percent Health}% <style=cStack>(+{Percent Health Extra Stacks}% per stack)</style> max HP</style>. Every <style=cIsUtility>{Debuff Tick} seconds</style>, burn nearby enemies for <style=cIsHealth>{Burn Percent}% max HP</style> and <style=cDeath>disable their healing for {Healing Disable Duration} seconds</style>.",
     "ITEM_ROT_RADIANT_SUNFIRECAPE_LORE": "",
+
+
+
+
+
+
+
 
 
     "ROT_ADAPTIVEHELM": "Adaptive Helm",
@@ -90,7 +97,7 @@
     "ROT_CROWNGUARD": "Crownguard",
     "ITEM_ROT_CROWNGUARD_NAME": "Crownguard",
     "ITEM_ROT_CROWNGUARD_PICKUP": "Activating the teleporter grants a temporary shield. When the shield expires, gain permanent BASE damage until the next stage.",
-    "ITEM_ROT_CROWNGUARD_DESC": "Upon activation of the teleporter, gain a <style=cIsUtility>{Effect Shield}% <style=cStack>(+{Effect Shield Extra Stacks}% per stack)</style> max HP shield</style> for <style=cIsUtility>{Effect Duration} seconds</style>. When the shield expires, gain <style=cIsDamage>{Effect Damage} <style=cStack>(+{Effect Damage Extra Stacks}% per stack)</style> BASE damage</style>.",
+    "ITEM_ROT_CROWNGUARD_DESC": "Upon activation of the teleporter, gain a <style=cIsUtility>{Effect Shield}% <style=cStack>(+{Effect Shield Extra Stacks}% per stack)</style> max HP shield</style> for <style=cIsUtility>{Effect Duration} seconds</style>. When the shield expires, gain <style=cIsDamage>{Effect Damage} <style=cStack>(+{Effect Damage Extra Stacks} per stack)</style> BASE damage</style>.",
     "ITEM_ROT_CROWNGUARD_LORE": "",
     "ROT_DRAGONSCLAW": "Dragon's Claw",
     "ITEM_ROT_DRAGONSCLAW_NAME": "Dragon's Claw",
@@ -120,7 +127,7 @@
     "ROT_SPEAROFSHOJIN": "Spear Of Shojin",
     "ITEM_ROT_SPEAROFSHOJIN_NAME": "Spear Of Shojin",
     "ITEM_ROT_SPEAROFSHOJIN_PICKUP": "Refund a percentage of your active cooldowns on-hit.",
-    "ITEM_ROT_SPEAROFSHOJIN_DESC": "On-hit, reduce your remaining skill cooldowns by <style=cIsUtility>{On-Hit Cooldown}% <style=cStack>(+{On-Hit Cooldown Extra Stacks}% per stack)</style></style>.",
+    "ITEM_ROT_SPEAROFSHOJIN_DESC": "On-hit, <style=cIsUtility>{On-Hit Chance}% chance</style> to reduce your remaining skill cooldowns by <style=cIsUtility>{On-Hit Cooldown}% <style=cStack>(+{On-Hit Cooldown Extra Stacks}% per stack)</style></style>.",
     "ITEM_ROT_SPEAROFSHOJIN_LORE": "",
     "ROT_STRIKERSFLAIL": "Striker's Flail",
     "ITEM_ROT_STRIKERSFLAIL_NAME": "Striker's Flail",
@@ -130,7 +137,7 @@
     "ROT_SUNFIRECAPE": "Sunfire Cape",
     "ITEM_ROT_SUNFIRECAPE_NAME": "Sunfire Cape",
     "ITEM_ROT_SUNFIRECAPE_PICKUP": "Periodically <style=cUserSetting>Burn</style> nearby enemies and <style=cDeath>disable their healing</style>.",
-    "ITEM_ROT_SUNFIRECAPE_DESC": "Gain <style=cIsHealth>{Percent Health}% <style=cStack>(+{Percent Health Extra Stacks}% per stack)</style> max HP</style>. Every <style=cIsUtility>{Debuff Tick} seconds</style>, <style=cUserSetting>Burn</style> nearby enemies for <style=cIsHealth>{Burn Percent}% max HP</style> and <style=cDeath>disable their healing for <style=cIsUtility>{Healing Disable Duration} seconds</style></style>.",
+    "ITEM_ROT_SUNFIRECAPE_DESC": "Gain <style=cIsHealth>{Percent Health}% <style=cStack>(+{Percent Health Extra Stacks}% per stack)</style> max HP</style>. Every <style=cIsUtility>{Debuff Tick} seconds</style>, burn nearby enemies for <style=cIsHealth>{Burn Percent}% max HP</style> and <style=cDeath>disable their healing for {Healing Disable Duration} seconds</style>.",
     "ITEM_ROT_SUNFIRECAPE_LORE": "",
 
 

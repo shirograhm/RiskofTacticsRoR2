@@ -31,14 +31,14 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> effectOnHitDamage = new(
             "Item: Statikk Shiv",
             "Bonus On-Hit",
-            90f,
+            240f,
             "Bonus on-hit damage (as a percentage of TOTAL damage) dealt by this item's effect.",
             ["ITEM_ROT_STATIKKSHIV_DESC"]
         );
         public static ConfigurableValue<float> effectOnHitDamageExtraStacks = new(
             "Item: Statikk Shiv",
             "Bonus On-Hit Per Stack",
-            90f,
+            240f,
             "Bonus on-hit damage for extra stacks of this item.",
             ["ITEM_ROT_STATIKKSHIV_DESC"]
         );
@@ -59,7 +59,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> shivProcCoeff = new(
             "Item: Statikk Shiv",
             "Proc Coefficient",
-            0.9f,
+            1f,
             "Proc coefficient for the chain effect of this item.",
             ["ITEM_ROT_STATIKKSHIV_DESC"]
         );

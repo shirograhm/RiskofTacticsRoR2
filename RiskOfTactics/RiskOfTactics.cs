@@ -4,6 +4,7 @@ using R2API.Utils;
 using RiskOfTactics.Content.Buffs;
 using RiskOfTactics.Content.Items.Artifacts;
 using RiskOfTactics.Content.Items.Completes;
+using RiskOfTactics.Content.Items.Shrines;
 using RiskOfTactics.Extensions;
 using RiskOfTactics.Helpers;
 using RoR2;
@@ -32,7 +33,7 @@ namespace RiskOfTactics
         public static PluginInfo PInfo { get; private set; }
 
         public static System.Random RandGen = new();
-        public static Xoroshiro128Plus xoroshiro = new Xoroshiro128Plus((ulong)RandGen.Next());
+        public static Xoroshiro128Plus rng = new((ulong)RandGen.Next());
 
         public static ExpansionDef voidDLC = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC1/Common/DLC1.asset").WaitForCompletion();
 
@@ -41,11 +42,10 @@ namespace RiskOfTactics
             PInfo = Info;
 
             // Setup
-            ROTLogger.Init(Logger);
+            Log.Init(Logger);
             AssetHandler.Init();
             GenericGameEvents.Init();
             ConfigOptions.Init();
-            DamageColorAPI.Init();
             Utilities.Init();
 
             // Mod Integrations
@@ -90,8 +90,11 @@ namespace RiskOfTactics
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
 
+            // Shrines
+            if (ForgeAnvil.isEnabled.Value)
+                ForgeAnvil.Init();
 
-            ROTLogger.Message("Finished initializations.");
+            Log.Message("Finished initializations.");
         }
     }
 }

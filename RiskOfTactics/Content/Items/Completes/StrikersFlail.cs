@@ -12,9 +12,6 @@ namespace RiskOfTactics.Content.Items.Completes
 
         public static ItemDef radiantDef;
 
-        public static DamageColorIndex damageColor = DamageColorAPI.RegisterDamageColor(Utilities.STRIKERS_FLAIL_COLOR);
-        public static DamageColorIndex damageColorStacked = DamageColorAPI.RegisterDamageColor(Utilities.STRIKERS_FLAIL_STACKED_COLOR);
-
         // Gain crit chance. Your critical strikes grant stacking damage amp.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Strikers Flail",
@@ -108,10 +105,10 @@ namespace RiskOfTactics.Content.Items.Completes
                     if (count > 0 && buffCount > 0 && !Utilities.OnSameTeam(vicBody, atkBody))
                     {
                         damageInfo.damage *= 1 + Utilities.GetLinearStacking(percentdamageAmp * radiantMultiplier, percentDamageAmpExtraStacks * radiantMultiplier, buffCount);
-                        damageInfo.damageColorIndex = damageColor;
+                        damageInfo.damageColorIndex = DamageColorIndex.WeakPoint;
                         if (buffCount == maxBuffStacks.Value)
                         {
-                            damageInfo.damageColorIndex = damageColorStacked;
+                            damageInfo.damageColorIndex = DamageColorIndex.Luminous;
                         }
                     }
                 }

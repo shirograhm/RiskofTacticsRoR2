@@ -23,7 +23,7 @@
     </PackageReference>
     <PackageReference Include="BepInEx.Core" Version="5.4.21" />
     <PackageReference Include="R2API" Version="5.0.5" />
-    <PackageReference Include="R2API.Colors" Version="1.0.1" />
+    <PackageReference Include="R2API.Colors" Version="1.0.3" />
     <PackageReference Include="R2API.DamageType" Version="1.1.7" />
     <PackageReference Include="R2API.Dot" Version="1.1.2" />
     <PackageReference Include="R2API.Items" Version="1.0.7" />
