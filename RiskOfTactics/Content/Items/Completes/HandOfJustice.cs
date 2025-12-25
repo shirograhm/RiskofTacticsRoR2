@@ -1,13 +1,17 @@
 ﻿using R2API;
 using RiskOfTactics.Helpers;
 using RoR2;
+using UnityEngine;
 
 namespace RiskOfTactics.Content.Items.Completes
 {
     class HandOfJustice
     {
         public static ItemDef itemDef;
-        private static ItemDef radiantDef;
+        public static BuffDef aboveHalfBuff;
+        public static BuffDef belowHalfBuff;
+
+        public static ItemDef radiantDef;
 
         // Gain crit chance. Grants damage and omnivamp that scales with your current health.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -67,6 +71,11 @@ namespace RiskOfTactics.Content.Items.Completes
             itemDef = ItemHelper.GenerateItem("HandOfJustice", [ItemTag.Damage, ItemTag.Healing, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
             radiantDef = ItemHelper.GenerateItem("Radiant_HandOfJustice", [ItemTag.Damage, ItemTag.Healing, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
 
+            aboveHalfBuff = Utilities.GenerateBuffDef("Above", AssetHandler.bundle.LoadAsset<Sprite>("HoJ Damage.png"), false, false, false, false);
+            ContentAddition.AddBuffDef(aboveHalfBuff);
+            belowHalfBuff = Utilities.GenerateBuffDef("Below", AssetHandler.bundle.LoadAsset<Sprite>("HoJ Omnivamp.png"), false, false, false, false);
+            ContentAddition.AddBuffDef(belowHalfBuff);
+
             Utilities.RegisterVoidPair(itemDef, radiantDef);
 
             Hooks(itemDef, ItemHelper.TacticTier.Normal);
@@ -86,7 +95,7 @@ namespace RiskOfTactics.Content.Items.Completes
                     {
                         args.critAdd += critChanceBonus.Value;
 
-                        int multiplier = sender.healthComponent.combinedHealthFraction >= 0.50f ? 2 : 1;
+                        int multiplier = sender.HasBuff(aboveHalfBuff) ? 2 : 1;
                         args.damageTotalMult *= 1 + Utilities.GetLinearStacking(percentScaledBonusDamageEffect * radiantMultiplier, percentScaledBonusDamageEffectExtraStacks * radiantMultiplier, count) * multiplier;
                     }
                 }
@@ -102,7 +111,7 @@ namespace RiskOfTactics.Content.Items.Completes
                     int count = atkBody.inventory.GetItemCountEffective(def);
                     if (count > 0 && !Utilities.OnSameTeam(vicBody, atkBody) && atkBody.healthComponent)
                     {
-                        int multiplier = atkBody.healthComponent.combinedHealthFraction < 0.50f ? 2 : 1;
+                        int multiplier = atkBody.HasBuff(belowHalfBuff) ? 2 : 1;
 
                         float healAmount = damageReport.damageInfo.damage * Utilities.GetHyperbolicStacking(percentOmnivampEffect * radiantMultiplier, percentOmnivampEffectExtraStacks * radiantMultiplier, count) * multiplier;
                         atkBody.healthComponent.Heal(healAmount, new ProcChainMask());
@@ -110,6 +119,33 @@ namespace RiskOfTactics.Content.Items.Completes
                         Utilities.SpawnHealEffect(atkBody);
                     }
                 }
+            };
+
+            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
+            {
+                if (self && self.inventory && self.healthComponent)
+                {
+                    int count = self.inventory.GetItemCountEffective(def);
+                    if (count > 0)
+                    {
+                        if (self.healthComponent.combinedHealthFraction >= 0.50f)
+                        {
+                            if (!self.HasBuff(aboveHalfBuff)) self.AddBuff(aboveHalfBuff);
+                            if (self.HasBuff(belowHalfBuff)) self.RemoveBuff(belowHalfBuff);
+                        }
+                        else
+                        {
+                            if (!self.HasBuff(belowHalfBuff)) self.AddBuff(belowHalfBuff);
+                            if (self.HasBuff(aboveHalfBuff)) self.RemoveBuff(aboveHalfBuff);
+                        }
+                    }
+                    else
+                    {
+                        self.RemoveBuff(aboveHalfBuff);
+                        self.RemoveBuff(belowHalfBuff);
+                    }
+                }
+                orig(self);
             };
         }
     }

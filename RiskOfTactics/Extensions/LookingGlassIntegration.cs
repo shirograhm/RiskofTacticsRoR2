@@ -50,6 +50,29 @@ namespace RiskOfTactics.Extensions
                     };
                     ItemDefinitions.allItemDefinitions.Add((int)GamblersBlade.itemDef.itemIndex, stats);
                 }
+
+                if (HorizonFocus.isEnabled.Value)
+                {
+                    ItemStatsDef stats = new ItemStatsDef();
+                    stats.descriptions.Add("Stun Chance: ");
+                    stats.valueTypes.Add(ItemStatsDef.ValueType.Utility);
+                    stats.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Percentage);
+                    stats.descriptions.Add("Explosion Damage: ");
+                    stats.valueTypes.Add(ItemStatsDef.ValueType.Health);
+                    stats.measurementUnits.Add(ItemStatsDef.MeasurementUnits.PercentHealth);
+                    stats.calculateValues = (master, itemCount) =>
+                    {
+                        var values = new List<float> { };
+                        if (master)
+                            values.Add(Utilities.GetChanceAfterLuck(HorizonFocus.percentStunChance, master.luck));
+                        else
+                            values.Add(HorizonFocus.percentStunChance);
+
+                        values.Add(Utilities.GetHyperbolicStacking(HorizonFocus.percentLightningDamage, HorizonFocus.percentLightningDamageExtraStacks, itemCount));
+                        return values;
+                    };
+                    ItemDefinitions.allItemDefinitions.Add((int)HorizonFocus.itemDef.itemIndex, stats);
+                }
                 //// Ancient Coin
                 //if (AncientCoin.isEnabled.Value)
                 //{

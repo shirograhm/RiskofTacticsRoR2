@@ -80,6 +80,8 @@ namespace RiskOfTactics
             // Artifacts
             if (GamblersBlade.isEnabled.Value)
                 GamblersBlade.Init();
+            if (HorizonFocus.isEnabled.Value)
+                HorizonFocus.Init();
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
 
