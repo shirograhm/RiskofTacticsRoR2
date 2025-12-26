@@ -41,8 +41,8 @@ namespace RiskOfTactics.Content.Items.Completes
             ["ITEM_ROT_SPEAROFSHOJIN_DESC"],
             true
         );
-        private static readonly float percentCooldownOnHit = cooldownOnHit.Value / 100f;
-        private static readonly float percentCooldownOnHitExtraStacks = cooldownOnHitExtraStacks.Value / 100f;
+        public static readonly float percentCooldownOnHit = cooldownOnHit.Value / 100f;
+        public static readonly float percentCooldownOnHitExtraStacks = cooldownOnHitExtraStacks.Value / 100f;
 
         internal static void Init()
         {
