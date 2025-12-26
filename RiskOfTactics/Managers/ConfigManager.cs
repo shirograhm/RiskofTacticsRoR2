@@ -3,7 +3,7 @@ using BepInEx.Configuration;
 using System;
 using System.Collections.Generic;
 
-namespace RiskOfTactics.Helpers
+namespace RiskOfTactics.Managers
 {
     public static class ConfigManager
     {

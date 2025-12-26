@@ -6,7 +6,7 @@ using RiskOfTactics.Content.Items.Artifacts;
 using RiskOfTactics.Content.Items.Completes;
 using RiskOfTactics.Content.Items.Shrines;
 using RiskOfTactics.Extensions;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using RoR2.ExpansionManagement;
 using UnityEngine.AddressableAssets;
@@ -45,8 +45,8 @@ namespace RiskOfTactics
 
             // Setup
             Log.Init(Logger);
-            AssetHandler.Init();
-            GenericGameEvents.Init();
+            AssetManager.Init();
+            GameEventManager.Init();
             ConfigOptions.Init();
             Utilities.Init();
 

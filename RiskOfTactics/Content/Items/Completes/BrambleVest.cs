@@ -1,7 +1,7 @@
 ﻿using R2API;
 using R2API.Networking;
 using R2API.Networking.Interfaces;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -121,20 +121,20 @@ namespace RiskOfTactics.Content.Items.Completes
         internal static void Init()
         {
             // Normal Variant
-            itemDef = ItemHelper.GenerateItem("BrambleVest", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
-            radiantDef = ItemHelper.GenerateItem("Radiant_BrambleVest", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
+            itemDef = ItemManager.GenerateItem("BrambleVest", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
+            radiantDef = ItemManager.GenerateItem("Radiant_BrambleVest", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
-            Utilities.RegisterVoidPair(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemHelper.TacticTier.Normal);
-            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
+            Hooks(itemDef, ItemManager.TacticTier.Normal);
+            Hooks(radiantDef, ItemManager.TacticTier.Radiant);
         }
 
-        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
+        public static void Hooks(ItemDef def, ItemManager.TacticTier tier)
         {
-            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
+            float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
             CharacterMaster.onStartGlobal += (obj) =>
             {
@@ -153,7 +153,7 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
-            GenericGameEvents.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
             {
                 CharacterBody victimBody = victimInfo.body;
                 if (victimBody && victimBody.inventory)
@@ -167,7 +167,7 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
-            GenericGameEvents.OnTakeDamage += (damageReport) =>
+            GameEventManager.OnTakeDamage += (damageReport) =>
             {
                 CharacterBody vicBody = damageReport.victimBody;
                 CharacterBody atkBody = damageReport.attackerBody;

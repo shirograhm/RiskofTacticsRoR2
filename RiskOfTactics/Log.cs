@@ -1,6 +1,6 @@
 ﻿using BepInEx.Logging;
 
-namespace RiskOfTactics.Helpers
+namespace RiskOfTactics
 {
     internal static class Log
     {

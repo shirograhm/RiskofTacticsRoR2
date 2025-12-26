@@ -2,9 +2,9 @@
 using System.IO;
 using UnityEngine;
 
-namespace RiskOfTactics.Helpers
+namespace RiskOfTactics.Managers
 {
-    public static class AssetHandler
+    public static class AssetManager
     {
         public static AssetBundle bundle;
         public const string bundleName = "rotassets";

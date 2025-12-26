@@ -1,7 +1,7 @@
 ﻿using R2API;
 using R2API.Networking;
 using R2API.Networking.Interfaces;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using System;
 using UnityEngine;
@@ -123,20 +123,20 @@ namespace RiskOfTactics.Content.Items.Completes
 
         internal static void Init()
         {
-            itemDef = ItemHelper.GenerateItem("DragonsClaw", [ItemTag.Healing, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
-            radiantDef = ItemHelper.GenerateItem("Radiant_DragonsClaw", [ItemTag.Healing, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
+            itemDef = ItemManager.GenerateItem("DragonsClaw", [ItemTag.Healing, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
+            radiantDef = ItemManager.GenerateItem("Radiant_DragonsClaw", [ItemTag.Healing, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
-            Utilities.RegisterVoidPair(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemHelper.TacticTier.Normal);
-            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
+            Hooks(itemDef, ItemManager.TacticTier.Normal);
+            Hooks(radiantDef, ItemManager.TacticTier.Radiant);
         }
 
-        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
+        public static void Hooks(ItemDef def, ItemManager.TacticTier tier)
         {
-            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
+            float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
             CharacterMaster.onStartGlobal += (obj) =>
             {

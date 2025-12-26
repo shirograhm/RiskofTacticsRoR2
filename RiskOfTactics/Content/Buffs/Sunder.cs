@@ -1,5 +1,5 @@
 ﻿using R2API;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +27,7 @@ namespace RiskOfTactics.Content.Buffs
         internal static void Init()
         {
             buffDef = Utilities.GenerateBuffDef("Sunder",
-                AssetHandler.bundle.LoadAsset<Sprite>("Sunder.png"),
+                AssetManager.bundle.LoadAsset<Sprite>("Sunder.png"),
                 true, false, true, false
             );
             ContentAddition.AddBuffDef(buffDef);
@@ -47,7 +47,7 @@ namespace RiskOfTactics.Content.Buffs
                 }
             };
 
-            GenericGameEvents.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
             {
                 CharacterBody vicBody = victimInfo.body;
 

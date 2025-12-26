@@ -1,5 +1,5 @@
 ﻿using R2API;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using UnityEngine;
 
@@ -68,23 +68,23 @@ namespace RiskOfTactics.Content.Items.Completes
 
         internal static void Init()
         {
-            itemDef = ItemHelper.GenerateItem("HandOfJustice", [ItemTag.Damage, ItemTag.Healing, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
-            radiantDef = ItemHelper.GenerateItem("Radiant_HandOfJustice", [ItemTag.Damage, ItemTag.Healing, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
+            itemDef = ItemManager.GenerateItem("HandOfJustice", [ItemTag.Damage, ItemTag.Healing, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
+            radiantDef = ItemManager.GenerateItem("Radiant_HandOfJustice", [ItemTag.Damage, ItemTag.Healing, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
-            aboveHalfBuff = Utilities.GenerateBuffDef("Above", AssetHandler.bundle.LoadAsset<Sprite>("HoJ Damage.png"), false, false, false, false);
+            aboveHalfBuff = Utilities.GenerateBuffDef("Above", AssetManager.bundle.LoadAsset<Sprite>("HoJ Damage.png"), false, false, false, false);
             ContentAddition.AddBuffDef(aboveHalfBuff);
-            belowHalfBuff = Utilities.GenerateBuffDef("Below", AssetHandler.bundle.LoadAsset<Sprite>("HoJ Omnivamp.png"), false, false, false, false);
+            belowHalfBuff = Utilities.GenerateBuffDef("Below", AssetManager.bundle.LoadAsset<Sprite>("HoJ Omnivamp.png"), false, false, false, false);
             ContentAddition.AddBuffDef(belowHalfBuff);
 
-            Utilities.RegisterVoidPair(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemHelper.TacticTier.Normal);
-            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
+            Hooks(itemDef, ItemManager.TacticTier.Normal);
+            Hooks(radiantDef, ItemManager.TacticTier.Radiant);
         }
 
-        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
+        public static void Hooks(ItemDef def, ItemManager.TacticTier tier)
         {
-            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
+            float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
@@ -101,7 +101,7 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
-            GenericGameEvents.OnTakeDamage += (damageReport) =>
+            GameEventManager.OnTakeDamage += (damageReport) =>
             {
                 CharacterBody vicBody = damageReport.victimBody;
                 CharacterBody atkBody = damageReport.attackerBody;

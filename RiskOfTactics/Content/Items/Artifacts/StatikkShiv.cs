@@ -1,6 +1,6 @@
 using R2API;
 using RiskOfTactics.Content.Buffs;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using RoR2.Orbs;
 using UnityEngine;
@@ -68,11 +68,11 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         internal static void Init()
         {
-            itemDef = ItemHelper.GenerateItem("StatikkShiv", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Artifact);
+            itemDef = ItemManager.GenerateItem("StatikkShiv", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Artifact);
 
-            shockBuff = Utilities.GenerateBuffDef("Shock", AssetHandler.bundle.LoadAsset<Sprite>("Shock.png"), false, false, false, false);
+            shockBuff = Utilities.GenerateBuffDef("Shock", AssetManager.bundle.LoadAsset<Sprite>("Shock.png"), false, false, false, false);
             ContentAddition.AddBuffDef(shockBuff);
-            shockCooldown = Utilities.GenerateBuffDef("Shock Cooldown", AssetHandler.bundle.LoadAsset<Sprite>("ShockCD.png"), false, false, false, true);
+            shockCooldown = Utilities.GenerateBuffDef("Shock Cooldown", AssetManager.bundle.LoadAsset<Sprite>("ShockCD.png"), false, false, false, true);
             ContentAddition.AddBuffDef(shockCooldown);
 
             Hooks();
@@ -136,7 +136,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                 }
             };
 
-            GenericGameEvents.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
             {
                 CharacterBody vicBody = victimInfo.body;
                 CharacterBody atkBody = attackerInfo.body;

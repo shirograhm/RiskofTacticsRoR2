@@ -1,5 +1,5 @@
 ﻿using R2API;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using UnityEngine;
 
@@ -95,23 +95,23 @@ namespace RiskOfTactics.Content.Items.Completes
         internal static void Init()
         {
             // Normal Variant
-            itemDef = ItemHelper.GenerateItem("AdaptiveHelm", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
-            radiantDef = ItemHelper.GenerateItem("Radiant_AdaptiveHelm", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
+            itemDef = ItemManager.GenerateItem("AdaptiveHelm", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
+            radiantDef = ItemManager.GenerateItem("Radiant_AdaptiveHelm", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
-            cooldownResetBuff = Utilities.GenerateBuffDef("CooldownReset", AssetHandler.bundle.LoadAsset<Sprite>("AdaptiveHelm.png"), false, false, false, true);
+            cooldownResetBuff = Utilities.GenerateBuffDef("CooldownReset", AssetManager.bundle.LoadAsset<Sprite>("AdaptiveHelm.png"), false, false, false, true);
             ContentAddition.AddBuffDef(cooldownResetBuff);
-            radiantCooldownResetBuff = Utilities.GenerateBuffDef("Radiant_CooldownReset", AssetHandler.bundle.LoadAsset<Sprite>("Radiant_AdaptiveHelm.png"), false, false, false, true);
+            radiantCooldownResetBuff = Utilities.GenerateBuffDef("Radiant_CooldownReset", AssetManager.bundle.LoadAsset<Sprite>("Radiant_AdaptiveHelm.png"), false, false, false, true);
             ContentAddition.AddBuffDef(radiantCooldownResetBuff);
 
-            Utilities.RegisterVoidPair(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemHelper.TacticTier.Normal, cooldownResetBuff);
-            Hooks(radiantDef, ItemHelper.TacticTier.Radiant, radiantCooldownResetBuff);
+            Hooks(itemDef, ItemManager.TacticTier.Normal, cooldownResetBuff);
+            Hooks(radiantDef, ItemManager.TacticTier.Radiant, radiantCooldownResetBuff);
         }
 
-        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier, BuffDef cooldownReset)
+        public static void Hooks(ItemDef def, ItemManager.TacticTier tier, BuffDef cooldownReset)
         {
-            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
+            float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
             On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
             {
@@ -170,7 +170,7 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
-            GenericGameEvents.OnTakeDamage += (damageReport) =>
+            GameEventManager.OnTakeDamage += (damageReport) =>
             {
                 CharacterBody vicBody = damageReport.victimBody;
                 if (vicBody && vicBody.inventory && vicBody.skillLocator && Utilities.IsMeleeBodyPrefab(vicBody.gameObject))

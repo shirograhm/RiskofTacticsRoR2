@@ -1,4 +1,4 @@
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using System;
 
@@ -46,20 +46,20 @@ namespace RiskOfTactics.Content.Items.Completes
 
         internal static void Init()
         {
-            itemDef = ItemHelper.GenerateItem("SpearOfShojin", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
-            radiantDef = ItemHelper.GenerateItem("Radiant_SpearOfShojin", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
+            itemDef = ItemManager.GenerateItem("SpearOfShojin", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
+            radiantDef = ItemManager.GenerateItem("Radiant_SpearOfShojin", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
-            Utilities.RegisterVoidPair(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemHelper.TacticTier.Normal);
-            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
+            Hooks(itemDef, ItemManager.TacticTier.Normal);
+            Hooks(radiantDef, ItemManager.TacticTier.Radiant);
         }
 
-        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
+        public static void Hooks(ItemDef def, ItemManager.TacticTier tier)
         {
-            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
+            float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
-            GenericGameEvents.OnHitEnemy += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.OnHitEnemy += (damageInfo, attackerInfo, victimInfo) =>
             {
                 CharacterBody vicBody = victimInfo.body;
                 CharacterBody atkBody = attackerInfo.body;

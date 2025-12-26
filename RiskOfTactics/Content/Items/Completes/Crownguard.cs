@@ -1,5 +1,5 @@
 ﻿using R2API;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using UnityEngine;
 
@@ -66,23 +66,23 @@ namespace RiskOfTactics.Content.Items.Completes
 
         internal static void Init()
         {
-            itemDef = ItemHelper.GenerateItem("Crownguard", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
-            radiantDef = ItemHelper.GenerateItem("Radiant_Crownguard", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
+            itemDef = ItemManager.GenerateItem("Crownguard", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
+            radiantDef = ItemManager.GenerateItem("Radiant_Crownguard", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
-            guardedBuff = Utilities.GenerateBuffDef("Guarded", AssetHandler.bundle.LoadAsset<Sprite>("Guarded.png"), false, false, false, true);
+            guardedBuff = Utilities.GenerateBuffDef("Guarded", AssetManager.bundle.LoadAsset<Sprite>("Guarded.png"), false, false, false, true);
             ContentAddition.AddBuffDef(guardedBuff);
-            crownedBuff = Utilities.GenerateBuffDef("Crowned", AssetHandler.bundle.LoadAsset<Sprite>("Crowned.png"), false, false, false, false);
+            crownedBuff = Utilities.GenerateBuffDef("Crowned", AssetManager.bundle.LoadAsset<Sprite>("Crowned.png"), false, false, false, false);
             ContentAddition.AddBuffDef(crownedBuff);
 
-            Utilities.RegisterVoidPair(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemHelper.TacticTier.Normal);
-            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
+            Hooks(itemDef, ItemManager.TacticTier.Normal);
+            Hooks(radiantDef, ItemManager.TacticTier.Radiant);
         }
 
-        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
+        public static void Hooks(ItemDef def, ItemManager.TacticTier tier)
         {
-            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
+            float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {

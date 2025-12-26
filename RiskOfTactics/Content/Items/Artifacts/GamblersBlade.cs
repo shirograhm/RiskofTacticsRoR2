@@ -1,5 +1,5 @@
 ﻿using R2API;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -57,7 +57,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         internal static void Init()
         {
-            itemDef = ItemHelper.GenerateItem("GamblersBlade", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Artifact);
+            itemDef = ItemManager.GenerateItem("GamblersBlade", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Artifact);
 
             ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
@@ -87,7 +87,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                 }
             };
 
-            GenericGameEvents.OnHitEnemy += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.OnHitEnemy += (damageInfo, attackerInfo, victimInfo) =>
             {
                 CharacterBody atkBody = attackerInfo.body;
                 CharacterBody vicBody = victimInfo.body;
@@ -117,7 +117,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                     MoneyPickup componentInChildren = goldPackObject.GetComponentInChildren<MoneyPickup>();
                     if ((bool)componentInChildren)
                     {
-                        componentInChildren.baseGoldReward = Mathf.RoundToInt(moneyGainOnDrop * Utilities.GetDifficultyAsMultiplier());
+                        componentInChildren.baseGoldReward = Mathf.RoundToInt(moneyGainOnDrop.Value * Utilities.GetDifficultyAsMultiplier());
                         Physics.IgnoreCollision(component, componentInChildren.GetComponent<Collider>());
                     }
                     GravitatePickup componentInChildren2 = goldPackObject.GetComponentInChildren<GravitatePickup>();

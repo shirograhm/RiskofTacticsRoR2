@@ -1,5 +1,5 @@
 ﻿using R2API;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using UnityEngine;
 
@@ -65,21 +65,21 @@ namespace RiskOfTactics.Content.Items.Completes
 
         internal static void Init()
         {
-            itemDef = ItemHelper.GenerateItem("StrikersFlail", [ItemTag.Damage, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
-            radiantDef = ItemHelper.GenerateItem("Radiant_StrikersFlail", [ItemTag.Damage, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
+            itemDef = ItemManager.GenerateItem("StrikersFlail", [ItemTag.Damage, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
+            radiantDef = ItemManager.GenerateItem("Radiant_StrikersFlail", [ItemTag.Damage, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
-            damageAmpBuff = Utilities.GenerateBuffDef("Damage Amp", AssetHandler.bundle.LoadAsset<Sprite>("DamageAmp.png"), canStack: true, isHidden: false, isDebuff: false, isCooldown: false);
+            damageAmpBuff = Utilities.GenerateBuffDef("Damage Amp", AssetManager.bundle.LoadAsset<Sprite>("DamageAmp.png"), canStack: true, isHidden: false, isDebuff: false, isCooldown: false);
             ContentAddition.AddBuffDef(damageAmpBuff);
 
-            Utilities.RegisterVoidPair(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemHelper.TacticTier.Normal);
-            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
+            Hooks(itemDef, ItemManager.TacticTier.Normal);
+            Hooks(radiantDef, ItemManager.TacticTier.Radiant);
         }
 
-        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
+        public static void Hooks(ItemDef def, ItemManager.TacticTier tier)
         {
-            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
+            float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
@@ -93,7 +93,7 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
-            GenericGameEvents.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
             {
                 CharacterBody vicBody = victimInfo.body;
                 CharacterBody atkBody = attackerInfo.body;
@@ -114,7 +114,7 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
-            GenericGameEvents.OnHitEnemy += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.OnHitEnemy += (damageInfo, attackerInfo, victimInfo) =>
             {
                 CharacterBody vicBody = victimInfo.body;
                 CharacterBody atkBody = attackerInfo.body;

@@ -1,7 +1,7 @@
 ﻿using R2API;
 using R2API.Networking;
 using R2API.Networking.Interfaces;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using System;
 using UnityEngine;
@@ -117,27 +117,27 @@ namespace RiskOfTactics.Content.Items.Completes
 
         internal static void Init()
         {
-            itemDef = ItemHelper.GenerateItem("Quicksilver", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Normal);
-            radiantDef = ItemHelper.GenerateItem("Radiant_Quicksilver", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Radiant);
+            itemDef = ItemManager.GenerateItem("Quicksilver", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
+            radiantDef = ItemManager.GenerateItem("Radiant_Quicksilver", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
-            flowBuff = Utilities.GenerateBuffDef("Flow", AssetHandler.bundle.LoadAsset<Sprite>("Flow.png"), true, false, false, false);
+            flowBuff = Utilities.GenerateBuffDef("Flow", AssetManager.bundle.LoadAsset<Sprite>("Flow.png"), true, false, false, false);
             ContentAddition.AddBuffDef(flowBuff);
-            cleanseBuff = Utilities.GenerateBuffDef("Cleanse", AssetHandler.bundle.LoadAsset<Sprite>("Cleanse.png"), false, false, false, true);
+            cleanseBuff = Utilities.GenerateBuffDef("Cleanse", AssetManager.bundle.LoadAsset<Sprite>("Cleanse.png"), false, false, false, true);
             ContentAddition.AddBuffDef(cleanseBuff);
 
             ccShieldPrefab = LegacyResourcesAPI.LoadAsync<GameObject>("Prefabs/TemporaryVisualEffects/BearVoidEffect").WaitForCompletion();
 
-            Utilities.RegisterVoidPair(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemHelper.TacticTier.Normal);
-            Hooks(radiantDef, ItemHelper.TacticTier.Radiant);
+            Hooks(itemDef, ItemManager.TacticTier.Normal);
+            Hooks(radiantDef, ItemManager.TacticTier.Radiant);
         }
 
-        public static void Hooks(ItemDef def, ItemHelper.TacticTier tier)
+        public static void Hooks(ItemDef def, ItemManager.TacticTier tier)
         {
-            float radiantMultiplier = tier.Equals(ItemHelper.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
+            float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
             CharacterMaster.onStartGlobal += (obj) =>
             {
@@ -200,7 +200,7 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
-            GenericGameEvents.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
             {
                 // CC immunity
                 if (victimInfo.body && victimInfo.body.HasBuff(cleanseBuff))

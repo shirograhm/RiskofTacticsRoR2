@@ -1,5 +1,5 @@
 ﻿using R2API;
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using RoR2.Navigation;
 using RoR2.Networking;
@@ -29,7 +29,7 @@ namespace RiskOfTactics.Content.Items.Shrines
 
         internal static void Init()
         {
-            prefab = PrefabAPI.InstantiateClone(AssetHandler.bundle.LoadAsset<GameObject>("ForgeAnvil.prefab"), "RiskOfTactics_ForgeAnvil", true);
+            prefab = PrefabAPI.InstantiateClone(AssetManager.bundle.LoadAsset<GameObject>("ForgeAnvil.prefab"), "RiskOfTactics_ForgeAnvil", true);
             prefab.AddComponent<NetworkTransform>();
 
             GameObject shrineChanceSymbol = LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/Shrines/ShrineGoldshoresAccess").transform.Find("Symbol").gameObject;
@@ -83,48 +83,35 @@ namespace RiskOfTactics.Content.Items.Shrines
             List<string> baseStages = ["blackbeach", "golemplains", "lakes", "goolake", "foggyswamp", "frozenwall", "wispgraveyard", "dampcavesimple", "shipgraveyard", "rootjungle", "skymeadow", "moon2"];
             List<string> sotvStages = ["snowyforest", "sulfurpools", "ancientloft"];
             List<string> sotsStages = ["lakesnight", "village", "villagenight", "lemuriantemple", "habitat", "habitatfall", "meridian", "helminthroost"];
-            if (isEnabled && directorCard != null)
+
+            foreach (string s in baseStages)
             {
-                foreach (string s in baseStages)
-                {
+                if (isEnabled && directorCard != null)
                     AddDirectorCardTo(s, "Shrines", directorCard);
-                }
-                if (RiskOfTactics.sotvDLC)
-                {
-                    foreach (string s in sotvStages)
-                    {
-                        AddDirectorCardTo(s, "Shrines", directorCard);
-                    }
-                }
-                if (RiskOfTactics.sotsDLC)
-                {
-                    foreach (string s in sotsStages)
-                    {
-                        AddDirectorCardTo(s, "Shrines", directorCard);
-                    }
-                }
-            }
-            else
-            {
-                foreach (string s in baseStages)
-                {
+                else
                     RemoveDirectorCardFrom(s, "Shrines", directorCard);
-                }
-                if (RiskOfTactics.sotvDLC)
+            }
+            if (RiskOfTactics.sotvDLC)
+            {
+                foreach (string s in sotvStages)
                 {
-                    foreach (string s in sotvStages)
-                    {
+                    if (isEnabled && directorCard != null)
+                        AddDirectorCardTo(s, "Shrines", directorCard);
+                    else
                         RemoveDirectorCardFrom(s, "Shrines", directorCard);
-                    }
-                }
-                if (RiskOfTactics.sotsDLC)
-                {
-                    foreach (string s in sotsStages)
-                    {
-                        RemoveDirectorCardFrom(s, "Shrines", directorCard);
-                    }
                 }
             }
+            if (RiskOfTactics.sotsDLC)
+            {
+                foreach (string s in sotsStages)
+                {
+                    if (isEnabled && directorCard != null)
+                        AddDirectorCardTo(s, "Shrines", directorCard);
+                    else
+                        RemoveDirectorCardFrom(s, "Shrines", directorCard);
+                }
+            }
+
             // Add director cards
             SceneDirector.onGenerateInteractableCardSelection += (sceneDirector, dccs) =>
             {
@@ -145,6 +132,7 @@ namespace RiskOfTactics.Content.Items.Shrines
                                 {
                                     foreach (DirectorCard directorCard in categoryCards[category.name])
                                     {
+                                        Log.Error("Added directorCard " + directorCard.spawnCard.name + " to selections.");
                                         dccs.AddCard(i, directorCard);
                                     }
                                 }
@@ -220,7 +208,7 @@ namespace RiskOfTactics.Content.Items.Shrines
                     delayedEvent.CallDelayed(1.5f);
                 });
 
-                availableItems = ItemHelper.artifactList.ConvertAll(x => x.itemIndex);
+                availableItems = ItemManager.artifactList.ConvertAll(x => x.itemIndex);
             }
 
             public void FixedUpdate()

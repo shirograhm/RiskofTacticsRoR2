@@ -1,4 +1,4 @@
-using RiskOfTactics.Helpers;
+using RiskOfTactics.Managers;
 using RoR2;
 using RoR2.Projectile;
 using UnityEngine;
@@ -44,14 +44,14 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         internal static void Init()
         {
-            itemDef = ItemHelper.GenerateItem("HorizonFocus", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemHelper.TacticTier.Artifact);
+            itemDef = ItemManager.GenerateItem("HorizonFocus", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Artifact);
 
             Hooks();
         }
 
         public static void Hooks()
         {
-            GenericGameEvents.OnHitEnemy += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.OnHitEnemy += (damageInfo, attackerInfo, victimInfo) =>
             {
                 CharacterBody vicBody = victimInfo.body;
                 CharacterBody atkBody = attackerInfo.body;
@@ -70,7 +70,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                 }
             };
 
-            GenericGameEvents.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
             {
                 CharacterBody vicBody = victimInfo.body;
                 CharacterBody atkBody = attackerInfo.body;

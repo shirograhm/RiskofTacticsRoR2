@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace RiskOfTactics.Helpers
+namespace RiskOfTactics.Managers
 {
-    public static class ItemHelper
+    public static class ItemManager
     {
         public static List<ItemDef> normalList = [];
         public static List<ItemDef> radiantList = [];
@@ -38,7 +38,7 @@ namespace RiskOfTactics.Helpers
                     break;
             }
 
-            GameObject prefab = AssetHandler.bundle.LoadAsset<GameObject>(name + ".prefab");
+            GameObject prefab = AssetManager.bundle.LoadAsset<GameObject>(name + ".prefab");
             if (prefab == null)
             {
                 Log.Warning("Missing prefab file for item " + itemDef.name + ". Substituting default...");
@@ -50,7 +50,7 @@ namespace RiskOfTactics.Helpers
             modelPanelParameters.maxDistance = 10f;
             modelPanelParameters.minDistance = 5f;
 
-            itemDef.pickupIconSprite = AssetHandler.bundle.LoadAsset<Sprite>(name + ".png");
+            itemDef.pickupIconSprite = AssetManager.bundle.LoadAsset<Sprite>(name + ".png");
             itemDef.pickupModelPrefab = prefab;
             itemDef.canRemove = true;
             itemDef.hidden = false;

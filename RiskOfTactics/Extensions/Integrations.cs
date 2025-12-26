@@ -1,5 +1,4 @@
-﻿using RiskOfTactics.Helpers;
-using System;
+﻿using System;
 
 namespace RiskOfTactics.Extensions
 {

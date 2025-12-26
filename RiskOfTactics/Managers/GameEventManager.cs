@@ -1,9 +1,9 @@
 ﻿using RoR2;
 using UnityEngine;
 
-namespace RiskOfTactics.Helpers
+namespace RiskOfTactics.Managers
 {
-    class GenericGameEvents
+    class GameEventManager
     {
         public delegate void DamageAttackerVictimEventHandler(DamageInfo damageInfo, GenericCharacterInfo attackerInfo, GenericCharacterInfo victimInfo);
         public delegate void DamageReportEventHandler(DamageReport damageReport);
