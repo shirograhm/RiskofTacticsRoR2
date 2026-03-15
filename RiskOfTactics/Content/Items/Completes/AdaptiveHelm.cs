@@ -103,7 +103,7 @@ namespace RiskOfTactics.Content.Items.Completes
             radiantCooldownResetBuff = Utilities.GenerateBuffDef("Radiant_CooldownReset", AssetManager.bundle.LoadAsset<Sprite>("Radiant_AdaptiveHelm.png"), false, false, false, true);
             ContentAddition.AddBuffDef(radiantCooldownResetBuff);
 
-            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal, cooldownResetBuff);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant, radiantCooldownResetBuff);

@@ -39,7 +39,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> barrierSize = new(
             "Item: Bloodthirster",
             "Percent Barrier",
-            100f,
+            50f,
             "Percent max HP barrier given when this item is procced.",
             ["ITEM_ROT_BLOODTHIRSTER_DESC"],
             true
@@ -47,7 +47,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> barrierSizeExtraStacks = new(
             "Item: Bloodthirster",
             "Percent Barrier Extra Stacks",
-            50f,
+            100f,
             "Percent max HP barrier given when extra stacks of item are procced.",
             ["ITEM_ROT_BLOODTHIRSTER_DESC"],
             true
@@ -64,7 +64,7 @@ namespace RiskOfTactics.Content.Items.Completes
             satedBuff = Utilities.GenerateBuffDef("Sated", AssetManager.bundle.LoadAsset<Sprite>("Sated.png"), false, false, false, true);
             ContentAddition.AddBuffDef(satedBuff);
 
-            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

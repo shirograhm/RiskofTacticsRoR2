@@ -19,67 +19,78 @@ namespace RiskOfTactics.Extensions
         {
             public static void RegisterStats()
             {
-                // Normal Items
-                RegisterStatsForItem(BrambleVest.itemDef, [
-                    new("Damage Reflected: ", ItemStatsDef.ValueType.Damage, ItemStatsDef.MeasurementUnits.Number)
-                    ], (master, itemCount) =>
-                    {
-                        var values = new List<float> { };
-                        if (master && master.inventory && master.inventory.GetComponent<BrambleVest.Statistics>())
-                            values.Add(master.inventory.GetComponent<BrambleVest.Statistics>().DamageReflected);
-                        else
-                            values.Add(0f);
+                // Normal Items & Radiant Variants
+                if (BrambleVest.isEnabled.Value)
+                {
+                    RegisterStatsForItemWithRadiantVariant(BrambleVest.itemDef, BrambleVest.radiantDef, [
+                        new("Damage Reflected: ", ItemStatsDef.ValueType.Damage, ItemStatsDef.MeasurementUnits.Number)
+                        ], (master, itemCount) =>
+                        {
+                            var values = new List<float> { };
+                            if (master && master.inventory && master.inventory.GetComponent<BrambleVest.Statistics>())
+                                values.Add(master.inventory.GetComponent<BrambleVest.Statistics>().DamageReflected);
+                            else
+                                values.Add(0f);
 
-                        return values;
-                    });
-                RegisterStatsForItem(BrambleVest.radiantDef, [
-                    new("Damage Reflected: ", ItemStatsDef.ValueType.Damage, ItemStatsDef.MeasurementUnits.Number)
-                    ], (master, itemCount) =>
-                    {
-                        var values = new List<float> { };
-                        if (master && master.inventory && master.inventory.GetComponent<BrambleVest.Statistics>())
-                            values.Add(master.inventory.GetComponent<BrambleVest.Statistics>().DamageReflected);
-                        else
-                            values.Add(0f);
-
-                        return values;
-                    });
-                RegisterStatsForItem(SpearOfShojin.itemDef, [
-                    new("On-Hit Reduction: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.Percentage)
-                    ], (master, itemCount) =>
-                    {
-                        return [Utilities.GetHyperbolicStacking(SpearOfShojin.percentCooldownOnHit, SpearOfShojin.percentCooldownOnHitExtraStacks, itemCount)];
-                    });
-                RegisterStatsForItem(SpearOfShojin.radiantDef, [
-                    new("On-Hit Reduction: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.Percentage)
-                    ], (master, itemCount) =>
-                    {
-                        return [Utilities.GetHyperbolicStacking(SpearOfShojin.percentCooldownOnHit * ConfigManager.Scaling.radiantItemStatMultiplier, SpearOfShojin.percentCooldownOnHitExtraStacks * ConfigManager.Scaling.radiantItemStatMultiplier, itemCount)];
-                    });
-
+                            return values;
+                        });
+                }
+                if (SpearOfShojin.isEnabled.Value)
+                {
+                    RegisterStatsForItemWithRadiantVariant(SpearOfShojin.itemDef, SpearOfShojin.radiantDef, [
+                        new("On-Hit Reduction: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.Percentage)
+                        ], (master, itemCount) =>
+                        {
+                            return [Utilities.GetHyperbolicStacking(SpearOfShojin.percentCooldownOnHit * ConfigManager.Scaling.radiantItemStatMultiplier, SpearOfShojin.percentCooldownOnHitExtraStacks * ConfigManager.Scaling.radiantItemStatMultiplier, itemCount)];
+                        });
+                }
 
 
                 // Artifacts
-                RegisterStatsForItem(GamblersBlade.itemDef, [
-                    new("Max Money Threshold: ", ItemStatsDef.ValueType.Gold, ItemStatsDef.MeasurementUnits.Money)
-                    ], (master, itemCount) =>
-                    {
-                        return [GamblersBlade.moneyEffectCap.Value * Utilities.GetDifficultyAsMultiplier()];
-                    });
-                RegisterStatsForItem(HorizonFocus.itemDef, [
-                    new("Stun Chance: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.Percentage),
-                    new("Explosion Damage: ", ItemStatsDef.ValueType.Health, ItemStatsDef.MeasurementUnits.PercentHealth)
-                    ], (master, itemCount) =>
-                    {
-                        var values = new List<float> { };
-                        if (master)
-                            values.Add(Utilities.GetChanceAfterLuck(HorizonFocus.percentStunChance, master.luck));
-                        else
-                            values.Add(HorizonFocus.percentStunChance);
+                if (GamblersBlade.isEnabled.Value)
+                {
+                    RegisterStatsForItem(GamblersBlade.itemDef, [
+                        new("Max Money Threshold: ", ItemStatsDef.ValueType.Gold, ItemStatsDef.MeasurementUnits.Money)
+                        ], (master, itemCount) =>
+                        {
+                            return [GamblersBlade.moneyEffectCap.Value * Utilities.GetDifficultyAsMultiplier()];
+                        });
+                }
+                if (HorizonFocus.isEnabled.Value)
+                {
+                    RegisterStatsForItem(HorizonFocus.itemDef, [
+                        new("Stun Chance: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.Percentage),
+                        new("Explosion Damage: ", ItemStatsDef.ValueType.Health, ItemStatsDef.MeasurementUnits.PercentHealth)
+                        ], (master, itemCount) =>
+                        {
+                            var values = new List<float> { };
+                            if (master)
+                                values.Add(Utilities.GetChanceAfterLuck(HorizonFocus.percentStunChance, master.luck));
+                            else
+                                values.Add(HorizonFocus.percentStunChance);
 
-                        values.Add(Utilities.GetHyperbolicStacking(HorizonFocus.percentLightningDamage, HorizonFocus.percentLightningDamageExtraStacks, itemCount));
-                        return values;
-                    });
+                            values.Add(Utilities.GetHyperbolicStacking(HorizonFocus.percentLightningDamage, HorizonFocus.percentLightningDamageExtraStacks, itemCount));
+                            return values;
+                        });
+                }
+            }
+
+            private static void RegisterStatsForItemWithRadiantVariant(ItemDef defaultItem, ItemDef radiantItem, List<ItemStatLine> statLines, Func<CharacterMaster, int, List<float>> func)
+            {
+                foreach (var itemDef in new ItemDef[] { defaultItem, radiantItem })
+                {
+                    if (!itemDef) throw new ArgumentNullException(nameof(itemDef));
+
+                    ItemStatsDef stats = new();
+                    foreach (ItemStatLine line in statLines)
+                    {
+                        stats.descriptions.Add(line.Name);
+                        stats.valueTypes.Add(line.ValueType);
+                        stats.measurementUnits.Add(line.Units);
+                    }
+                    stats.calculateValues = func;
+                    ItemDefinitions.allItemDefinitions.Add((int)itemDef.itemIndex, stats);
+                }
             }
 
             private static void RegisterStatsForItem(ItemDef itemDef, List<ItemStatLine> statLines, Func<CharacterMaster, int, List<float>> func)

@@ -49,7 +49,7 @@ namespace RiskOfTactics.Content.Items.Completes
             itemDef = ItemManager.GenerateItem("SpearOfShojin", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
             radiantDef = ItemManager.GenerateItem("Radiant_SpearOfShojin", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
-            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

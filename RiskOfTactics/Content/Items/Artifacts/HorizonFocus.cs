@@ -94,8 +94,11 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         private static void SpawnLightningStrike(DamageInfo info, CharacterBody attackerBody, CharacterBody victimBody, float mult)
         {
+            GameObject projectilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/LightningStrikeProjectile");
+            projectilePrefab.GetComponent<ProjectileController>().ghostPrefab = itemDef.pickupModelPrefab;
+            projectilePrefab.GetComponent<ProjectileImpactExplosion>().impactEffect = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/ImpactStunGrenade");
             ProjectileManager.instance.FireProjectileWithoutDamageType(
-                LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/LightningStake"),
+                projectilePrefab,
                 info.position,
                 Quaternion.identity,
                 attackerBody.gameObject,

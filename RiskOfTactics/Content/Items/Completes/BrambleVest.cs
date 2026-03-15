@@ -3,6 +3,7 @@ using R2API.Networking;
 using R2API.Networking.Interfaces;
 using RiskOfTactics.Managers;
 using RoR2;
+using RoR2.Orbs;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -24,7 +25,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> healthBonus = new(
             "Item: Bramble Vest",
             "Health",
-            8f,
+            5f,
             "Percent health bonus when holding this item.",
             ["ITEM_ROT_BRAMBLEVEST_DESC"],
             true
@@ -40,7 +41,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> reflectDamage = new(
             "Item: Bramble Vest",
             "Reflect Percent",
-            80f,
+            100f,
             "Percent damage reflected back to the attacker when holding this item.",
             ["ITEM_ROT_BRAMBLEVEST_DESC"],
             true
@@ -48,7 +49,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> reflectProcCoefficient = new(
             "Item: Bramble Vest",
             "Reflect Proc Coefficient",
-            0.5f,
+            1f,
             "Proc coefficient for the reflected damage hit when holding this item.",
             ["ITEM_ROT_BRAMBLEVEST_DESC"],
             false
@@ -126,7 +127,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
-            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);
@@ -177,24 +178,71 @@ namespace RiskOfTactics.Content.Items.Completes
                     int count = vicBody.inventory.GetItemCountEffective(def);
                     if (count > 0 && !Utilities.OnSameTeam(vicBody, atkBody))
                     {
-                        DamageInfo brambleProc = new DamageInfo
-                        {
-                            damage = damageReport.damageInfo.damage * Utilities.GetLinearStacking(percentReflectDamage * radiantMultiplier, count),
-                            damageColorIndex = DamageColorIndex.Poison,
-                            damageType = DamageType.Generic,
-                            attacker = vicBody.gameObject,
-                            crit = vicBody.RollCrit(),
-                            inflictor = vicBody.gameObject,
-                            procCoefficient = reflectProcCoefficient,
-                            procChainMask = new ProcChainMask()
-                        };
-                        atkBody.healthComponent.TakeDamage(brambleProc);
-                        // Store damage numbers for user flavor
-                        Statistics component = vicBody.inventory.GetComponent<Statistics>();
-                        if (component) component.DamageReflected += brambleProc.damage;
+                        OrbManager.instance.AddOrb(new BrambleOrb(damageReport, radiantMultiplier));
                     }
                 }
             };
+        }
+
+        public class BrambleOrb : Orb
+        {
+            private readonly float speed = 60f;
+
+            private readonly float multi;
+            private readonly DamageReport damageReport;
+
+            public BrambleOrb(DamageReport report, float radiantMult)
+            {
+                damageReport = report;
+                multi = radiantMult;
+
+                if (report.victimBody && report.attackerBody)
+                {
+                    origin = report.victimBody ? report.victimBody.corePosition : Vector3.zero;
+                    if (report.attackerBody) target = report.attackerBody.mainHurtBox;
+                }
+            }
+
+            public override void Begin()
+            {
+                base.duration = base.distanceToTarget / speed;
+                EffectData effectData = new()
+                {
+                    origin = origin,
+                    genericFloat = base.duration
+                };
+                effectData.SetHurtBoxReference(target);
+                EffectManager.SpawnEffect(OrbStorageUtility.Get("Prefabs/Effects/OrbEffects/ClayGooOrbEffect"), effectData, transmit: true);
+            }
+
+            public override void OnArrival()
+            {
+                if (damageReport.attackerBody && damageReport.victimBody && damageReport.victimBody.inventory)
+                {
+                    CharacterBody vicBody = damageReport.victimBody;
+                    CharacterBody atkBody = damageReport.attackerBody;
+
+                    int count = damageReport.victimBody.inventory.GetItemCountEffective(BrambleVest.itemDef);
+                    DamageInfo brambleProc = new DamageInfo
+                    {
+                        damage = damageReport.damageInfo.damage * Utilities.GetLinearStacking(BrambleVest.percentReflectDamage * multi, count),
+                        damageColorIndex = DamageColorIndex.Poison,
+                        damageType = DamageType.Generic,
+                        attacker = vicBody.gameObject,
+                        crit = vicBody.RollCrit(),
+                        inflictor = vicBody.gameObject,
+                        procCoefficient = reflectProcCoefficient,
+                        procChainMask = new ProcChainMask()
+                    };
+                    atkBody.healthComponent.TakeDamage(brambleProc);
+
+                    // Damage calculation takes minions into account
+                    CharacterBody trackerBody = Utilities.GetMinionOwnershipParentBody(damageReport.victimBody);
+                    // Store damage numbers for user flavor
+                    Statistics component = vicBody.inventory.GetComponent<Statistics>();
+                    if (component) component.DamageReflected += brambleProc.damage;
+                }
+            }
         }
     }
 }

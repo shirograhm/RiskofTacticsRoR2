@@ -76,6 +76,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                     {
                         if (sender.master && sender.master.money > 0)
                         {
+                            // Scale money requirement with difficulty
                             float moneyRequired = moneyEffectCap.Value * Utilities.GetDifficultyAsMultiplier();
                             // Cap money ratio at 100%
                             float currentMoneyRatio = Mathf.Min(1f, sender.master.money / moneyRequired);

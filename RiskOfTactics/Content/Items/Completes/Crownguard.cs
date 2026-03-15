@@ -74,7 +74,7 @@ namespace RiskOfTactics.Content.Items.Completes
             crownedBuff = Utilities.GenerateBuffDef("Crowned", AssetManager.bundle.LoadAsset<Sprite>("Crowned.png"), false, false, false, false);
             ContentAddition.AddBuffDef(crownedBuff);
 
-            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

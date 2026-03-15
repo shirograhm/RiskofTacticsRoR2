@@ -3,7 +3,6 @@ using R2API.Networking.Interfaces;
 using RiskOfTactics.Managers;
 using RoR2;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -228,22 +227,22 @@ namespace RiskOfTactics
             EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/MedkitHealEffect"), effectData, transmit: true);
         }
 
-        internal static void RegisterRadiantUpgrade(ItemDef itemDef, ItemDef radiantDef)
-        {
-            On.RoR2.Items.ContagiousItemManager.Init += (orig) =>
-            {
-                List<ItemDef.Pair> newPair = [
-                    new ItemDef.Pair() { itemDef1 = itemDef, itemDef2 = radiantDef }];
+        //internal static void RegisterRadiantUpgrade(ItemDef itemDef, ItemDef radiantDef)
+        //{
+        //    On.RoR2.Items.ContagiousItemManager.Init += (orig) =>
+        //    {
+        //        List<ItemDef.Pair> newPair = [
+        //            new ItemDef.Pair() { itemDef1 = itemDef, itemDef2 = radiantDef }];
 
-                ItemRelationshipType key = DLC1Content.ItemRelationshipTypes.ContagiousItem;
-                Debug.Log(key);
+        //        ItemRelationshipType key = DLC1Content.ItemRelationshipTypes.ContagiousItem;
+        //        Debug.Log(key);
 
-                ItemDef.Pair[] pairs = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem];
-                ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = [.. pairs.Union(newPair)];
+        //        ItemDef.Pair[] pairs = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem];
+        //        ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = [.. pairs.Union(newPair)];
 
-                Debug.Log("Injected radiant item transformation for " + itemDef.name + ".");
-                orig();
-            };
-        }
+        //        Debug.Log("Injected radiant item transformation for " + itemDef.name + ".");
+        //        orig();
+        //    };
+        //}
     }
 }

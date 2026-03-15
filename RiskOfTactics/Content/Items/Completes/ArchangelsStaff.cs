@@ -114,7 +114,7 @@ namespace RiskOfTactics.Content.Items.Completes
             foresightBuff = Utilities.GenerateBuffDef("Foresight", AssetManager.bundle.LoadAsset<Sprite>("Foresight.png"), true, false, false, false);
             ContentAddition.AddBuffDef(foresightBuff);
 
-            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

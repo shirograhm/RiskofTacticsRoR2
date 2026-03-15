@@ -129,7 +129,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
             ccShieldPrefab = LegacyResourcesAPI.LoadAsync<GameObject>("Prefabs/TemporaryVisualEffects/BearVoidEffect").WaitForCompletion();
 
-            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

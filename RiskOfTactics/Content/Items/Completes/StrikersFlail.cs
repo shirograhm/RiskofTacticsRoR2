@@ -71,7 +71,7 @@ namespace RiskOfTactics.Content.Items.Completes
             damageAmpBuff = Utilities.GenerateBuffDef("Damage Amp", AssetManager.bundle.LoadAsset<Sprite>("DamageAmp.png"), canStack: true, isHidden: false, isDebuff: false, isCooldown: false);
             ContentAddition.AddBuffDef(damageAmpBuff);
 
-            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

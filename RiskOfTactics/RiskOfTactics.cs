@@ -4,7 +4,6 @@ using R2API.Utils;
 using RiskOfTactics.Content.Buffs;
 using RiskOfTactics.Content.Items.Artifacts;
 using RiskOfTactics.Content.Items.Completes;
-using RiskOfTactics.Content.Items.Shrines;
 using RiskOfTactics.Extensions;
 using RiskOfTactics.Managers;
 using RoR2;
@@ -91,10 +90,6 @@ namespace RiskOfTactics
                 HorizonFocus.Init();
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
-
-            // Shrines
-            if (ForgeAnvil.isEnabled.Value)
-                ForgeAnvil.Init();
 
             Log.Message("Finished initializations.");
         }
