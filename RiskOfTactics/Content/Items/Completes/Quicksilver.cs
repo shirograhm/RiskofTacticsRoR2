@@ -5,6 +5,7 @@ using RiskOfTactics.Managers;
 using RoR2;
 using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 
 namespace RiskOfTactics.Content.Items.Completes
@@ -127,7 +128,7 @@ namespace RiskOfTactics.Content.Items.Completes
             cleanseBuff = Utilities.GenerateBuffDef("Cleanse", AssetManager.bundle.LoadAsset<Sprite>("Cleanse.png"), false, false, false, true);
             ContentAddition.AddBuffDef(cleanseBuff);
 
-            ccShieldPrefab = LegacyResourcesAPI.LoadAsync<GameObject>("Prefabs/TemporaryVisualEffects/BearVoidEffect").WaitForCompletion();
+            ccShieldPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/OutOfCombatArmor/OutOfCombatArmorEffect.prefab").WaitForCompletion();
 
             //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
@@ -240,25 +241,26 @@ namespace RiskOfTactics.Content.Items.Completes
                         if (!string.IsNullOrEmpty(childLocatorOverride))
                         {
                             ChildLocator childLocator = userBody.modelLocator?.modelTransform?.GetComponent<ChildLocator>();
-                            if ((bool)childLocator)
+                            if (childLocator)
                             {
                                 Transform transform = childLocator.FindChild(childLocatorOverride);
-                                if ((bool)transform)
+                                if (transform)
                                 {
                                     tempEffect.parentTransform = transform;
                                 }
                             }
                         }
                     }
-                    else
-                    {
-                        Debug.LogError("Can't instantiate null temporary visual effect");
-                    }
                 }
                 else
                 {
                     tempEffect.visualState = TemporaryVisualEffect.VisualState.Exit;
                 }
+            }
+            if (tempEffect != null)
+            {
+                bool isNotVehicle = userBody.currentVehicle == null || !userBody.currentVehicle.hidePassenger;
+                if (tempEffect.visualTransform) tempEffect.visualTransform.gameObject.SetActive(isNotVehicle);
             }
         }
     }
