@@ -39,7 +39,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> barrierSize = new(
             "Item: Bloodthirster",
             "Percent Barrier",
-            50f,
+            25f,
             "Percent max HP barrier given when this item is procced.",
             ["ITEM_ROT_BLOODTHIRSTER_DESC"],
             true
@@ -47,7 +47,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> barrierSizeExtraStacks = new(
             "Item: Bloodthirster",
             "Percent Barrier Extra Stacks",
-            100f,
+            50f,
             "Percent max HP barrier given when extra stacks of item are procced.",
             ["ITEM_ROT_BLOODTHIRSTER_DESC"],
             true

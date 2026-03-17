@@ -49,7 +49,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> reflectProcCoefficient = new(
             "Item: Bramble Vest",
             "Reflect Proc Coefficient",
-            1f,
+            0.5f,
             "Proc coefficient for the reflected damage hit when holding this item.",
             ["ITEM_ROT_BRAMBLEVEST_DESC"],
             false

@@ -43,7 +43,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> debuffTickDuration = new(
             "Item: Sunfire Cape",
             "Debuff Tick",
-            10f,
+            7f,
             "Seconds between Burn and Wound reapplication.",
             ["ITEM_ROT_SUNFIRECAPE_DESC"],
             false
@@ -59,7 +59,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<int> debuffRadius = new(
             "Item: Sunfire Cape",
             "Debuff Radius",
-            16,
+            15,
             "Range of the debuff application (meters).",
             ["ITEM_ROT_SUNFIRECAPE_DESC"],
             true
@@ -67,7 +67,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> healingDisableDuration = new(
             "Item: Sunfire Cape",
             "Healing Disable Duration",
-            15f,
+            7f,
             "Healing disable duration once applied by this item.",
             ["ITEM_ROT_SUNFIRECAPE_DESC"],
             false

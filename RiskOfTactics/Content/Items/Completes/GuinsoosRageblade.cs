@@ -26,7 +26,7 @@ namespace RiskOfTactics.Content.Items.Completes
             "Item: Guinsoos Rageblade",
             "Attack Speed On-Hit",
             3f,
-            "Percent attack speed gained on-hit.",
+            "Percent attack speed gained on-hit while hitting the same target.",
             ["ITEM_ROT_GUINSOOSRAGEBLADE_DESC"],
             true
         );

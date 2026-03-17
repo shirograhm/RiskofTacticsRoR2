@@ -20,7 +20,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> chanceToProc = new(
             "Item: Spear Of Shojin",
             "On-Hit Chance",
-            60f,
+            10f,
             "Percentage chance to trigger the cooldown refund.",
             ["ITEM_ROT_SPEAROFSHOJIN_DESC"],
             false
