@@ -27,7 +27,7 @@ namespace RiskOfTactics
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "shirograhm";
         public const string PluginName = "RiskOfTactics";
-        public const string PluginVersion = "0.1.0";
+        public const string PluginVersion = "0.1.1";
 
         public static PluginInfo PInfo { get; private set; }
 
