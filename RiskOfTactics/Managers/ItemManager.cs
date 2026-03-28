@@ -15,7 +15,7 @@ namespace RiskOfTactics.Managers
 
         public enum TacticTier
         {
-            Normal, Radiant, Artifact
+            Normal, Radiant, Artifact, Unique
         }
 
         public static ItemDef GenerateItem(string name, ItemTag[] tags, TacticTier tTier)
@@ -35,6 +35,9 @@ namespace RiskOfTactics.Managers
                     break;
                 case TacticTier.Artifact:
                     SetItemTier(itemDef, ItemTier.Tier3);
+                    break;
+                case TacticTier.Unique:
+                    SetItemTier(itemDef, ItemTier.Lunar);
                     break;
             }
 
