@@ -199,16 +199,8 @@ namespace RiskOfTactics
             return returnable;
         }
 
-        /**
-         * <summary>Returns true if the victim and attacker bodies are on the same team.</summary>
-         * 
-         * <param name="body1">Cannot be null.</param>
-         * <param name="body2">Cannot be null.</param>
-         */
         internal static bool OnSameTeam(CharacterBody body1, CharacterBody body2)
         {
-            if (body1 == null) throw new ArgumentNullException("body1");
-            if (body2 == null) throw new ArgumentNullException("body2");
             return body1.teamComponent && body2.teamComponent && body1.teamComponent.teamIndex == body2.teamComponent.teamIndex;
         }
 
