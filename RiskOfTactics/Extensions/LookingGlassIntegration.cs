@@ -35,6 +35,21 @@ namespace RiskOfTactics.Extensions
                             return values;
                         });
                 }
+                if (HextechGunblade.isEnabled.Value)
+                {
+                    RegisterStatsForItemWithRadiantVariant(HextechGunblade.itemDef, HextechGunblade.radiantDef, [
+                        new("Total Healing: ", ItemStatsDef.ValueType.Healing, ItemStatsDef.MeasurementUnits.Number)
+                        ], (master, itemCount) =>
+                        {
+                            var values = new List<float> { };
+                            if (master && master.inventory && master.inventory.GetComponent<HextechGunblade.Statistics>())
+                                values.Add(master.inventory.GetComponent<HextechGunblade.Statistics>().DamageHealed);
+                            else
+                                values.Add(0f);
+
+                            return values;
+                        });
+                }
                 if (SpearOfShojin.isEnabled.Value)
                 {
                     RegisterStatsForItemWithRadiantVariant(SpearOfShojin.itemDef, SpearOfShojin.radiantDef, [
