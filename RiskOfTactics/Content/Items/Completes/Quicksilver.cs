@@ -130,7 +130,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
             ccShieldPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/OutOfCombatArmor/OutOfCombatArmorEffect.prefab").WaitForCompletion();
 
-            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

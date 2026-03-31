@@ -104,7 +104,7 @@ namespace RiskOfTactics.Content.Items.Completes
             wrathBuff = Utilities.GenerateBuffDef("Wrath", AssetManager.bundle.LoadAsset<Sprite>("Wrath.png"), true, false, false, false);
             ContentAddition.AddBuffDef(wrathBuff);
 
-            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

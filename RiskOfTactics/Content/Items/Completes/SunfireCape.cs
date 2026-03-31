@@ -148,7 +148,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
             NetworkingAPI.RegisterMessageType<Statistics.Sync>();
 
-            //Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

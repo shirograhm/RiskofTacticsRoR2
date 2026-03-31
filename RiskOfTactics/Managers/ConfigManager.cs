@@ -51,6 +51,15 @@ namespace RiskOfTactics.Managers
                 1000000f,
                 "Value all stats are multiplied by when upgraded to radiant."
             );
+            public static ConfigOptions.ConfigurableValue<bool> useRadiantAutoConversion = ConfigOptions.ConfigurableValue.CreateBool(
+                categoryGUID,
+                categoryName,
+                config,
+                "! Important !",
+                "Radiant Auto-Conversion",
+                true,
+                "Set to true to enable automatic conversion of items to their radiant versions if you have both in your inventory."
+            );
         }
     }
 
