@@ -82,6 +82,13 @@ namespace RiskOfTactics
             return body;
         }
 
+        public static CharacterBody GetLowestHealthAlly(TeamIndex index)
+        {
+            var allies = CharacterMaster.readOnlyInstancesList.Where(el => el.teamIndex == index);
+            var lowestHealthAlly = allies.OrderBy(el => el.GetBody() ? el.GetBody().healthComponent ? el.GetBody().healthComponent.combinedHealthFraction : 1f : 1f).FirstOrDefault();
+            return lowestHealthAlly ? lowestHealthAlly.GetBody() : null;
+        }
+
         public static uint ScaleGoldWithDifficulty(int goldGranted)
         {
             return Convert.ToUInt32(goldGranted * (1 + 50 * GetDifficultyAsPercentage()));

@@ -72,6 +72,8 @@ namespace RiskOfTactics
                 GuinsoosRageblade.Init();
             if (HandOfJustice.isEnabled.Value)
                 HandOfJustice.Init();
+            if (HextechGunblade.isEnabled.Value)
+                HextechGunblade.Init();
             if (Quicksilver.isEnabled.Value)
                 Quicksilver.Init();
             if (StrikersFlail.isEnabled.Value)
