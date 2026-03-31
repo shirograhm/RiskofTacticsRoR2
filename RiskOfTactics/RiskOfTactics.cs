@@ -10,6 +10,7 @@ using RoR2;
 using RoR2.ExpansionManagement;
 using UnityEngine.AddressableAssets;
 
+[assembly: HG.Reflection.SearchableAttribute.OptIn]
 namespace RiskOfTactics
 {
     // Dependencies
@@ -54,6 +55,7 @@ namespace RiskOfTactics
 
             // Buffs
             Sunder.Init();
+            Chill.Init();
 
             // Completes
             if (AdaptiveHelm.isEnabled.Value)
@@ -90,6 +92,8 @@ namespace RiskOfTactics
                 HellfireHatchet.Init();
             if (HorizonFocus.isEnabled.Value)
                 HorizonFocus.Init();
+            if (Mittens.isEnabled.Value)
+                Mittens.Init();
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
 
