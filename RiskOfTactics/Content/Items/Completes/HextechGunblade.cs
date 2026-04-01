@@ -11,9 +11,11 @@ namespace RiskOfTactics.Content.Items.Completes
     public class HextechGunblade
     {
         public static ItemDef itemDef;
+        public static BuffDef afterKillHealing;
+
         public static ItemDef radiantDef;
 
-        // Heal the lowest ally for a portion of the damage dealt.
+        // Heal the lowest ally for a portion of the damage dealt by your special skill.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Hextech Gunblade",
             "Enabled",
@@ -24,16 +26,16 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> healingOnDamage = new(
             "Item: Hextech Gunblade",
             "Percent Healing",
-            10f,
-            "Percent of all damage dealt returned as healing.",
+            8f,
+            "Percent of all special damage dealt returned as healing.",
             ["ITEM_ROT_HEXTECHGUNBLADE_DESC"],
             true
         );
         public static ConfigurableValue<float> healingOnDamageExtraStacks = new(
             "Item: Hextech Gunblade",
             "Percent Healing Extra Stacks",
-            10f,
-            "Percent of all damage dealt returned as healing.",
+            8f,
+            "Percent of all special damage dealt returned as healing.",
             ["ITEM_ROT_HEXTECHGUNBLADE_DESC"],
             true
         );
@@ -134,7 +136,7 @@ namespace RiskOfTactics.Content.Items.Completes
                 if (vicBody && atkBody && atkBody.teamComponent && atkBody.inventory)
                 {
                     int count = atkBody.inventory.GetItemCountEffective(def);
-                    if (count > 0)
+                    if (count > 0 && damageReport.damageInfo.damageType == DamageTypeCombo.GenericSpecial)
                     {
                         var lowest = Utilities.GetLowestHealthAlly(atkBody.teamComponent.teamIndex);
                         var healing = damageReport.damageInfo.damage * Utilities.GetLinearStacking(percentHealingOnDamage, percentHealingOnDamageExtraStacks, count) * radiantMultiplier;

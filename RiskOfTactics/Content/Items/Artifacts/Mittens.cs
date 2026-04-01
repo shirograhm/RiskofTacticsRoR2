@@ -16,7 +16,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         public void FixedUpdate()
         {
-            if (body && body.transform && stack > 0) body.transform.localScale *= 0.5f;
+            if (body && body.transform && stack > 0) body.master.transform.localScale *= 0.5f;
         }
     }
 
