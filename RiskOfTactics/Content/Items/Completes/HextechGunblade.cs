@@ -15,7 +15,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
         public static ItemDef radiantDef;
 
-        // Heal the lowest ally for a portion of the damage dealt by your special skill.
+        // On-kill, heal your lowest ally for a portion of their max health.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Hextech Gunblade",
             "Enabled",
@@ -128,7 +128,7 @@ namespace RiskOfTactics.Content.Items.Completes
                 obj.inventory?.gameObject.AddComponent<Statistics>();
             };
 
-            GameEventManager.OnTakeDamage += (damageReport) =>
+            GlobalEventManager.onCharacterDeathGlobal += (damageReport) =>
             {
                 CharacterBody vicBody = damageReport.victimBody;
                 CharacterBody atkBody = damageReport.attackerBody;
@@ -136,11 +136,14 @@ namespace RiskOfTactics.Content.Items.Completes
                 if (vicBody && atkBody && atkBody.teamComponent && atkBody.inventory)
                 {
                     int count = atkBody.inventory.GetItemCountEffective(def);
-                    if (count > 0 && damageReport.damageInfo.damageType == DamageTypeCombo.GenericSpecial)
+                    if (count > 0)
                     {
                         var lowest = Utilities.GetLowestHealthAlly(atkBody.teamComponent.teamIndex);
-                        var healing = damageReport.damageInfo.damage * Utilities.GetLinearStacking(percentHealingOnDamage, percentHealingOnDamageExtraStacks, count) * radiantMultiplier;
-                        OrbManager.instance.AddOrb(new HextechOrb(lowest, vicBody, atkBody, healing));
+                        if (lowest && lowest.healthComponent && lowest.healthComponent.alive)
+                        {
+                            var healing = lowest.healthComponent.fullHealth * Utilities.GetLinearStacking(percentHealingOnDamage, percentHealingOnDamageExtraStacks, count) * radiantMultiplier;
+                            OrbManager.instance.AddOrb(new HextechOrb(lowest, vicBody, atkBody, healing));
+                        }
                     }
                 }
             };
@@ -148,7 +151,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
         public class HextechOrb : Orb
         {
-            private readonly float speed = 60f;
+            private readonly float speed = 25f;
 
             private readonly CharacterBody toBeHealed;
             private readonly CharacterBody toBeTracked;
