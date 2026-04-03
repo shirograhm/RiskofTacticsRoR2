@@ -1,8 +1,8 @@
 ﻿using R2API;
-using RiskOfTactics.Content.Buffs;
 using RiskOfTactics.Managers;
 using RoR2;
 using RoR2.Items;
+using UnityEngine;
 
 namespace RiskOfTactics.Content.Items.Artifacts
 {
@@ -16,7 +16,21 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         public void FixedUpdate()
         {
-            if (body && body.transform && stack > 0) body.master.transform.localScale *= 0.5f;
+            if (body && body.gameObject)
+            {
+                if (stack > 0)
+                {
+                    //body.gameObject.transform.localScale = (Vector3.one * 0.5f);
+                    //body.mainHurtBox.gameObject.transform.localScale = (Vector3.one * 0.5f);
+                    body.masterObject.transform.localScale = (Vector3.one * 0.5f);
+                }
+                else
+                {
+                    //body.gameObject.transform.localScale = Vector3.one;
+                    //body.mainHurtBox.gameObject.transform.localScale = Vector3.one;
+                    body.masterObject.transform.localScale = Vector3.one;
+                }
+            }
         }
     }
 
@@ -24,7 +38,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
     {
         public static ItemDef itemDef;
 
-        // Become smaller and faster. You are immune to burn, anti-heal, and chill.
+        // Become smaller and faster. You are immune to burn, anti-heal, and cripple.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Mittens",
             "Enabled",
@@ -35,7 +49,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> movementSpeed = new(
             "Item: Mittens",
             "Movement Speed",
-            15f,
+            20f,
             "Percent movement speed gained when holding this item.",
             ["ITEM_ROT_MITTENS_DESC"],
             true
@@ -51,7 +65,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> attackSpeed = new(
             "Item: Mittens",
             "Attack Speed",
-            15f,
+            20f,
             "Percent attack speed gained when holding this item.",
             ["ITEM_ROT_MITTENS_DESC"],
             true
@@ -93,10 +107,11 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
             On.RoR2.CharacterBody.AddBuff_BuffDef += (orig, self, buffDef) =>
             {
-                if (buffDef == RoR2Content.Buffs.OnFire && buffDef == RoR2Content.Buffs.HealingDisabled && buffDef == Chill.buffDef)
-                {
+                if (buffDef == RoR2Content.Buffs.OnFire
+                    || buffDef == RoR2Content.Buffs.HealingDisabled
+                    || buffDef == RoR2Content.Buffs.Cripple)
                     return;
-                }
+
                 orig(self, buffDef);
             };
         }

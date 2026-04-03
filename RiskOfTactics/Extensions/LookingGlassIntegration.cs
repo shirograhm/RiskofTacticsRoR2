@@ -67,6 +67,7 @@ namespace RiskOfTactics.Extensions
                 }
 
 
+
                 // Artifacts
                 if (GamblersBlade.isEnabled.Value)
                 {
@@ -92,6 +93,19 @@ namespace RiskOfTactics.Extensions
 
                             values.Add(Utilities.GetHyperbolicStacking(HorizonFocus.percentLightningDamage, HorizonFocus.percentLightningDamageExtraStacks, itemCount));
                             return values;
+                        });
+                }
+                if (Mittens.isEnabled.Value)
+                {
+                    RegisterStatsForItem(Mittens.itemDef, [
+                        new("Attack Speed: ", ItemStatsDef.ValueType.Damage, ItemStatsDef.MeasurementUnits.Percentage),
+                        new("Movement Speed: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.Percentage)
+                        ], (master, itemCount) =>
+                        {
+                            return [
+                                Utilities.GetHyperbolicStacking(Mittens.percentAttackSpeed, Mittens.percentAttackSpeedExtraStacks, itemCount),
+                                Utilities.GetHyperbolicStacking(Mittens.percentMovementSpeed, Mittens.percentMovementSpeedExtraStacks, itemCount)
+                            ];
                         });
                 }
                 if (SnipersFocus.isEnabled.Value)
