@@ -82,10 +82,8 @@ namespace RiskOfTactics.Content.Items.Artifacts
                     {
                         if (Util.CheckRoll0To1(percentStunChance * damageInfo.procCoefficient, atkBody.master))
                         {
-                            damageInfo.damageType = DamageType.Stun1s;
+                            damageInfo.damageType |= DamageType.Stun1s;
                             damageInfo.damageColorIndex = DamageColorIndex.Electrocution;
-
-                            EffectManager.SimpleImpactEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/ImpactStunGrenade"), damageInfo.position, -damageInfo.force, transmit: true);
                         }
                     }
                 }
@@ -94,9 +92,9 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         private static void SpawnLightningStrike(DamageInfo info, CharacterBody attackerBody, CharacterBody victimBody, float mult)
         {
-            if (victimBody.healthComponent && victimBody.healthComponent.alive)
+            if (victimBody.healthComponent)
             {
-                GameObject projectilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/LightningStrikeProjectile");
+                GameObject projectilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/LightningStake");
                 projectilePrefab.GetComponent<ProjectileController>().ghostPrefab = itemDef.pickupModelPrefab;
                 projectilePrefab.GetComponent<ProjectileImpactExplosion>().impactEffect = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/ImpactStunGrenade");
                 ProjectileManager.instance.FireProjectileWithoutDamageType(
