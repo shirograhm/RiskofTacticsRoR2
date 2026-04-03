@@ -52,11 +52,17 @@ namespace RiskOfTactics.Extensions
                 }
                 if (SpearOfShojin.isEnabled.Value)
                 {
-                    RegisterStatsForItemWithRadiantVariant(SpearOfShojin.itemDef, SpearOfShojin.radiantDef, [
+                    RegisterStatsForItem(SpearOfShojin.itemDef, [
                         new("On-Hit Reduction: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.Percentage)
                         ], (master, itemCount) =>
                         {
-                            return [Utilities.GetHyperbolicStacking(SpearOfShojin.percentCooldownOnHit * ConfigManager.Scaling.radiantItemStatMultiplier, SpearOfShojin.percentCooldownOnHitExtraStacks * ConfigManager.Scaling.radiantItemStatMultiplier, itemCount)];
+                            return [Utilities.GetHyperbolicStacking(SpearOfShojin.percentCooldownOnHit, SpearOfShojin.percentCooldownOnHitExtraStacks, itemCount)];
+                        });
+                    RegisterStatsForItem(SpearOfShojin.radiantDef, [
+                        new("On-Hit Reduction: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.Percentage)
+                        ], (master, itemCount) =>
+                        {
+                            return [Utilities.GetHyperbolicStacking(SpearOfShojin.percentCooldownOnHit, SpearOfShojin.percentCooldownOnHitExtraStacks, itemCount) * ConfigManager.Scaling.radiantItemStatMultiplier];
                         });
                 }
 
@@ -86,6 +92,15 @@ namespace RiskOfTactics.Extensions
 
                             values.Add(Utilities.GetHyperbolicStacking(HorizonFocus.percentLightningDamage, HorizonFocus.percentLightningDamageExtraStacks, itemCount));
                             return values;
+                        });
+                }
+                if (SnipersFocus.isEnabled.Value)
+                {
+                    RegisterStatsForItem(SnipersFocus.itemDef, [
+                        new("Damage Increase Per Meter: ", ItemStatsDef.ValueType.Damage, ItemStatsDef.MeasurementUnits.Percentage)
+                        ], (master, itemCount) =>
+                        {
+                            return [Utilities.GetHyperbolicStacking(SnipersFocus.percentDamageIncreasePerMeter, SnipersFocus.percentDamageIncreasePerMeterExtraStacks, itemCount)];
                         });
                 }
             }
