@@ -91,6 +91,8 @@ namespace RiskOfTactics
                 HellfireHatchet.Init();
             if (HorizonFocus.isEnabled.Value)
                 HorizonFocus.Init();
+            if (LightshieldCrest.isEnabled.Value)
+                LightshieldCrest.Init();
             if (Mittens.isEnabled.Value)
                 Mittens.Init();
             if (SnipersFocus.isEnabled.Value)

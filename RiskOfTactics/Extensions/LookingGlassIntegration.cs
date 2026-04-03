@@ -95,6 +95,15 @@ namespace RiskOfTactics.Extensions
                             return values;
                         });
                 }
+                if (LightshieldCrest.isEnabled.Value)
+                {
+                    RegisterStatsForItem(LightshieldCrest.itemDef, [
+                        new("Armor Conversion: ", ItemStatsDef.ValueType.Armor, ItemStatsDef.MeasurementUnits.Percentage)
+                        ], (master, itemCount) =>
+                        {
+                            return [Utilities.GetLinearStacking(LightshieldCrest.percentArmor, LightshieldCrest.percentArmorExtraStacks, itemCount)];
+                        });
+                }
                 if (Mittens.isEnabled.Value)
                 {
                     RegisterStatsForItem(Mittens.itemDef, [
