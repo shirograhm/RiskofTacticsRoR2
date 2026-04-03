@@ -112,18 +112,18 @@ namespace RiskOfTactics.Extensions
                         ], (master, itemCount) =>
                         {
                             return [
-                                Utilities.GetHyperbolicStacking(Mittens.percentAttackSpeed, Mittens.percentAttackSpeedExtraStacks, itemCount),
-                                Utilities.GetHyperbolicStacking(Mittens.percentMovementSpeed, Mittens.percentMovementSpeedExtraStacks, itemCount)
+                                Utilities.GetLinearStacking(Mittens.percentAttackSpeed, Mittens.percentAttackSpeedExtraStacks, itemCount),
+                                Utilities.GetLinearStacking(Mittens.percentMovementSpeed, Mittens.percentMovementSpeedExtraStacks, itemCount)
                             ];
                         });
                 }
                 if (SnipersFocus.isEnabled.Value)
                 {
                     RegisterStatsForItem(SnipersFocus.itemDef, [
-                        new("Damage Increase Per Meter: ", ItemStatsDef.ValueType.Damage, ItemStatsDef.MeasurementUnits.Percentage)
+                        new("Damage Per Meter: ", ItemStatsDef.ValueType.Damage, ItemStatsDef.MeasurementUnits.Percentage)
                         ], (master, itemCount) =>
                         {
-                            return [Utilities.GetHyperbolicStacking(SnipersFocus.percentDamageIncreasePerMeter, SnipersFocus.percentDamageIncreasePerMeterExtraStacks, itemCount)];
+                            return [Utilities.GetLinearStacking(SnipersFocus.percentDamageIncreasePerMeter, SnipersFocus.percentDamageIncreasePerMeterExtraStacks, itemCount)];
                         });
                 }
             }
