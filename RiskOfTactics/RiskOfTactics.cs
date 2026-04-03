@@ -55,7 +55,6 @@ namespace RiskOfTactics
 
             // Buffs
             Sunder.Init();
-            Chill.Init();
 
             // Completes
             if (AdaptiveHelm.isEnabled.Value)
@@ -94,6 +93,8 @@ namespace RiskOfTactics
                 HorizonFocus.Init();
             if (Mittens.isEnabled.Value)
                 Mittens.Init();
+            if (SnipersFocus.isEnabled.Value)
+                SnipersFocus.Init();
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
 
