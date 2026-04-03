@@ -20,21 +20,21 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> stunChance = new(
             "Item: Horizon Focus",
             "Stun Chance",
-            8f,
+            5f,
             "Percent chance to stun enemies when dealing damage.",
             ["ITEM_ROT_HORIZONFOCUS_DESC"]
         );
         public static ConfigurableValue<float> lightningDamage = new(
             "Item: Horizon Focus",
             "Lightning Damage",
-            8f,
+            5f,
             "Percent enemy max HP damage dealt by the lightning orb caused by this item.",
             ["ITEM_ROT_HORIZONFOCUS_DESC"]
         );
         public static ConfigurableValue<float> lightningDamageExtraStacks = new(
             "Item: Horizon Focus",
             "Lightning Damage Extra Stacks",
-            5f,
+            8f,
             "Percent enemy max HP damage dealt by the lightning orb caused by extra stacks this item.",
             ["ITEM_ROT_HORIZONFOCUS_DESC"]
         );
@@ -94,19 +94,22 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         private static void SpawnLightningStrike(DamageInfo info, CharacterBody attackerBody, CharacterBody victimBody, float mult)
         {
-            GameObject projectilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/LightningStrikeProjectile");
-            projectilePrefab.GetComponent<ProjectileController>().ghostPrefab = itemDef.pickupModelPrefab;
-            projectilePrefab.GetComponent<ProjectileImpactExplosion>().impactEffect = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/ImpactStunGrenade");
-            ProjectileManager.instance.FireProjectileWithoutDamageType(
-                projectilePrefab,
-                info.position,
-                Quaternion.identity,
-                attackerBody.gameObject,
-                victimBody.healthComponent.fullHealth * mult,
-                0f,
-                info.crit,
-                DamageColorIndex.Electrocution
-            );
+            if (victimBody.healthComponent && victimBody.healthComponent.alive)
+            {
+                GameObject projectilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/LightningStrikeProjectile");
+                projectilePrefab.GetComponent<ProjectileController>().ghostPrefab = itemDef.pickupModelPrefab;
+                projectilePrefab.GetComponent<ProjectileImpactExplosion>().impactEffect = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/ImpactStunGrenade");
+                ProjectileManager.instance.FireProjectileWithoutDamageType(
+                    projectilePrefab,
+                    info.position,
+                    Quaternion.identity,
+                    attackerBody.gameObject,
+                    victimBody.healthComponent.fullHealth * mult,
+                    0f,
+                    info.crit,
+                    DamageColorIndex.Electrocution
+                );
+            }
         }
     }
 }
