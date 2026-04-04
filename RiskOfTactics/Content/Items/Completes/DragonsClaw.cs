@@ -1,19 +1,17 @@
 ﻿using R2API;
-using R2API.Networking;
-using R2API.Networking.Interfaces;
 using RiskOfTactics.Managers;
 using RoR2;
-using System;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace RiskOfTactics.Content.Items.Completes
 {
     class DragonsClaw
     {
         public static ItemDef itemDef;
+        public static BuffDef dragonsClawCooldownBuff;
 
         public static ItemDef radiantDef;
+        public static BuffDef dragonsClawRadiantCooldownBuff;
 
         // Gain health. Periodically heal for a portion of your max HP.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -42,7 +40,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> healingPerTick = new(
             "Item: Dragons Claw",
             "Healing Per Tick",
-            9f,
+            4.5f,
             "Percent max health healing per item proc.",
             ["ITEM_ROT_DRAGONSCLAW_DESC"],
             true
@@ -59,89 +57,25 @@ namespace RiskOfTactics.Content.Items.Completes
         public static readonly float percentMaxHealthBonus = maxHealthBonus.Value / 100f;
         public static readonly float percentMaxHealthBonusExtraStacks = maxHealthBonusExtraStacks.Value / 100f;
 
-        public class Statistics : MonoBehaviour
-        {
-            private float _lastTick;
-            public float LastTick
-            {
-                get { return _lastTick; }
-                set
-                {
-                    _lastTick = value;
-                    if (NetworkServer.active)
-                    {
-                        new Sync(gameObject.GetComponent<NetworkIdentity>().netId, value).Send(NetworkDestination.Clients);
-                    }
-                }
-            }
-
-            public class Sync : INetMessage
-            {
-                NetworkInstanceId objId;
-                float lastTick;
-
-                public Sync()
-                {
-                }
-
-                public Sync(NetworkInstanceId objId, float tick)
-                {
-                    this.objId = objId;
-                    lastTick = tick;
-                }
-
-                public void Deserialize(NetworkReader reader)
-                {
-                    objId = reader.ReadNetworkId();
-                    lastTick = reader.ReadSingle();
-                }
-
-                public void OnReceived()
-                {
-                    if (NetworkServer.active) return;
-
-                    GameObject obj = Util.FindNetworkObject(objId);
-                    if (obj != null)
-                    {
-                        Statistics component = obj.GetComponent<Statistics>();
-                        if (component != null)
-                        {
-                            component.LastTick = lastTick;
-                        }
-                    }
-                }
-
-                public void Serialize(NetworkWriter writer)
-                {
-                    writer.Write(objId);
-                    writer.Write(lastTick);
-
-                    writer.FinishMessage();
-                }
-            }
-        }
-
         internal static void Init()
         {
             itemDef = ItemManager.GenerateItem("DragonsClaw", [ItemTag.Healing, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
-            radiantDef = ItemManager.GenerateItem("Radiant_DragonsClaw", [ItemTag.Healing, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
+            dragonsClawCooldownBuff = Utilities.GenerateBuffDef("DragonsClawCooldown", AssetManager.bundle.LoadAsset<Sprite>("DragonsClawCooldown"), false, false, false, true);
+            ContentAddition.AddBuffDef(dragonsClawCooldownBuff);
 
-            NetworkingAPI.RegisterMessageType<Statistics.Sync>();
+            radiantDef = ItemManager.GenerateItem("Radiant_DragonsClaw", [ItemTag.Healing, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
+            dragonsClawRadiantCooldownBuff = Utilities.GenerateBuffDef("DragonsClawRadiantCooldown", AssetManager.bundle.LoadAsset<Sprite>("DragonsClawRadiantCooldown"), false, false, false, true);
+            ContentAddition.AddBuffDef(dragonsClawRadiantCooldownBuff);
 
             if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemManager.TacticTier.Normal);
-            Hooks(radiantDef, ItemManager.TacticTier.Radiant);
+            Hooks(itemDef, dragonsClawCooldownBuff, ItemManager.TacticTier.Normal);
+            Hooks(radiantDef, dragonsClawRadiantCooldownBuff, ItemManager.TacticTier.Radiant);
         }
 
-        public static void Hooks(ItemDef def, ItemManager.TacticTier tier)
+        public static void Hooks(ItemDef def, BuffDef cooldownBuff, ItemManager.TacticTier tier)
         {
             float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
-
-            CharacterMaster.onStartGlobal += (obj) =>
-            {
-                obj.inventory?.gameObject.AddComponent<Statistics>();
-            };
 
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
@@ -155,42 +89,40 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
-            Stage.onStageStartGlobal += (stage) =>
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += (orig, self, buffDef) =>
             {
-                foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
+                orig(self, buffDef);
+
+                if (buffDef == cooldownBuff)
                 {
-                    CharacterMaster master = user.masterController?.master ?? user.master;
-                    if (master && master.inventory && master.inventory.GetItemCountEffective(def) > 0)
-                    {
-                        Statistics component = master.inventory.GetComponent<Statistics>();
-                        if (component)
-                        {
-                            component.LastTick = Environment.TickCount;
-                        }
-                    }
+                    self.healthComponent.Heal(self.maxHealth * percentHealingPerTick, default, true);
+                    Utilities.SpawnHealEffect(self);
+
+                    if (self.inventory && self.inventory.GetItemCountEffective(def) > 0)
+                        self.AddTimedBuff(cooldownBuff, tickDuration.Value);
                 }
             };
 
-            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
+            On.RoR2.Inventory.GiveItemPermanent_ItemIndex_int += (orig, self, index, count) =>
             {
-                orig(self);
-
-                if (self && self.inventory)
+                CharacterMaster master = self.GetComponent<CharacterMaster>();
+                if (master && index == def.itemIndex)
                 {
-                    int itemCount = self.inventory.GetItemCountEffective(def);
-                    if (itemCount > 0)
-                    {
-                        Statistics component = self.inventory.GetComponent<Statistics>();
-                        // Check time elapsed 
-                        if (component && Environment.TickCount - component.LastTick > tickDuration * 1000)
-                        {
-                            self.healthComponent.Heal(self.healthComponent.fullHealth * percentHealingPerTick * radiantMultiplier, new ProcChainMask());
-                            component.LastTick = Environment.TickCount;
-
-                            Utilities.SpawnHealEffect(self);
-                        }
-                    }
+                    if (master.GetBody()) master.GetBody().AddTimedBuff(cooldownBuff, tickDuration.Value);
                 }
+
+                orig(self, index, count);
+            };
+
+            On.RoR2.Inventory.GiveItemTemp += (orig, self, index, count) =>
+            {
+                CharacterMaster master = self.GetComponent<CharacterMaster>();
+                if (master && index == def.itemIndex)
+                {
+                    if (master.GetBody()) master.GetBody().AddTimedBuff(cooldownBuff, tickDuration.Value);
+                }
+
+                orig(self, index, count);
             };
         }
     }
