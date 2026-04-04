@@ -1,20 +1,48 @@
 ﻿using R2API;
-using R2API.Networking;
-using R2API.Networking.Interfaces;
 using RiskOfTactics.Managers;
 using RoR2;
-using System;
+using RoR2.Items;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace RiskOfTactics.Content.Items.Completes
 {
+    public class ArchangelsStaffItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return ArchangelsStaff.itemDef;
+        }
+
+        public void FixedUpdate()
+        {
+            ArchangelsStaff.FixedUpdateHook(body, ArchangelsStaff.staffIntervalCooldown);
+        }
+    }
+
+    public class ArchangelsStaffRadiantItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return ArchangelsStaff.radiantDef;
+        }
+
+        public void FixedUpdate()
+        {
+            ArchangelsStaff.FixedUpdateHook(body, ArchangelsStaff.staffRadiantIntervalCooldown);
+        }
+    }
+
     class ArchangelsStaff
     {
-        public static ItemDef itemDef;
         public static BuffDef foresightBuff;
 
+        public static ItemDef itemDef;
+        public static BuffDef staffIntervalCooldown;
+
         public static ItemDef radiantDef;
+        public static BuffDef staffRadiantIntervalCooldown;
 
         // During the teleporter event, periodically gain BASE damage.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -41,147 +69,88 @@ namespace RiskOfTactics.Content.Items.Completes
             false
         );
 
-        public class Statistics : MonoBehaviour
-        {
-            private float _lastTick;
-            public float LastTick
-            {
-                get { return _lastTick; }
-                set
-                {
-                    _lastTick = value;
-                    if (NetworkServer.active)
-                    {
-                        new Sync(gameObject.GetComponent<NetworkIdentity>().netId, value).Send(NetworkDestination.Clients);
-                    }
-                }
-            }
-
-            public class Sync : INetMessage
-            {
-                NetworkInstanceId objId;
-                float lastTick;
-
-                public Sync()
-                {
-                }
-
-                public Sync(NetworkInstanceId objId, float tick)
-                {
-                    this.objId = objId;
-                    lastTick = tick;
-                }
-
-                public void Deserialize(NetworkReader reader)
-                {
-                    objId = reader.ReadNetworkId();
-                    lastTick = reader.ReadSingle();
-                }
-
-                public void OnReceived()
-                {
-                    if (NetworkServer.active) return;
-
-                    GameObject obj = Util.FindNetworkObject(objId);
-                    if (obj != null)
-                    {
-                        Statistics component = obj.GetComponent<Statistics>();
-                        if (component != null)
-                        {
-                            component.LastTick = lastTick;
-                        }
-                    }
-                }
-
-                public void Serialize(NetworkWriter writer)
-                {
-                    writer.Write(objId);
-                    writer.Write(lastTick);
-
-                    writer.FinishMessage();
-                }
-            }
-        }
-
         internal static void Init()
         {
             // Normal Variant
             itemDef = ItemManager.GenerateItem("ArchangelsStaff", [ItemTag.Damage, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
             radiantDef = ItemManager.GenerateItem("Radiant_ArchangelsStaff", [ItemTag.Damage, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
-            NetworkingAPI.RegisterMessageType<Statistics.Sync>();
-
             foresightBuff = Utilities.GenerateBuffDef("Foresight", AssetManager.bundle.LoadAsset<Sprite>("Foresight.png"), true, false, false, false);
             ContentAddition.AddBuffDef(foresightBuff);
 
+            staffIntervalCooldown = Utilities.GenerateBuffDef("ArchangelIntervalCooldown", AssetManager.bundle.LoadAsset<Sprite>("ArchangelsStaff.png"), false, true, false, true);
+            ContentAddition.AddBuffDef(staffIntervalCooldown);
+            staffRadiantIntervalCooldown = Utilities.GenerateBuffDef("RadiantArchangelIntervalCooldown", AssetManager.bundle.LoadAsset<Sprite>("ArchangelsStaff.png"), false, true, false, true);
+            ContentAddition.AddBuffDef(staffRadiantIntervalCooldown);
+
             if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemManager.TacticTier.Normal);
-            Hooks(radiantDef, ItemManager.TacticTier.Radiant);
+            Hooks(itemDef, staffIntervalCooldown, ItemManager.TacticTier.Normal);
+            Hooks(radiantDef, staffRadiantIntervalCooldown, ItemManager.TacticTier.Radiant);
         }
 
-        public static void Hooks(ItemDef def, ItemManager.TacticTier tier)
+        public static void Hooks(ItemDef def, BuffDef cooldownBuff, ItemManager.TacticTier tier)
         {
             float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
 
-            CharacterMaster.onStartGlobal += (obj) =>
-            {
-                obj.inventory?.gameObject.AddComponent<Statistics>();
-            };
-
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
-                if (sender && sender.inventory)
+                if (sender)
                 {
-                    int count = sender.inventory.GetItemCountEffective(def);
-                    if (count > 0)
-                    {
-                        int buffCount = sender.GetBuffCount(foresightBuff);
-
-                        args.baseDamageAdd += buffCount * flatDamagePerTick.Value * radiantMultiplier;
-                    }
+                    int buffCount = sender.GetBuffCount(foresightBuff);
+                    args.baseDamageAdd += buffCount * flatDamagePerTick.Value * radiantMultiplier;
                 }
             };
 
-            Stage.onStageStartGlobal += (stage) =>
+            On.RoR2.HoldoutZoneController.Start += (orig, self) =>
             {
+                orig(self);
                 foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
                 {
                     CharacterMaster master = user.masterController.master ?? user.master;
-                    if (master && master.inventory && master.inventory.GetItemCountEffective(def) > 0)
+                    if (master)
                     {
-                        Statistics component = master.inventory.GetComponent<Statistics>();
-                        if (component)
+                        CharacterBody body = master.GetBody();
+                        if (body && body.inventory && body.inventory.GetItemCountEffective(def) > 0)
                         {
-                            component.LastTick = Environment.TickCount;
+                            body.AddTimedBuff(cooldownBuff, tickDuration.Value);
                         }
                     }
                 }
             };
 
-            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += (orig, self, buffDef) =>
             {
-                orig(self);
-
-                foreach (HoldoutZoneController hzc in InstanceTracker.GetInstancesList<HoldoutZoneController>())
+                orig(self, buffDef);
+                if (buffDef == cooldownBuff)
                 {
                     if (self && self.inventory)
                     {
                         int itemCount = self.inventory.GetItemCountEffective(def);
-
-                        if (itemCount > 0 && hzc.isActiveAndEnabled)
+                        if (itemCount > 0 && InstanceTracker.GetInstancesList<HoldoutZoneController>().Count > 0)
                         {
-                            Statistics component = self.inventory.GetComponent<Statistics>();
-                            // Check time elapsed 
-                            if (component && Environment.TickCount - component.LastTick > tickDuration.Value * 1000)
-                            {
-                                self.AddBuff(foresightBuff);
-                                component.LastTick = Environment.TickCount;
-                            }
+                            self.AddBuff(foresightBuff);
+                            self.AddTimedBuff(cooldownBuff, tickDuration.Value);
                         }
                     }
                 }
             };
+        }
+
+        public static void FixedUpdateHook(CharacterBody body, BuffDef cooldownBuff)
+        {
+            foreach (HoldoutZoneController hzc in InstanceTracker.GetInstancesList<HoldoutZoneController>())
+            {
+                if (body && body.inventory)
+                {
+                    int itemCount = body.inventory.GetItemCountEffective(itemDef);
+                    if (itemCount > 0 && hzc.isActiveAndEnabled)
+                    {
+                        if (!body.HasBuff(cooldownBuff))
+                            body.AddTimedBuff(cooldownBuff, tickDuration.Value);
+                    }
+                }
+            }
         }
     }
 }
