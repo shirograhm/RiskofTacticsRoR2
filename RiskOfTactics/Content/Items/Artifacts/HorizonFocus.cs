@@ -20,14 +20,14 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> stunChance = new(
             "Item: Horizon Focus",
             "Stun Chance",
-            5f,
+            8f,
             "Percent chance to stun enemies when dealing damage.",
             ["ITEM_ROT_HORIZONFOCUS_DESC"]
         );
         public static ConfigurableValue<float> lightningDamage = new(
             "Item: Horizon Focus",
             "Lightning Damage",
-            5f,
+            8f,
             "Percent enemy max HP damage dealt by the lightning orb caused by this item.",
             ["ITEM_ROT_HORIZONFOCUS_DESC"]
         );
@@ -94,11 +94,8 @@ namespace RiskOfTactics.Content.Items.Artifacts
         {
             if (victimBody.healthComponent)
             {
-                GameObject projectilePrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/LightningStake");
-                projectilePrefab.GetComponent<ProjectileController>().ghostPrefab = itemDef.pickupModelPrefab;
-                projectilePrefab.GetComponent<ProjectileImpactExplosion>().impactEffect = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/ImpactStunGrenade");
                 ProjectileManager.instance.FireProjectileWithoutDamageType(
-                    projectilePrefab,
+                    LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/LightningStake"),
                     info.position,
                     Quaternion.identity,
                     attackerBody.gameObject,
