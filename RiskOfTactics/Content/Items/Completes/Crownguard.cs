@@ -74,7 +74,7 @@ namespace RiskOfTactics.Content.Items.Completes
             crownedBuff = Utilities.GenerateBuffDef("Crowned", AssetManager.bundle.LoadAsset<Sprite>("Crowned.png"), false, false, false, false);
             ContentAddition.AddBuffDef(crownedBuff);
 
-                        if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);
@@ -108,7 +108,7 @@ namespace RiskOfTactics.Content.Items.Completes
                     self.AddBuff(crownedBuff);
             };
 
-            On.RoR2.HoldoutZoneController.Awake += (orig, self) =>
+            On.RoR2.HoldoutZoneController.Start += (orig, self) =>
             {
                 orig(self);
 
