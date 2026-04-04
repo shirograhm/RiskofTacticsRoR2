@@ -47,7 +47,7 @@ namespace RiskOfTactics.Managers
                 "! Important !",
                 "Radiant Stat Multiplier",
                 2f,
-                0f,
+                1f,
                 1000000f,
                 "Value all stats are multiplied by when upgraded to radiant."
             );
@@ -58,7 +58,7 @@ namespace RiskOfTactics.Managers
                 "! Important !",
                 "Radiant Auto-Conversion",
                 true,
-                "Set to true to enable automatic conversion of items to their radiant versions if you have both in your inventory."
+                "Set to true to enable automatic conversion of items to their radiant versions if you have both in your inventory. WARNING: Disabling this may cause bugs."
             );
         }
     }
