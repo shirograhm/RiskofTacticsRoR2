@@ -3,6 +3,7 @@ using R2API.Networking;
 using R2API.Networking.Interfaces;
 using RiskOfTactics.Managers;
 using RoR2;
+using RoR2.Items;
 using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -10,6 +11,34 @@ using UnityEngine.Networking;
 
 namespace RiskOfTactics.Content.Items.Completes
 {
+    public class QuicksilverItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return Quicksilver.itemDef;
+        }
+
+        public void FixedUpdate()
+        {
+            Quicksilver.FixedUpdateHook(body);
+        }
+    }
+
+    public class QuicksilverRadiantItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return Quicksilver.radiantDef;
+        }
+
+        public void FixedUpdate()
+        {
+            Quicksilver.FixedUpdateHook(body);
+        }
+    }
+
     class Quicksilver
     {
         public static ItemDef itemDef;
@@ -17,7 +46,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static BuffDef cleanseBuff;
 
         public static GameObject ccShieldPrefab;
-
+        public static TemporaryVisualEffect ccShieldEffectInstance;
         public static ItemDef radiantDef;
 
         // When the teleporter is activated, gain immunity to crowd control for a duration. During this time, gain attack speed every second.
@@ -34,7 +63,7 @@ namespace RiskOfTactics.Content.Items.Completes
             30f,
             "Number of seconds immune to crowd control once the teleporter event starts.",
             ["ITEM_ROT_QUICKSILVER_DESC"],
-            true
+            false
         );
         public static ConfigurableValue<float> ccImmunityDurationExtraStacks = new(
             "Item: Quicksilver",
@@ -147,11 +176,10 @@ namespace RiskOfTactics.Content.Items.Completes
 
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
-                if (sender && sender.inventory)
+                if (sender)
                 {
                     int buffCount = sender.GetBuffCount(flowBuff);
-                    if (buffCount > 0)
-                        args.attackSpeedMultAdd += buffCount * percentAttackSpeedPerBuff * radiantMultiplier;
+                    args.attackSpeedMultAdd += buffCount * percentAttackSpeedPerBuff * radiantMultiplier;
                 }
             };
 
@@ -171,33 +199,31 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
-            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
+            On.RoR2.HoldoutZoneController.Start += (orig, self) =>
             {
                 orig(self);
 
-                foreach (HoldoutZoneController hzc in InstanceTracker.GetInstancesList<HoldoutZoneController>())
+                foreach (NetworkUser user in NetworkUser.readOnlyInstancesList)
                 {
-                    if (self && self.inventory)
+                    CharacterMaster master = user.masterController.master ?? user.master;
+                    if (master)
                     {
-                        int itemCount = self.inventory.GetItemCountEffective(def);
-
-                        if (itemCount > 0 && hzc.isActiveAndEnabled)
+                        CharacterBody body = master.GetBody();
+                        if (body && body.inventory && body.inventory.GetItemCountEffective(def) > 0)
                         {
-                            if (self.GetBuffCount(flowBuff) == 0 && self.GetBuffCount(cleanseBuff) == 0)
-                                self.AddTimedBuff(cleanseBuff, Utilities.GetLinearStacking(ccImmunityDuration.Value * radiantMultiplier, ccImmunityDurationExtraStacks.Value, itemCount));
-
-                            if (self.GetBuffCount(cleanseBuff) > 0)
-                            {
-                                Statistics component = self.inventory.GetComponent<Statistics>();
-                                // Check time elapsed 
-                                if (component && Environment.TickCount - component.LastTick > 1000)
-                                {
-                                    self.AddBuff(flowBuff);
-                                    component.LastTick = Environment.TickCount;
-                                }
-                            }
+                            body.AddTimedBuff(cleanseBuff, Utilities.GetLinearStacking(ccImmunityDuration.Value, ccImmunityDurationExtraStacks.Value, body.inventory.GetItemCountEffective(def)));
+                            UpdateSingleTemporaryVisualEffect(ref ccShieldEffectInstance, ccShieldPrefab, body, true);
                         }
                     }
+                }
+            };
+
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += (orig, self, buffDef) =>
+            {
+                orig(self, buffDef);
+                if (buffDef == cleanseBuff)
+                {
+                    UpdateSingleTemporaryVisualEffect(ref ccShieldEffectInstance, ccShieldPrefab, self, false);
                 }
             };
 
@@ -209,45 +235,55 @@ namespace RiskOfTactics.Content.Items.Completes
                     damageInfo.force = Vector3.zero;
                 }
             };
+        }
 
-            On.RoR2.CharacterBody.UpdateAllTemporaryVisualEffects += (orig, self) =>
+        public static void FixedUpdateHook(CharacterBody body)
+        {
+            if (body && body.inventory)
             {
-                orig(self);
-
-                TemporaryVisualEffect ccShieldEffectInstance = new() { };
-                UpdateSingleTemporaryVisualEffect(ref ccShieldEffectInstance, ccShieldPrefab, self, self.HasBuff(cleanseBuff));
-            };
+                int itemCount = body.inventory.GetItemCountEffective(itemDef);
+                if (itemCount > 0)
+                {
+                    if (body.GetBuffCount(cleanseBuff) > 0)
+                    {
+                        Statistics component = body.inventory.GetComponent<Statistics>();
+                        // Check time elapsed 
+                        if (component && Environment.TickCount - component.LastTick > 1000)
+                        {
+                            body.AddBuff(flowBuff);
+                            component.LastTick = Environment.TickCount;
+                        }
+                    }
+                }
+            }
         }
 
         private static void UpdateSingleTemporaryVisualEffect(ref TemporaryVisualEffect tempEffect, GameObject tempEffectPrefab, CharacterBody userBody, bool active, string childLocatorOverride = "")
         {
             if (tempEffect != null != active)
             {
-                if (active)
+                if (active && tempEffectPrefab)
                 {
-                    if (tempEffectPrefab)
+                    GameObject gameObject = UnityEngine.Object.Instantiate(tempEffectPrefab, userBody.corePosition, Quaternion.identity);
+                    tempEffect = gameObject.GetComponent<TemporaryVisualEffect>();
+                    tempEffect.parentTransform = userBody.coreTransform;
+                    tempEffect.visualState = TemporaryVisualEffect.VisualState.Enter;
+                    tempEffect.healthComponent = userBody.healthComponent;
+                    tempEffect.radius = 1.0f;
+                    LocalCameraEffect component = gameObject.GetComponent<LocalCameraEffect>();
+                    if (component)
                     {
-                        GameObject gameObject = UnityEngine.Object.Instantiate(tempEffectPrefab, userBody.corePosition, Quaternion.identity);
-                        tempEffect = gameObject.GetComponent<TemporaryVisualEffect>();
-                        tempEffect.parentTransform = userBody.coreTransform;
-                        tempEffect.visualState = TemporaryVisualEffect.VisualState.Enter;
-                        tempEffect.healthComponent = userBody.healthComponent;
-                        tempEffect.radius = 4f;
-                        LocalCameraEffect component = gameObject.GetComponent<LocalCameraEffect>();
-                        if (component)
+                        component.targetCharacter = userBody.gameObject;
+                    }
+                    if (!string.IsNullOrEmpty(childLocatorOverride))
+                    {
+                        ChildLocator childLocator = userBody.modelLocator?.modelTransform?.GetComponent<ChildLocator>();
+                        if (childLocator)
                         {
-                            component.targetCharacter = userBody.gameObject;
-                        }
-                        if (!string.IsNullOrEmpty(childLocatorOverride))
-                        {
-                            ChildLocator childLocator = userBody.modelLocator?.modelTransform?.GetComponent<ChildLocator>();
-                            if (childLocator)
+                            Transform transform = childLocator.FindChild(childLocatorOverride);
+                            if (transform)
                             {
-                                Transform transform = childLocator.FindChild(childLocatorOverride);
-                                if (transform)
-                                {
-                                    tempEffect.parentTransform = transform;
-                                }
+                                tempEffect.parentTransform = transform;
                             }
                         }
                     }
