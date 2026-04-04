@@ -100,6 +100,10 @@ namespace RiskOfTactics
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
 
+            // Uniques
+            //if (CrownOfDemacia.isEnabled.Value)
+            //    CrownOfDemacia.Init();
+
             Log.Message("Finished initializations.");
         }
     }

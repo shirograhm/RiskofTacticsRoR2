@@ -188,6 +188,19 @@
     "ITEM_ROT_STATIKKSHIV_NAME": "Statikk Shiv",
     "ITEM_ROT_STATIKKSHIV_PICKUP": "Your next attack periodically chains to nearby enemies, dealing bonus damage and applying Sunder.",
     "ITEM_ROT_STATIKKSHIV_DESC": "Every <style=cIsUtility>{Effect Cooldown} seconds</style>, your next hit chains up to {Number of Enemies Chained} enemies within <style=cIsUtility>{Zap Range}m</style>, dealing an additional <style=cIsDamage>{Bonus On-Hit}% <style=cStack>(+{Bonus On-Hit Per Stack}% per stack)</style> TOTAL damage</style> and applying <style=cWorldEvent>Sunder</style>, reducing armor by <style=cEvent>{Sunder Reduction}</style>.",
-    "ITEM_ROT_STATIKKSHIV_LORE": ""
+    "ITEM_ROT_STATIKKSHIV_LORE": "",
+
+
+
+
+
+
+
+
+    "ROT_CROWNOFDEMACIA": "Crown of Demacia",
+    "ITEM_ROT_CROWNOFDEMACIA_NAME": "Crown of Demacia",
+    "ITEM_ROT_CROWNOFDEMACIA_PICKUP": "Gain health, base damage, attack speed, and health regeneration. If you die, lose the run.",
+    "ITEM_ROT_CROWNOFDEMACIA_DESC": "Gain <style=cIsHealth>{Max Health}%</style> max health, <style=cIsDamage>{Attack Speed}%</style> attack speed, <style=cIsDamage>{Base Damage}%</style> BASE damage, and <style=cIsHealing>{Health Regen} HP/s</style> health regen. <style=cDeath>If you die, lose the run.</style>",
+    "ITEM_ROT_CROWNOFDEMACIA_LORE": ""
   }
 }
