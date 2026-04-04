@@ -42,7 +42,6 @@ namespace RiskOfTactics.Content.Items.Completes
         public static readonly float percentHealingOnDamage = healingOnDamage.Value / 100f;
         public static readonly float percentHealingOnDamageExtraStacks = healingOnDamageExtraStacks.Value / 100f;
 
-
         public class Statistics : MonoBehaviour
         {
             private float _damageHealed;
