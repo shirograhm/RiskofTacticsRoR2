@@ -27,6 +27,9 @@ Adds some TFT items, radiants, and artifacts to Risk of Rain 2.
             <img src="https://i.imgur.com/lJQytH4.png" alt="Radiant Hand of Justice" width="64"/>
         </td>
         <td>
+            <img src="https://i.imgur.com/uN6YeoN.png" alt="Radiant Hextech Gunblade" width="64"/>
+        </td>
+        <td>
             <img src="https://i.imgur.com/XEHfVZY.png" alt="Radiant Quicksilver" width="64"/>
         </td>
         <td>
@@ -150,6 +153,17 @@ Base items have Radiant variants in which most/all values are doubled. These Rad
     </tr>
     <tr>
         <td>
+            <img src="https://i.imgur.com/rZd3w3x.png" alt="Hextech Gunblade" width="192"/>
+        </td>
+        <td>
+            <b>Hextech Gunblade</b>
+        </td>
+        <td>
+            On-kill, heal your lowest ally for <b>5% (+5% per stack)</b> of their max health.
+        </td>
+    </tr>
+    <tr>
+        <td>
             <img src="https://i.imgur.com/S2LeCye.png" alt="Quicksilver" width="192"/>
         </td>
         <td>
@@ -223,6 +237,39 @@ Base items have Radiant variants in which most/all values are doubled. These Rad
         </td>
         <td>
             <b>8%</b> chance to stun when damaging enemies. Hits that stun also <b>explode after a delay</b>, dealing <b>8% (+5% per stack)</b> of the <b>enemy's max HP</b> in a small area.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://i.imgur.com/Fu2Ec4A.png" alt="Lightshield Crest" width="192"/>
+        </td>
+        <td>
+            <b>Lightshield Crest</b>
+        </td>
+        <td>
+            Gain <b>50</b> armor. Every <b>10 seconds</b>, shield your lowest ally for <b>50% (+50% per stack)</b> of your current armor.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://i.imgur.com/fYaIGZ5.png" alt="Mittens" width="192"/>
+        </td>
+        <td>
+            <b>Mittens</b>
+        </td>
+        <td>
+            Become smaller and gain <b>20% (+20% per stack)</b> movement speed and <b>20% (+20% per stack)</b> attack speed. You are immune to Burn, Anti-Heal, and Cripple.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://i.imgur.com/uoIIsEq.png" alt="Sniper's Focus" width="192"/>
+        </td>
+        <td>
+            <b>Sniper's Focus</b>
+        </td>
+        <td>
+            Deal <b>1% (+1% per stack)</b> more damage for each meter between you and the target, up to <b>100m</b>.
         </td>
     </tr>
     <tr>
