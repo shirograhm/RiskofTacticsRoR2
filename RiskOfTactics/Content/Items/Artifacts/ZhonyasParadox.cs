@@ -39,13 +39,6 @@ namespace RiskOfTactics.Content.Items.Artifacts
             "Additional duration of the Gilded effect with extra stacks.",
             ["ITEM_ROT_ZHONYASPARADOX_DESC"]
         );
-        public static ConfigurableValue<bool> includeInvulnerability = new(
-            "Item: Zhonyas Paradox",
-            "Include Invulnerability",
-            true,
-            "Whether or not to include invulnerability during the Gilded effect.",
-            ["ITEM_ROT_ZHONYASPARADOX_DESC"]
-        );
         public static readonly float percentHealthThreshold = healthThreshold.Value / 100f;
 
         internal static void Init()
@@ -93,7 +86,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                             damageInfo.damage = resultingHealth - vicBody.healthComponent.fullCombinedHealth * percentHealthThreshold;
                         }
 
-                        if (includeInvulnerability.Value && vicBody.HasBuff(zhonyasBuff))
+                        if (vicBody.HasBuff(zhonyasBuff))
                         {
                             // Make the player invulnerable while they have the buff
                             damageInfo.damage = 0f;
