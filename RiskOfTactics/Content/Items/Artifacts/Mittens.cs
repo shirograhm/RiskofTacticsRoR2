@@ -105,6 +105,8 @@ namespace RiskOfTactics.Content.Items.Artifacts
                 orig(self, buffIndex);
             };
 
+            On.RoR2.DotController.InflictDot_refInflictDotInfo += DotController_InflictDot_refInflictDotInfo;
+
             /// TODO: Fix Mitten's scaling
             //    On.RoR2.Inventory.GiveItemTemp += (orig, self, itemIndex, count) =>
             //    {
@@ -169,6 +171,22 @@ namespace RiskOfTactics.Content.Items.Artifacts
             //            }
             //        }
             //    }
+        }
+
+        private static void DotController_InflictDot_refInflictDotInfo(On.RoR2.DotController.orig_InflictDot_refInflictDotInfo orig, ref InflictDotInfo inflictDotInfo)
+        {
+            CharacterBody victimBody = inflictDotInfo.victimObject ? inflictDotInfo.victimObject.GetComponent<CharacterBody>() : null;
+            if (victimBody && victimBody.inventory)
+            {
+                int count = victimBody.inventory.GetItemCountEffective(itemDef);
+                if (count > 0)
+                {
+                    if (inflictDotInfo.dotIndex == DotController.DotIndex.Burn || inflictDotInfo.dotIndex == DotController.DotIndex.StrongerBurn)
+                        return;
+                }
+            }
+
+            orig(ref inflictDotInfo);
         }
     }
 }
