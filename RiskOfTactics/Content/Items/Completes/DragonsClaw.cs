@@ -24,7 +24,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> maxHealthBonus = new(
             "Item: Dragons Claw",
             "Percent Health",
-            9f,
+            8f,
             "Percent max health bonus when holding this item.",
             ["ITEM_ROT_DRAGONSCLAW_DESC"],
             true
@@ -32,7 +32,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> maxHealthBonusExtraStacks = new(
             "Item: Dragons Claw",
             "Percent Health Per Stack",
-            9f,
+            8f,
             "Percent max health bonus when holding extra stacks of this item.",
             ["ITEM_ROT_DRAGONSCLAW_DESC"],
             true
@@ -40,7 +40,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> healingPerTick = new(
             "Item: Dragons Claw",
             "Healing Per Tick",
-            4.5f,
+            4f,
             "Percent max health healing per item proc.",
             ["ITEM_ROT_DRAGONSCLAW_DESC"],
             true
@@ -48,7 +48,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> tickDuration = new(
             "Item: Dragons Claw",
             "Tick Duration",
-            9f,
+            8f,
             "Number of seconds between item procs.",
             ["ITEM_ROT_DRAGONSCLAW_DESC"],
             false
