@@ -21,7 +21,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
             "Item: The Indomitable",
             "Max Health",
             20f,
-            "Percent max health increase.",
+            "Max health increase.",
             ["ITEM_ROT_THEINDOMITABLE_DESC"]
         );
         public static ConfigurableValue<float> maxHealthExtraStacks = new(
@@ -31,31 +31,15 @@ namespace RiskOfTactics.Content.Items.Artifacts
             "Percent max health increase with extra stacks.",
             ["ITEM_ROT_THEINDOMITABLE_DESC"]
         );
-        public static ConfigurableValue<float> movespeedLost = new(
-            "Item: The Indomitable",
-            "Movespeed Lost",
-            20f,
-            "Percent movement speed lost.",
-            ["ITEM_ROT_THEINDOMITABLE_DESC"]
-        );
-        public static ConfigurableValue<float> movespeedLostExtraStacks = new(
-            "Item: The Indomitable",
-            "Movespeed Lost Extra Stacks",
-            20f,
-            "Percent movement speed lost with extra stacks.",
-            ["ITEM_ROT_THEINDOMITABLE_DESC"]
-        );
         public static ConfigurableValue<float> forceOnHit = new(
             "Item: The Indomitable",
             "Force On Hit",
-            1f,
+            20f,
             "Force applied to enemies on hit.",
             ["ITEM_ROT_THEINDOMITABLE_DESC"]
         );
         public static readonly float percentMaxHealth = maxHealth.Value / 100f;
         public static readonly float percentMaxHealthExtraStacks = maxHealthExtraStacks.Value / 100f;
-        public static readonly float percentMovespeedLost = movespeedLost.Value / 100f;
-        public static readonly float percentMovespeedLostExtraStacks = movespeedLostExtraStacks.Value / 100f;
 
         internal static void Init()
         {
@@ -74,12 +58,11 @@ namespace RiskOfTactics.Content.Items.Artifacts
                     if (count > 0)
                     {
                         args.healthTotalMult *= 1 + Utilities.GetLinearStacking(percentMaxHealth, percentMaxHealthExtraStacks, count);
-                        args.moveSpeedTotalMult *= 1 - Utilities.GetLinearStacking(percentMovespeedLost, percentMovespeedLostExtraStacks, count);
                     }
                 }
             };
 
-            On.RoR2.SetStateOnHurt.SetStun += (orig, self, damageInfo) =>
+            On.RoR2.SetStateOnHurt.SetStun += (orig, self, duration) =>
             {
                 if (NetworkServer.active)
                 {
@@ -90,9 +73,19 @@ namespace RiskOfTactics.Content.Items.Artifacts
                         if (count > 0) return;
                     }
                 }
-
                 // Call the original method for normal behavior
-                orig(self, damageInfo);
+                orig(self, duration);
+            };
+
+            GameEventManager.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
+            {
+                CharacterBody atkBody = attackerInfo.body;
+                CharacterBody vicBody = victimInfo.body;
+                if (atkBody && atkBody.master && atkBody.inventory && atkBody.inventory.GetItemCountEffective(itemDef) > 0)
+                {
+                    var direction = atkBody.corePosition - vicBody.corePosition;
+                    damageInfo.force += direction.normalized * forceOnHit.Value;
+                }
             };
         }
     }
