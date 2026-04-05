@@ -29,7 +29,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
             "Item: Lightshield Crest",
             "Armor",
             50f,
-            "Amount of armor to apply as a shield to the lowest health ally.",
+            "Amount of armor gained while holding this item.",
             ["ITEM_ROT_LIGHTSHIELDCREST_DESC"]
         );
         public static ConfigurableValue<float> armorPercent = new(
