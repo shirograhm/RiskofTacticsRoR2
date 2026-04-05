@@ -1,4 +1,5 @@
-﻿using RiskOfTactics.Managers;
+﻿using R2API;
+using RiskOfTactics.Managers;
 using RoR2;
 using UnityEngine;
 
@@ -7,8 +8,9 @@ namespace RiskOfTactics.Content.Items.Artifacts
     internal class ZhonyasParadox
     {
         public static ItemDef itemDef;
+        public static BuffDef zhonyasBuff;
 
-        // Taking damage below a threshold causes you to become Gilded for a duration.
+        // Taking damage below a threshold causes you to become Gilded for a duration. During this duration you are also invulnerable.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Zhonyas Paradox",
             "Enabled",
@@ -37,11 +39,21 @@ namespace RiskOfTactics.Content.Items.Artifacts
             "Additional duration of the Gilded effect with extra stacks.",
             ["ITEM_ROT_ZHONYASPARADOX_DESC"]
         );
+        public static ConfigurableValue<bool> includeInvulnerability = new(
+            "Item: Zhonyas Paradox",
+            "Include Invulnerability",
+            true,
+            "Whether or not to include invulnerability during the Gilded effect.",
+            ["ITEM_ROT_ZHONYASPARADOX_DESC"]
+        );
         public static readonly float percentHealthThreshold = healthThreshold.Value / 100f;
 
         internal static void Init()
         {
             itemDef = ItemManager.GenerateItem("ZhonyasParadox", [ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Artifact);
+
+            zhonyasBuff = Utilities.GenerateBuffDef("ZhonyasParadoxBuff", AssetManager.bundle.LoadAsset<Sprite>("ZhonyasParadox"), false, true, false, true);
+            ContentAddition.AddBuffDef(zhonyasBuff);
 
             Hooks();
         }
@@ -60,6 +72,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                         {
                             float duration = Utilities.GetLinearStacking(effectDuration.Value, effectDurationExtraStacks.Value, count);
                             vicBody.AddTimedBuff(DLC2Content.Buffs.EliteAurelionite, duration);
+                            vicBody.AddTimedBuff(zhonyasBuff, duration);
                         }
                     }
                 }
@@ -78,6 +91,12 @@ namespace RiskOfTactics.Content.Items.Artifacts
                         {
                             // Damage the player down to the threshold instead of killing them
                             damageInfo.damage = resultingHealth - vicBody.healthComponent.fullCombinedHealth * percentHealthThreshold;
+                        }
+
+                        if (includeInvulnerability.Value && vicBody.HasBuff(zhonyasBuff))
+                        {
+                            // Make the player invulnerable while they have the buff
+                            damageInfo.damage = 0f;
                         }
                     }
                 }
