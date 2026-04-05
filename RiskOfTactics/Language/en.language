@@ -70,7 +70,11 @@
     "ITEM_ROT_RADIANT_SUNFIRECAPE_PICKUP": "Periodically <style=cUserSetting>Burn</style> nearby enemies and <style=cDeath>disable their healing</style>.",
     "ITEM_ROT_RADIANT_SUNFIRECAPE_DESC": "Gain <style=cIsHealth>{Percent Health}% <style=cStack>(+{Percent Health Extra Stacks}% per stack)</style> max HP</style>. Every <style=cIsUtility>{Debuff Tick} seconds</style>, burn nearby enemies for <style=cIsHealth>{Burn Percent}% max HP</style> and <style=cDeath>disable their healing for {Healing Disable Duration} seconds</style>.",
     "ITEM_ROT_RADIANT_SUNFIRECAPE_LORE": "",
-
+    "ROT_RADIANT_WARMOGSARMOR": "Warmog's Armor (Radiant)",
+    "ITEM_ROT_RADIANT_WARMOGSARMOR_NAME": "Warmog's Armor (Radiant)",
+    "ITEM_ROT_RADIANT_WARMOGSARMOR_PICKUP": "Gain bonus health.",
+    "ITEM_ROT_RADIANT_WARMOGSARMOR_DESC": "Gain <style=cIsHealth>{Flat Health} <style=cStack>(+{Flat Health Extra Stacks} per stack)</style> max health</style>. Increase your total health by <style=cIsHealth>{Percent Health}%</style>.",
+    "ITEM_ROT_RADIANT_WARMOGSARMOR_LORE": "",
 
 
 
@@ -149,6 +153,12 @@
     "ITEM_ROT_SUNFIRECAPE_PICKUP": "Periodically <style=cUserSetting>Burn</style> nearby enemies and <style=cDeath>disable their healing</style>.",
     "ITEM_ROT_SUNFIRECAPE_DESC": "Gain <style=cIsHealth>{Percent Health}% <style=cStack>(+{Percent Health Extra Stacks}% per stack)</style> max HP</style>. Every <style=cIsUtility>{Debuff Tick} seconds</style>, burn nearby enemies for <style=cIsHealth>{Burn Percent}% max HP</style> and <style=cDeath>disable their healing for {Healing Disable Duration} seconds</style>.",
     "ITEM_ROT_SUNFIRECAPE_LORE": "",
+    "ROT_WARMOGSARMOR": "Warmog's Armor",
+    "ITEM_ROT_WARMOGSARMOR_NAME": "Warmog's Armor",
+    "ITEM_ROT_WARMOGSARMOR_PICKUP": "Gain bonus health.",
+    "ITEM_ROT_WARMOGSARMOR_DESC": "Gain <style=cIsHealth>{Flat Health} <style=cStack>(+{Flat Health Extra Stacks} per stack)</style> max health</style>. Increase your total health by <style=cIsHealth>{Percent Health}%</style>.",
+    "ITEM_ROT_WARMOGSARMOR_LORE": "",
+
 
 
 
@@ -167,7 +177,7 @@
     "ROT_HORIZONFOCUS": "Horizon Focus",
     "ITEM_ROT_HORIZONFOCUS_NAME": "Horizon Focus",
     "ITEM_ROT_HORIZONFOCUS_PICKUP": "Stunning enemies strikes them again.",
-    "ITEM_ROT_HORIZONFOCUS_DESC": "<style=cIsUtility>{Stun Chance}%</style> chance to stun when damaging enemies. Hits that stun also <style=cLunarObjective>explode after a delay</style>, dealing <style=cIsHealth>{Lightning Damage}% <style=cStack>(+{Lightning Damage Extra Stacks}% per stack)</style></style> of the <style=cIsHealth>enemy's max HP</style> in a small area.",
+    "ITEM_ROT_HORIZONFOCUS_DESC": "On-hit, <style=cIsUtility>{Stun Chance}%</style> chance to stun enemies. Hits that stun also <style=cLunarObjective>explode after a delay</style>, dealing <style=cIsHealth>{Lightning Damage}% <style=cStack>(+{Lightning Damage Extra Stacks}% per stack)</style></style> of the <style=cIsHealth>enemy's max HP</style> in a small area.",
     "ITEM_ROT_HORIZONFOCUS_LORE": "",
     "ROT_LIGHTSHIELDCREST": "Lightshield Crest",
     "ITEM_ROT_LIGHTSHIELDCREST_NAME": "Lightshield Crest",
@@ -189,6 +199,11 @@
     "ITEM_ROT_STATIKKSHIV_PICKUP": "Your next attack periodically chains to nearby enemies, dealing bonus damage and applying Sunder.",
     "ITEM_ROT_STATIKKSHIV_DESC": "Every <style=cIsUtility>{Effect Cooldown} seconds</style>, your next hit chains up to {Number of Enemies Chained} enemies within <style=cIsUtility>{Zap Range}m</style>, dealing an additional <style=cIsDamage>{Bonus On-Hit}% <style=cStack>(+{Bonus On-Hit Per Stack}% per stack)</style> TOTAL damage</style> and applying <style=cWorldEvent>Sunder</style>, reducing armor by <style=cEvent>{Sunder Reduction}</style>.",
     "ITEM_ROT_STATIKKSHIV_LORE": "",
+    "ROT_ZHONYASPARADOX": "Zhonya's Paradox",
+    "ITEM_ROT_ZHONYASPARADOX_NAME": "Zhonya's Paradox",
+    "ITEM_ROT_ZHONYASPARADOX_PICKUP": "Taking damage at low health causes you to become temporarily Gilded.",
+    "ITEM_ROT_ZHONYASPARADOX_DESC": "Taking damage below <style=cIsHealth>{Health Threshold}% health</style> causes you to become <style=cShrine>Gilded</style> for <style=cIsUtility>{Effect Duration} <style=cStack>(+{Effect Duration Extra Stacks} per stack)</style> seconds</style>.",
+    "ITEM_ROT_ZHONYASPARADOX_LORE": "",
 
 
 

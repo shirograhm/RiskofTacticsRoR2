@@ -101,6 +101,8 @@ namespace RiskOfTactics
                 SnipersFocus.Init();
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
+            if (ZhonyasParadox.isEnabled.Value)
+                ZhonyasParadox.Init();
 
             // Uniques
             //if (CrownOfDemacia.isEnabled.Value)

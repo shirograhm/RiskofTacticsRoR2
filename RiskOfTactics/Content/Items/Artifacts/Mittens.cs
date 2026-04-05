@@ -21,32 +21,28 @@ namespace RiskOfTactics.Content.Items.Artifacts
             "Movement Speed",
             20f,
             "Percent movement speed gained when holding this item.",
-            ["ITEM_ROT_MITTENS_DESC"],
-            true
+            ["ITEM_ROT_MITTENS_DESC"]
         );
         public static ConfigurableValue<float> movementSpeedExtraStacks = new(
             "Item: Mittens",
             "Movement Speed Extra Stacks",
             20f,
             "Percent movement speed gained when holding extra stacks of this item.",
-            ["ITEM_ROT_MITTENS_DESC"],
-            true
+            ["ITEM_ROT_MITTENS_DESC"]
         );
         public static ConfigurableValue<float> attackSpeed = new(
             "Item: Mittens",
             "Attack Speed",
             20f,
             "Percent attack speed gained when holding this item.",
-            ["ITEM_ROT_MITTENS_DESC"],
-            true
+            ["ITEM_ROT_MITTENS_DESC"]
         );
         public static ConfigurableValue<float> attackSpeedExtraStacks = new(
             "Item: Mittens",
             "Attack Speed Extra Stacks",
             20f,
             "Percent attack speed gained when holding extra stacks of this item.",
-            ["ITEM_ROT_MITTENS_DESC"],
-            true
+            ["ITEM_ROT_MITTENS_DESC"]
         );
         public static readonly float percentMovementSpeed = movementSpeed.Value / 100f;
         public static readonly float percentMovementSpeedExtraStacks = movementSpeedExtraStacks.Value / 100f;
