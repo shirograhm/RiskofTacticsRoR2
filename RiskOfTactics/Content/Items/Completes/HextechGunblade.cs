@@ -26,7 +26,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> healingOnDamage = new(
             "Item: Hextech Gunblade",
             "Percent Healing",
-            8f,
+            5f,
             "Percent of all special damage dealt returned as healing.",
             ["ITEM_ROT_HEXTECHGUNBLADE_DESC"],
             true
@@ -34,7 +34,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> healingOnDamageExtraStacks = new(
             "Item: Hextech Gunblade",
             "Percent Healing Extra Stacks",
-            8f,
+            5f,
             "Percent of all special damage dealt returned as healing.",
             ["ITEM_ROT_HEXTECHGUNBLADE_DESC"],
             true

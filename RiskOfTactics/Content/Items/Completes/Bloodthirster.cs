@@ -34,12 +34,12 @@ namespace RiskOfTactics.Content.Items.Completes
             20f,
             "Threshold needed to fall below in order to trigger this item's effect.",
             ["ITEM_ROT_BLOODTHIRSTER_DESC"],
-            false
+            true
         );
         public static ConfigurableValue<float> barrierSize = new(
             "Item: Bloodthirster",
             "Percent Barrier",
-            25f,
+            20f,
             "Percent max HP barrier given when this item is procced.",
             ["ITEM_ROT_BLOODTHIRSTER_DESC"],
             true
@@ -47,7 +47,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> barrierSizeExtraStacks = new(
             "Item: Bloodthirster",
             "Percent Barrier Extra Stacks",
-            50f,
+            40f,
             "Percent max HP barrier given when extra stacks of item are procced.",
             ["ITEM_ROT_BLOODTHIRSTER_DESC"],
             true
@@ -64,7 +64,7 @@ namespace RiskOfTactics.Content.Items.Completes
             satedBuff = Utilities.GenerateBuffDef("Sated", AssetManager.bundle.LoadAsset<Sprite>("Sated.png"), false, false, false, true);
             ContentAddition.AddBuffDef(satedBuff);
 
-                        if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);
@@ -81,7 +81,7 @@ namespace RiskOfTactics.Content.Items.Completes
                 {
                     // Low health barrier effect
                     int vicCount = vicBody.inventory.GetItemCountEffective(def);
-                    if (vicCount > 0 && !vicBody.HasBuff(satedBuff) && vicBody.healthComponent.combinedHealthFraction < percentBarrierTriggerHP)
+                    if (vicCount > 0 && !vicBody.HasBuff(satedBuff) && vicBody.healthComponent.combinedHealthFraction < percentBarrierTriggerHP * radiantMultiplier)
                     {
                         vicBody.healthComponent.AddBarrier(vicBody.healthComponent.fullCombinedHealth * Utilities.GetLinearStacking(percentBarrierSize * radiantMultiplier, percentBarrierSizeExtraStacks * radiantMultiplier, vicCount));
                         vicBody.AddTimedBuff(satedBuff, effectCooldown);

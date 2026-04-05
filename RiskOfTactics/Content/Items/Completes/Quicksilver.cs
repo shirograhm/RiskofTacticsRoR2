@@ -60,15 +60,15 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> ccImmunityDuration = new(
             "Item: Quicksilver",
             "CC Immunity Duration",
-            30f,
+            20f,
             "Number of seconds immune to crowd control once the teleporter event starts.",
             ["ITEM_ROT_QUICKSILVER_DESC"],
-            false
+            true
         );
         public static ConfigurableValue<float> ccImmunityDurationExtraStacks = new(
             "Item: Quicksilver",
             "CC Immunity Duration Extra Stacks",
-            30f,
+            20f,
             "Number of seconds immune to crowd control once the teleporter event starts.",
             ["ITEM_ROT_QUICKSILVER_DESC"],
             false

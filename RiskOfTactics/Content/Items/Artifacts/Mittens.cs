@@ -1,39 +1,9 @@
 ﻿using R2API;
 using RiskOfTactics.Managers;
 using RoR2;
-using RoR2.Items;
-using UnityEngine;
 
 namespace RiskOfTactics.Content.Items.Artifacts
 {
-    public class MittensItemBehavior : BaseItemBodyBehavior
-    {
-        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
-        public static ItemDef GetItemDef()
-        {
-            return Mittens.itemDef;
-        }
-
-        public void FixedUpdate()
-        {
-            if (body && body.gameObject)
-            {
-                if (stack > 0)
-                {
-                    //body.gameObject.transform.localScale = (Vector3.one * 0.5f);
-                    //body.mainHurtBox.gameObject.transform.localScale = (Vector3.one * 0.5f);
-                    body.masterObject.transform.localScale = (Vector3.one * 0.5f);
-                }
-                else
-                {
-                    //body.gameObject.transform.localScale = Vector3.one;
-                    //body.mainHurtBox.gameObject.transform.localScale = Vector3.one;
-                    body.masterObject.transform.localScale = Vector3.one;
-                }
-            }
-        }
-    }
-
     internal class Mittens
     {
         public static ItemDef itemDef;
@@ -57,7 +27,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> movementSpeedExtraStacks = new(
             "Item: Mittens",
             "Movement Speed Extra Stacks",
-            30f,
+            20f,
             "Percent movement speed gained when holding extra stacks of this item.",
             ["ITEM_ROT_MITTENS_DESC"],
             true
@@ -73,7 +43,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> attackSpeedExtraStacks = new(
             "Item: Mittens",
             "Attack Speed Extra Stacks",
-            30f,
+            20f,
             "Percent attack speed gained when holding extra stacks of this item.",
             ["ITEM_ROT_MITTENS_DESC"],
             true
@@ -87,16 +57,16 @@ namespace RiskOfTactics.Content.Items.Artifacts
         {
             itemDef = ItemManager.GenerateItem("Mittens", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Artifact);
 
-            Hooks(itemDef);
+            Hooks();
         }
 
-        public static void Hooks(ItemDef def)
+        public static void Hooks()
         {
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
                 if (sender && sender.inventory)
                 {
-                    int count = sender.inventory.GetItemCountEffective(def);
+                    int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
                         args.moveSpeedMultAdd += Utilities.GetLinearStacking(percentMovementSpeed, percentMovementSpeedExtraStacks, count);
@@ -107,13 +77,102 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
             On.RoR2.CharacterBody.AddBuff_BuffDef += (orig, self, buffDef) =>
             {
-                if (buffDef == RoR2Content.Buffs.OnFire
-                    || buffDef == RoR2Content.Buffs.HealingDisabled
-                    || buffDef == RoR2Content.Buffs.Cripple)
-                    return;
+                if (self && self.inventory)
+                {
+                    int count = self.inventory.GetItemCountEffective(itemDef);
+                    if (count > 0)
+                    {
+                        if (buffDef == RoR2Content.Buffs.OnFire
+                            || buffDef == RoR2Content.Buffs.HealingDisabled
+                            || buffDef == RoR2Content.Buffs.Cripple)
+                            return;
+                    }
+                }
 
                 orig(self, buffDef);
             };
+
+            On.RoR2.CharacterBody.AddBuff_BuffIndex += (orig, self, buffIndex) =>
+            {
+                if (self && self.inventory)
+                {
+                    int count = self.inventory.GetItemCountEffective(itemDef);
+                    if (count > 0)
+                    {
+                        var buffDef = BuffCatalog.GetBuffDef(buffIndex);
+                        if (buffDef == RoR2Content.Buffs.OnFire
+                            || buffDef == RoR2Content.Buffs.HealingDisabled
+                            || buffDef == RoR2Content.Buffs.Cripple)
+                            return;
+                    }
+                }
+                orig(self, buffIndex);
+            };
+
+            /// TODO: Fix Mitten's scaling
+            //    On.RoR2.Inventory.GiveItemTemp += (orig, self, itemIndex, count) =>
+            //    {
+            //        AdjustMittensScaling(itemIndex, self, Vector3.one * 0.5f);
+
+            //        orig(self, itemIndex, count);
+            //    };
+
+            //    On.RoR2.Inventory.GiveItemPermanent_ItemDef_int += (orig, self, itemDef, count) =>
+            //    {
+            //        AdjustMittensScaling(itemDef.itemIndex, self, Vector3.one * 0.5f);
+
+            //        orig(self, itemDef, count);
+            //    };
+
+            //    On.RoR2.Inventory.GiveItemPermanent_ItemIndex_int += (orig, self, itemIndex, count) =>
+            //    {
+            //        AdjustMittensScaling(itemIndex, self, Vector3.one * 0.5f);
+
+            //        orig(self, itemIndex, count);
+            //    };
+
+            //    On.RoR2.Inventory.RemoveItemTemp += (orig, self, itemIndex, count) =>
+            //    {
+            //        AdjustMittensScaling(itemIndex, self, Vector3.one);
+
+            //        orig(self, itemIndex, count);
+            //    };
+
+            //    On.RoR2.Inventory.RemoveItemPermanent_ItemDef_int += (orig, self, itemDef, count) =>
+            //    {
+            //        AdjustMittensScaling(itemDef.itemIndex, self, Vector3.one);
+
+            //        orig(self, itemDef, count);
+            //    };
+
+            //    On.RoR2.Inventory.RemoveItemPermanent_ItemIndex_int += (orig, self, itemIndex, count) =>
+            //    {
+            //        AdjustMittensScaling(itemIndex, self, Vector3.one);
+
+            //        orig(self, itemIndex, count);
+            //    };
+            //}
+
+            //private static void AdjustMittensScaling(ItemIndex index, Inventory self, Vector3 scaling)
+            //{
+            //    if (index == itemDef.itemIndex)
+            //    {
+            //        if (self)
+            //        {
+            //            var body = self.GetComponentInParent<CharacterBody>();
+            //            if (body && self.GetItemCountEffective(itemDef) > 0)
+            //            {
+            //                body.gameObject.transform.localScale = scaling;
+
+            //                body.mainHurtBox.transform.localScale = scaling;
+            //                System.Array.ForEach(body.hurtBoxGroup.hurtBoxes, hurtBox =>
+            //                {
+            //                    if (hurtBox)
+            //                        hurtBox.transform.localScale = scaling;
+            //                });
+            //            }
+            //        }
+            //    }
         }
     }
 }

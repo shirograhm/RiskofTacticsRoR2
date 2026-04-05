@@ -21,7 +21,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> interval = new(
             "Item: Lightshield Crest",
             "Interval",
-            5f,
+            10f,
             "Interval in seconds between each shield application.",
             ["ITEM_ROT_LIGHTSHIELDCREST_DESC"]
         );
