@@ -83,6 +83,8 @@ namespace RiskOfTactics
                 SpearOfShojin.Init();
             if (SunfireCape.isEnabled.Value)
                 SunfireCape.Init();
+            if (WarmogsArmor.isEnabled.Value)
+                WarmogsArmor.Init();
 
             // Artifacts
             if (GamblersBlade.isEnabled.Value)
