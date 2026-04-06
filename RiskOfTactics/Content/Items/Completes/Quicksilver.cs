@@ -21,7 +21,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
         public void FixedUpdate()
         {
-            Quicksilver.FixedUpdateHook(body);
+            Quicksilver.FixedUpdateHook(body, stack);
         }
     }
 
@@ -35,7 +35,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
         public void FixedUpdate()
         {
-            Quicksilver.FixedUpdateHook(body);
+            Quicksilver.FixedUpdateHook(body, stack);
         }
     }
 
@@ -237,11 +237,10 @@ namespace RiskOfTactics.Content.Items.Completes
             };
         }
 
-        public static void FixedUpdateHook(CharacterBody body)
+        public static void FixedUpdateHook(CharacterBody body, int itemCount)
         {
             if (body && body.inventory)
             {
-                int itemCount = body.inventory.GetItemCountEffective(itemDef);
                 if (itemCount > 0)
                 {
                     if (body.GetBuffCount(cleanseBuff) > 0)
