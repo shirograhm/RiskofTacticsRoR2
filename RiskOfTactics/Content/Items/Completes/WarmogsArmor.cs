@@ -9,7 +9,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ItemDef itemDef;
         public static ItemDef radiantDef;
 
-        // Gain health. Periodically heal for a portion of your max HP.
+        // Gain health.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Warmogs Armor",
             "Enabled",

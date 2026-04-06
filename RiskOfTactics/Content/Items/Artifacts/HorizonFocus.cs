@@ -23,21 +23,21 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> stunChance = new(
             "Item: Horizon Focus",
             "Stun Chance",
-            6f,
+            8f,
             "Percent chance to stun enemies when dealing damage.",
             ["ITEM_ROT_HORIZONFOCUS_DESC"]
         );
         public static ConfigurableValue<float> lightningDamage = new(
             "Item: Horizon Focus",
             "Lightning Damage",
-            6f,
+            8f,
             "Percent enemy max HP damage dealt by the lightning orb caused by this item.",
             ["ITEM_ROT_HORIZONFOCUS_DESC"]
         );
         public static ConfigurableValue<float> lightningDamageExtraStacks = new(
             "Item: Horizon Focus",
             "Lightning Damage Extra Stacks",
-            6f,
+            8f,
             "Percent enemy max HP damage dealt by the lightning orb caused by extra stacks this item.",
             ["ITEM_ROT_HORIZONFOCUS_DESC"]
         );
