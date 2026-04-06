@@ -1,9 +1,6 @@
 using R2API;
-using R2API.Networking;
-using R2API.Networking.Interfaces;
 using RiskOfTactics.Managers;
 using RoR2;
-using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -11,10 +8,13 @@ namespace RiskOfTactics.Content.Items.Completes
 {
     class SunfireCape
     {
-        public static ItemDef itemDef;
         public static GameObject sunfireEffectIndicator;
 
+        public static ItemDef itemDef;
+        public static BuffDef sunfireCooldownBuff;
+
         public static ItemDef radiantDef;
+        public static BuffDef radiantSunfireCooldownBuff;
 
         // Gain max HP. Periodically burn nearby enemies and disable their healing.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -54,7 +54,7 @@ namespace RiskOfTactics.Content.Items.Completes
             15f,
             "Total burn damage as a percentage of max HP.",
             ["ITEM_ROT_SUNFIRECAPE_DESC"],
-            true
+            false
         );
         public static ConfigurableValue<int> debuffRadius = new(
             "Item: Sunfire Cape",
@@ -77,91 +77,27 @@ namespace RiskOfTactics.Content.Items.Completes
         private static readonly float percentHealthBonusExtraStacks = healthBonusExtraStacks.Value / 100f;
         private static readonly float percentMaxHealthBurn = maxHealthBurn.Value / 100f;
 
-        public class Statistics : MonoBehaviour
-        {
-            private float _lastTick;
-            public float LastTick
-            {
-                get { return _lastTick; }
-                set
-                {
-                    _lastTick = value;
-                    if (NetworkServer.active)
-                    {
-                        new Sync(gameObject.GetComponent<NetworkIdentity>().netId, value).Send(NetworkDestination.Clients);
-                    }
-                }
-            }
-
-            public class Sync : INetMessage
-            {
-                NetworkInstanceId objId;
-                float lastTick;
-
-                public Sync()
-                {
-                }
-
-                public Sync(NetworkInstanceId objId, float tick)
-                {
-                    this.objId = objId;
-                    lastTick = tick;
-                }
-
-                public void Deserialize(NetworkReader reader)
-                {
-                    objId = reader.ReadNetworkId();
-                    lastTick = reader.ReadSingle();
-                }
-
-                public void OnReceived()
-                {
-                    if (NetworkServer.active) return;
-
-                    GameObject obj = Util.FindNetworkObject(objId);
-                    if (obj != null)
-                    {
-                        Statistics component = obj.GetComponent<Statistics>();
-                        if (component != null)
-                        {
-                            component.LastTick = lastTick;
-                        }
-                    }
-                }
-
-                public void Serialize(NetworkWriter writer)
-                {
-                    writer.Write(objId);
-                    writer.Write(lastTick);
-
-                    writer.FinishMessage();
-                }
-            }
-        }
-
         internal static void Init()
         {
             itemDef = ItemManager.GenerateItem("SunfireCape", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
+            sunfireCooldownBuff = Utilities.GenerateBuffDef("SunfireCapeCooldown", AssetManager.bundle.LoadAsset<Sprite>("SunfireCape"), false, false, false, false);
+            ContentAddition.AddBuffDef(sunfireCooldownBuff);
+
             radiantDef = ItemManager.GenerateItem("Radiant_SunfireCape", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
+            radiantSunfireCooldownBuff = Utilities.GenerateBuffDef("RadiantSunfireCapeCooldown", AssetManager.bundle.LoadAsset<Sprite>("Radiant_SunfireCape"), false, false, false, false);
+            ContentAddition.AddBuffDef(radiantSunfireCooldownBuff);
 
             sunfireEffectIndicator = LegacyResourcesAPI.LoadAsync<GameObject>("Prefabs/NetworkedObjects/ExplodeOnDeathVoidExplosion").WaitForCompletion();
 
-            NetworkingAPI.RegisterMessageType<Statistics.Sync>();
-
             if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
-            Hooks(itemDef, ItemManager.TacticTier.Normal);
-            Hooks(radiantDef, ItemManager.TacticTier.Radiant);
+            Hooks(itemDef, sunfireCooldownBuff, ItemManager.TacticTier.Normal);
+            Hooks(radiantDef, radiantSunfireCooldownBuff, ItemManager.TacticTier.Radiant);
         }
 
-        public static void Hooks(ItemDef def, ItemManager.TacticTier tier)
+        public static void Hooks(ItemDef def, BuffDef cooldownBuff, ItemManager.TacticTier tier)
         {
             float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
-
-            CharacterMaster.onStartGlobal += (obj) =>
-            {
-                obj.inventory?.gameObject.AddComponent<Statistics>();
-            };
 
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
@@ -175,58 +111,93 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
-            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += (orig, self, buffDef) =>
             {
-                if (self && self.inventory && self.inventory.GetItemCountEffective(def) > 0)
+                orig(self, buffDef);
+
+                if (buffDef == cooldownBuff)
                 {
-                    Statistics component = self.inventory.GetComponent<Statistics>();
-
-                    // Check time elapsed 
-                    if (component && Environment.TickCount - component.LastTick > debuffTickDuration.Value * 1000)
+                    if (self && self.inventory)
                     {
-                        // Get all enemies nearby
-                        HurtBox[] hurtboxes = new SphereSearch
-                        {
-                            mask = LayerIndex.entityPrecise.mask,
-                            origin = self.corePosition,
-                            queryTriggerInteraction = QueryTriggerInteraction.Collide,
-                            radius = debuffRadius.Value
-                        }.RefreshCandidates().FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes();
+                        int count = self.inventory.GetItemCountEffective(def);
+                        ApplySunfireEffect(self, count, cooldownBuff);
 
-                        foreach (HurtBox h in hurtboxes)
-                        {
-                            HealthComponent hc = h.healthComponent;
-                            if (hc && hc.body && !Utilities.OnSameTeam(hc.body, self))
-                            {
-                                InflictDotInfo dotInfo = new InflictDotInfo()
-                                {
-                                    attackerObject = self.gameObject,
-                                    maxStacksFromAttacker = 1,
-                                    totalDamage = hc.fullCombinedHealth * percentMaxHealthBurn,
-                                    victimObject = hc.body.gameObject
-                                };
-                                if (self.inventory.GetItemCountEffective(DLC1Content.Items.StrengthenBurn) > 0)
-                                {
-                                    dotInfo.dotIndex = DotController.DotIndex.StrongerBurn;
-                                    dotInfo.damageMultiplier = 3f;
-                                }
-                                else
-                                {
-                                    dotInfo.dotIndex = DotController.DotIndex.Burn;
-                                    dotInfo.damageMultiplier = 1f;
-                                }
-                                DotController.InflictDot(ref dotInfo);
-
-                                hc.body.AddTimedBuff(RoR2Content.Buffs.HealingDisabled, healingDisableDuration.Value);
-                            }
-                        }
-                        component.LastTick = Environment.TickCount;
-
-                        DisplaySunfireEffectIndicator(self);
+                        if (count > 0)
+                            self.AddTimedBuff(cooldownBuff, debuffTickDuration.Value);
                     }
                 }
-                orig(self);
             };
+
+            On.RoR2.Inventory.GiveItemPermanent_ItemDef_int += (orig, self, itemDef, count) =>
+            {
+                GiveItemProc(self, itemDef == def, cooldownBuff);
+                orig(self, itemDef, count);
+            };
+
+            On.RoR2.Inventory.GiveItemPermanent_ItemIndex_int += (orig, self, index, count) =>
+            {
+                GiveItemProc(self, index == def.itemIndex, cooldownBuff);
+                orig(self, index, count);
+            };
+
+            On.RoR2.Inventory.GiveItemTemp += (orig, self, index, count) =>
+            {
+                GiveItemProc(self, index == def.itemIndex, cooldownBuff);
+                orig(self, index, count);
+            };
+        }
+
+        internal static void GiveItemProc(Inventory self, bool isCorrectItem, BuffDef cooldownBuff)
+        {
+            CharacterMaster master = self.GetComponent<CharacterMaster>();
+            if (master && isCorrectItem)
+            {
+                if (master.GetBody()) master.GetBody().AddTimedBuff(cooldownBuff, debuffTickDuration.Value);
+            }
+        }
+
+        internal static void ApplySunfireEffect(CharacterBody self, int count, BuffDef cooldownBuff)
+        {
+            if (count > 0)
+            {
+                // Get all enemies nearby
+                HurtBox[] hurtboxes = new SphereSearch
+                {
+                    mask = LayerIndex.entityPrecise.mask,
+                    origin = self.corePosition,
+                    queryTriggerInteraction = QueryTriggerInteraction.Collide,
+                    radius = debuffRadius.Value
+                }.RefreshCandidates().FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes();
+
+                foreach (HurtBox h in hurtboxes)
+                {
+                    HealthComponent hc = h.healthComponent;
+                    if (hc && hc.body && !Utilities.OnSameTeam(hc.body, self))
+                    {
+                        InflictDotInfo dotInfo = new InflictDotInfo()
+                        {
+                            attackerObject = self.gameObject,
+                            maxStacksFromAttacker = 1,
+                            totalDamage = hc.fullCombinedHealth * percentMaxHealthBurn,
+                            victimObject = hc.body.gameObject
+                        };
+                        if (self.inventory.GetItemCountEffective(DLC1Content.Items.StrengthenBurn) > 0)
+                        {
+                            dotInfo.dotIndex = DotController.DotIndex.StrongerBurn;
+                            dotInfo.damageMultiplier = 3f;
+                        }
+                        else
+                        {
+                            dotInfo.dotIndex = DotController.DotIndex.Burn;
+                            dotInfo.damageMultiplier = 1f;
+                        }
+                        DotController.InflictDot(ref dotInfo);
+
+                        hc.body.AddTimedBuff(RoR2Content.Buffs.HealingDisabled, healingDisableDuration.Value);
+                    }
+                }
+                DisplaySunfireEffectIndicator(self);
+            }
         }
 
         private static void DisplaySunfireEffectIndicator(CharacterBody self)
