@@ -3,11 +3,40 @@ using R2API.Networking;
 using R2API.Networking.Interfaces;
 using RiskOfTactics.Managers;
 using RoR2;
+using RoR2.Items;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace RiskOfTactics.Content.Items.Completes
 {
+    public class GuinsoosRagebladeItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return GuinsoosRageblade.itemDef;
+        }
+
+        public void FixedUpdate()
+        {
+            GuinsoosRageblade.FixedUpdateHook(body, stack);
+        }
+    }
+
+    public class RadiantGuinsoosRagebladeItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return GuinsoosRageblade.radiantDef;
+        }
+
+        public void FixedUpdate()
+        {
+            GuinsoosRageblade.FixedUpdateHook(body, stack);
+        }
+    }
+
     class GuinsoosRageblade
     {
         public static ItemDef itemDef;
@@ -119,19 +148,6 @@ namespace RiskOfTactics.Content.Items.Completes
                 obj.inventory?.gameObject.AddComponent<Statistics>();
             };
 
-            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
-            {
-                orig(self);
-
-                if (self && self.HasBuff(wrathBuff) && self.inventory)
-                {
-                    if (self.inventory.GetItemCountEffective(def) == 0)
-                    {
-                        self.SetBuffCount(wrathBuff.buffIndex, 0);
-                    }
-                }
-            };
-
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
                 if (sender && sender.inventory)
@@ -167,6 +183,17 @@ namespace RiskOfTactics.Content.Items.Completes
                     }
                 }
             };
+        }
+
+        internal static void FixedUpdateHook(CharacterBody self, int itemCount)
+        {
+            if (self && self.HasBuff(wrathBuff) && self.inventory)
+            {
+                if (itemCount == 0)
+                {
+                    self.SetBuffCount(wrathBuff.buffIndex, 0);
+                }
+            }
         }
     }
 }

@@ -1,10 +1,39 @@
 ﻿using R2API;
 using RiskOfTactics.Managers;
 using RoR2;
+using RoR2.Items;
 using UnityEngine;
 
 namespace RiskOfTactics.Content.Items.Completes
 {
+    public class HandOfJusticeItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return HandOfJustice.itemDef;
+        }
+
+        public void FixedUpdate()
+        {
+            HandOfJustice.FixedUpdateHook(body, stack);
+        }
+    }
+
+    public class RadiantHandOfJusticeItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return HandOfJustice.radiantDef;
+        }
+
+        public void FixedUpdate()
+        {
+            HandOfJustice.FixedUpdateHook(body, stack);
+        }
+    }
+
     class HandOfJustice
     {
         public static ItemDef itemDef;
@@ -120,33 +149,31 @@ namespace RiskOfTactics.Content.Items.Completes
                     }
                 }
             };
+        }
 
-            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
+        internal static void FixedUpdateHook(CharacterBody self, int count)
+        {
+            if (self && self.inventory && self.healthComponent)
             {
-                if (self && self.inventory && self.healthComponent)
+                if (count > 0)
                 {
-                    int count = self.inventory.GetItemCountEffective(def);
-                    if (count > 0)
+                    if (self.healthComponent.combinedHealthFraction >= 0.50f)
                     {
-                        if (self.healthComponent.combinedHealthFraction >= 0.50f)
-                        {
-                            if (!self.HasBuff(aboveHalfBuff)) self.AddBuff(aboveHalfBuff);
-                            if (self.HasBuff(belowHalfBuff)) self.RemoveBuff(belowHalfBuff);
-                        }
-                        else
-                        {
-                            if (!self.HasBuff(belowHalfBuff)) self.AddBuff(belowHalfBuff);
-                            if (self.HasBuff(aboveHalfBuff)) self.RemoveBuff(aboveHalfBuff);
-                        }
+                        if (!self.HasBuff(aboveHalfBuff)) self.AddBuff(aboveHalfBuff);
+                        if (self.HasBuff(belowHalfBuff)) self.RemoveBuff(belowHalfBuff);
                     }
                     else
                     {
-                        self.RemoveBuff(aboveHalfBuff);
-                        self.RemoveBuff(belowHalfBuff);
+                        if (!self.HasBuff(belowHalfBuff)) self.AddBuff(belowHalfBuff);
+                        if (self.HasBuff(aboveHalfBuff)) self.RemoveBuff(aboveHalfBuff);
                     }
                 }
-                orig(self);
-            };
+                else
+                {
+                    self.RemoveBuff(aboveHalfBuff);
+                    self.RemoveBuff(belowHalfBuff);
+                }
+            }
         }
     }
 }
