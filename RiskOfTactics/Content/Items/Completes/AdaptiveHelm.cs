@@ -55,7 +55,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> commonStatBoost = new(
             "Item: Adaptive Helm",
             "Common Stat Boost",
-            10f,
+            20f,
             "Base armor and % max HP shield for all users.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             true
@@ -63,7 +63,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> meleeResistBonus = new(
             "Item: Adaptive Helm - Melee",
             "Bonus Resist",
-            40f,
+            20f,
             "Melee: Armor and % shield bonus for melee users for the first stack.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             true
@@ -71,7 +71,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> meleeResistBonusExtraStacks = new(
             "Item: Adaptive Helm - Melee",
             "Bonus Resist Extra Stacks",
-            30f,
+            20f,
             "Melee: Armor and % shield bonus for melee users with extra stacks.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             true
@@ -87,7 +87,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> rangedDamageBonus = new(
             "Item: Adaptive Helm - Ranged",
             "Bonus Damage",
-            5f,
+            1f,
             "Flat damage bonus for ranged users for the first stack.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             true
@@ -95,7 +95,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> rangedDamageBonusExtraStacks = new(
             "Item: Adaptive Helm - Ranged",
             "Bonus Damage Extra Stacks",
-            3f,
+            1f,
             "Flat damage bonus for ranged users with extra stacks.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             true
