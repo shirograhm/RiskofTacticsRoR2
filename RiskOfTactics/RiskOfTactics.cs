@@ -33,7 +33,6 @@ namespace RiskOfTactics
 
         public static PluginInfo PInfo { get; private set; }
 
-
         public static ExpansionDef sotvDLC = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC1/Common/DLC1.asset").WaitForCompletion();
         public static ExpansionDef sotsDLC = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC2/Common/DLC2.asset").WaitForCompletion();
         public static ExpansionDef acDLC = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC3/Common/DLC3.asset").WaitForCompletion();
