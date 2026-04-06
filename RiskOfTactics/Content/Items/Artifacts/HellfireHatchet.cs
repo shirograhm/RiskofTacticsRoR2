@@ -1,9 +1,27 @@
 using R2API;
 using RiskOfTactics.Managers;
 using RoR2;
+using RoR2.Items;
 
 namespace RiskOfTactics.Content.Items.Artifacts
 {
+    public class HellfireHatchetItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return HellfireHatchet.itemDef;
+        }
+
+        public void FixedUpdate()
+        {
+            if (body & stack > 0)
+            {
+                Utilities.ForceRecalculate(body);
+            }
+        }
+    }
+
     class HellfireHatchet
     {
         public static ItemDef itemDef;
@@ -65,8 +83,6 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         public static void Hooks()
         {
-            Utilities.AddRecalculateOnFrameHook(itemDef);
-
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
                 if (sender && sender.inventory)
