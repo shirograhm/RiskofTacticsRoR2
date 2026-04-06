@@ -8,6 +8,7 @@ using RiskOfTactics.Extensions;
 using RiskOfTactics.Managers;
 using RoR2;
 using RoR2.ExpansionManagement;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
@@ -32,8 +33,6 @@ namespace RiskOfTactics
 
         public static PluginInfo PInfo { get; private set; }
 
-        public static System.Random RandGen = new();
-        public static Xoroshiro128Plus rng = new((ulong)RandGen.Next());
 
         public static ExpansionDef sotvDLC = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC1/Common/DLC1.asset").WaitForCompletion();
         public static ExpansionDef sotsDLC = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC2/Common/DLC2.asset").WaitForCompletion();
@@ -110,7 +109,21 @@ namespace RiskOfTactics
             //if (CrownOfDemacia.isEnabled.Value)
             //    CrownOfDemacia.Init();
 
+            InjectRadiantItemTramsforms();
             Log.Message("Finished initializations.");
+        }
+
+        private void InjectRadiantItemTramsforms()
+        {
+            ItemRelationshipProvider provider = ScriptableObject.CreateInstance<ItemRelationshipProvider>();
+            provider.name = "RiskOfTactics_RadiantItemProvider";
+            provider.relationshipType = Addressables.LoadAssetAsync<ItemRelationshipType>("RoR2/DLC1/Common/ContagiousItem.asset").WaitForCompletion();
+            provider.relationships = Utilities.GetRadiantUpgradePairs();
+
+            if (ContentAddition.AddItemRelationshipProvider(provider))
+                Log.Debug("Successfully injected radiant item transformations.");
+            else
+                Log.Error("Unable to inject radiant item transformations.");
         }
     }
 }

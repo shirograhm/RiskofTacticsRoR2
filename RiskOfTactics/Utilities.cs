@@ -227,22 +227,17 @@ namespace RiskOfTactics
             EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/MedkitHealEffect"), effectData, transmit: true);
         }
 
+        // ContentPackProvider methods for radiant item transformations
+        // Must be called Utilities.Init() -> All Items -> InjectRadiantTramsforms()
+        public static List<ItemDef.Pair> radiantPairs = [];
+        public static ItemDef.Pair[] GetRadiantUpgradePairs()
+        {
+            return [.. radiantPairs];
+        }
+
         internal static void RegisterRadiantUpgrade(ItemDef itemDef, ItemDef radiantDef)
         {
-            On.RoR2.Items.ContagiousItemManager.Init += (orig) =>
-            {
-                List<ItemDef.Pair> newPair = [
-                    new ItemDef.Pair() { itemDef1 = itemDef, itemDef2 = radiantDef }];
-
-                ItemRelationshipType key = DLC1Content.ItemRelationshipTypes.ContagiousItem;
-                Debug.Log(key);
-
-                ItemDef.Pair[] pairs = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem];
-                ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = [.. pairs.Union(newPair)];
-
-                Debug.Log("Injected radiant item transformation for " + itemDef.name + ".");
-                orig();
-            };
+            radiantPairs.Add(new ItemDef.Pair { itemDef1 = itemDef, itemDef2 = radiantDef });
         }
     }
 }
