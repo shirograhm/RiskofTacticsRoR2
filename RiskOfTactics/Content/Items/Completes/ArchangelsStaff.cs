@@ -16,7 +16,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
         public void FixedUpdate()
         {
-            ArchangelsStaff.FixedUpdateHook(body, ArchangelsStaff.staffIntervalCooldown);
+            ArchangelsStaff.FixedUpdateHook(body, stack, ArchangelsStaff.staffIntervalCooldown);
         }
     }
 
@@ -30,7 +30,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
         public void FixedUpdate()
         {
-            ArchangelsStaff.FixedUpdateHook(body, ArchangelsStaff.staffRadiantIntervalCooldown);
+            ArchangelsStaff.FixedUpdateHook(body, stack, ArchangelsStaff.staffRadiantIntervalCooldown);
         }
     }
 
@@ -137,13 +137,12 @@ namespace RiskOfTactics.Content.Items.Completes
             };
         }
 
-        public static void FixedUpdateHook(CharacterBody body, BuffDef cooldownBuff)
+        public static void FixedUpdateHook(CharacterBody body, int itemCount, BuffDef cooldownBuff)
         {
             foreach (HoldoutZoneController hzc in InstanceTracker.GetInstancesList<HoldoutZoneController>())
             {
                 if (body && body.inventory)
                 {
-                    int itemCount = body.inventory.GetItemCountEffective(itemDef);
                     if (itemCount > 0 && hzc.isActiveAndEnabled)
                     {
                         if (!body.HasBuff(cooldownBuff))
