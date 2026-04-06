@@ -23,7 +23,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> effectCooldown = new(
             "Item: Bloodthirster",
             "Effect Cooldown",
-            20f,
+            60f,
             "Cooldown of this item's effect.",
             ["ITEM_ROT_BLOODTHIRSTER_DESC"],
             false
@@ -47,7 +47,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> barrierSizeExtraStacks = new(
             "Item: Bloodthirster",
             "Percent Barrier Extra Stacks",
-            40f,
+            20f,
             "Percent max HP barrier given when extra stacks of item are procced.",
             ["ITEM_ROT_BLOODTHIRSTER_DESC"],
             true
@@ -84,7 +84,7 @@ namespace RiskOfTactics.Content.Items.Completes
                     if (vicCount > 0 && !vicBody.HasBuff(satedBuff) && vicBody.healthComponent.combinedHealthFraction < percentBarrierTriggerHP * radiantMultiplier)
                     {
                         vicBody.healthComponent.AddBarrier(vicBody.healthComponent.fullCombinedHealth * Utilities.GetLinearStacking(percentBarrierSize * radiantMultiplier, percentBarrierSizeExtraStacks * radiantMultiplier, vicCount));
-                        vicBody.AddTimedBuff(satedBuff, effectCooldown);
+                        vicBody.AddTimedBuff(satedBuff, effectCooldown.Value);
                     }
                 }
             };

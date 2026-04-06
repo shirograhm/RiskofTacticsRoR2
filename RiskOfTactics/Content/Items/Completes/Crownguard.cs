@@ -43,12 +43,12 @@ namespace RiskOfTactics.Content.Items.Completes
             30f,
             "How long the shield effect lasts when teleporter is activated.",
             ["ITEM_ROT_CROWNGUARD_DESC"],
-            true
+            false
         );
         public static ConfigurableValue<float> effectDamage = new(
             "Item: Crownguard",
             "Effect Damage",
-            4f,
+            2.5f,
             "Damage bonus given after the shield effect expires.",
             ["ITEM_ROT_CROWNGUARD_DESC"],
             true
@@ -56,7 +56,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> effectDamageExtraStacks = new(
             "Item: Crownguard",
             "Effect Damage Extra Stacks",
-            1.5f,
+            2f,
             "Damage bonus given after the shield effect expires.",
             ["ITEM_ROT_CROWNGUARD_DESC"],
             true
