@@ -28,7 +28,7 @@ namespace RiskOfTactics.Managers
                 config,
                 "! Important !",
                 "Melee Characters",
-                "MercBody,LoaderBody,CrocoBody,FalseSonBody",
+                "MercBody,LoaderBody,CrocoBody,FalseSonBody,Executioner2Body,NemCommandoBody",
                 "List of melee characters. Add modded charater bodies here to enable selective item effects (e.g. Adaptive Helm)."
             );
             public static ConfigOptions.ConfigurableValue<string> rangedCharactersList = ConfigOptions.ConfigurableValue.CreateString(
@@ -37,7 +37,7 @@ namespace RiskOfTactics.Managers
                 config,
                 "! Important !",
                 "Ranged Characters",
-                "CommandoBody,HuntressBody,Bandit2Body,ToolbotBody,EngiBody,EngiTurretBody,MageBody,TreebotBody,CaptainBody,RailGunnerBody,VoidSurvivorBody,SeekerBody,ChefBody,ScavBody",
+                "CommandoBody,HuntressBody,Bandit2Body,ToolbotBody,EngiBody,EngiTurretBody,MageBody,TreebotBody,CaptainBody,RailGunnerBody,VoidSurvivorBody,SeekerBody,ChefBody,ScavBody,RangerBody,ChirrBody,ElectricianBody",
                 "List of ranged characters. Add modded charater bodies here to enable selective item effects (e.g. Adaptive Helm)."
             );
             public static ConfigOptions.ConfigurableValue<float> radiantItemStatMultiplier = ConfigOptions.ConfigurableValue.CreateFloat(
