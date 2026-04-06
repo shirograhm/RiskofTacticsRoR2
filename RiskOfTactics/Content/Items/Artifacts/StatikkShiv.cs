@@ -28,7 +28,6 @@ namespace RiskOfTactics.Content.Items.Artifacts
         }
     }
 
-
     class StatikkShiv
     {
         public static ItemDef itemDef;

@@ -1,7 +1,6 @@
 ﻿using R2API;
 using RiskOfTactics.Managers;
 using RoR2;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RiskOfTactics.Content.Buffs
@@ -18,10 +17,7 @@ namespace RiskOfTactics.Content.Buffs
             "Sunder Reduction",
             10,
             "Armor reduction applied to enemies for each stack of this debuff.",
-            new List<string>()
-            {
-                "BUFF_SUNDER_DESC"
-            }
+            ["BUFF_SUNDER_DESC"]
         );
 
         internal static void Init()
