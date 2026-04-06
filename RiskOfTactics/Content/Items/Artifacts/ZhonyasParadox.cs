@@ -77,6 +77,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                             float duration = Utilities.GetLinearStacking(effectDuration.Value, effectDurationExtraStacks.Value, count);
                             vicBody.AddTimedBuff(DLC2Content.Buffs.EliteAurelionite, duration);
                             vicBody.AddTimedBuff(zhonyasBuff, duration);
+                            // Start cooldown upon activation
                             vicBody.AddTimedBuff(zhonyasBuffCooldown, zhonyasCooldown.Value);
                         }
                     }
@@ -105,17 +106,6 @@ namespace RiskOfTactics.Content.Items.Artifacts
                             damageInfo.damage = 0f;
                         }
                     }
-                }
-            };
-
-            On.RoR2.CharacterBody.OnBuffFinalStackLost += (orig, self, buffDef) =>
-            {
-                orig(self, buffDef);
-
-                if (buffDef == zhonyasBuff)
-                {
-                    // Start the cooldown when the buff expires
-                    self.AddTimedBuff(zhonyasBuffCooldown, zhonyasCooldown.Value);
                 }
             };
         }
