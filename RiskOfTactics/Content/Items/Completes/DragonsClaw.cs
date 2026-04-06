@@ -11,7 +11,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static BuffDef dragonsClawCooldownBuff;
 
         public static ItemDef radiantDef;
-        public static BuffDef dragonsClawRadiantCooldownBuff;
+        public static BuffDef radiantDragonsClawCooldownBuff;
 
         // Gain health. Periodically heal for a portion of your max HP.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -64,13 +64,13 @@ namespace RiskOfTactics.Content.Items.Completes
             ContentAddition.AddBuffDef(dragonsClawCooldownBuff);
 
             radiantDef = ItemManager.GenerateItem("Radiant_DragonsClaw", [ItemTag.Healing, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
-            dragonsClawRadiantCooldownBuff = Utilities.GenerateBuffDef("DragonsClawRadiantCooldown", AssetManager.bundle.LoadAsset<Sprite>("DragonsClawRadiantCooldown"), false, false, false, true);
-            ContentAddition.AddBuffDef(dragonsClawRadiantCooldownBuff);
+            radiantDragonsClawCooldownBuff = Utilities.GenerateBuffDef("DragonsClawRadiantCooldown", AssetManager.bundle.LoadAsset<Sprite>("DragonsClawRadiantCooldown"), false, false, false, true);
+            ContentAddition.AddBuffDef(radiantDragonsClawCooldownBuff);
 
             if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, dragonsClawCooldownBuff, ItemManager.TacticTier.Normal);
-            Hooks(radiantDef, dragonsClawRadiantCooldownBuff, ItemManager.TacticTier.Radiant);
+            Hooks(radiantDef, radiantDragonsClawCooldownBuff, ItemManager.TacticTier.Radiant);
         }
 
         public static void Hooks(ItemDef def, BuffDef cooldownBuff, ItemManager.TacticTier tier)
@@ -103,27 +103,32 @@ namespace RiskOfTactics.Content.Items.Completes
                 }
             };
 
+            On.RoR2.Inventory.GiveItemPermanent_ItemDef_int += (orig, self, itemDef, count) =>
+            {
+                GiveItemProc(self, itemDef == def, cooldownBuff);
+                orig(self, itemDef, count);
+            };
+
             On.RoR2.Inventory.GiveItemPermanent_ItemIndex_int += (orig, self, index, count) =>
             {
-                CharacterMaster master = self.GetComponent<CharacterMaster>();
-                if (master && index == def.itemIndex)
-                {
-                    if (master.GetBody()) master.GetBody().AddTimedBuff(cooldownBuff, tickDuration.Value);
-                }
-
+                GiveItemProc(self, index == def.itemIndex, cooldownBuff);
                 orig(self, index, count);
             };
 
             On.RoR2.Inventory.GiveItemTemp += (orig, self, index, count) =>
             {
-                CharacterMaster master = self.GetComponent<CharacterMaster>();
-                if (master && index == def.itemIndex)
-                {
-                    if (master.GetBody()) master.GetBody().AddTimedBuff(cooldownBuff, tickDuration.Value);
-                }
-
+                GiveItemProc(self, index == def.itemIndex, cooldownBuff);
                 orig(self, index, count);
             };
+        }
+
+        internal static void GiveItemProc(Inventory self, bool isCorrectItem, BuffDef cooldownBuff)
+        {
+            CharacterMaster master = self.GetComponent<CharacterMaster>();
+            if (master && isCorrectItem)
+            {
+                if (master.GetBody()) master.GetBody().AddTimedBuff(cooldownBuff, tickDuration.Value);
+            }
         }
     }
 }
