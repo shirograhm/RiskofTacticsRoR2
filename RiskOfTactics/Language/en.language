@@ -207,7 +207,7 @@
     "ROT_ZHONYASPARADOX": "Zhonya's Paradox",
     "ITEM_ROT_ZHONYASPARADOX_NAME": "Zhonya's Paradox",
     "ITEM_ROT_ZHONYASPARADOX_PICKUP": "Taking damage at low health causes you to become temporarily Gilded and invulnerable.",
-    "ITEM_ROT_ZHONYASPARADOX_DESC": "Taking damage below <style=cIsHealth>{Health Threshold}% health</style> causes you to become <style=cShrine>Gilded</style> and <style=cIsUtility>invulnerable</style> for <style=cIsUtility>{Effect Duration} <style=cStack>(+{Effect Duration Extra Stacks} per stack)</style> seconds</style>.",
+    "ITEM_ROT_ZHONYASPARADOX_DESC": "Taking damage below <style=cIsHealth>{Health Threshold}% health</style> causes you to become <style=cShrine>Gilded</style> and <style=cIsUtility>invulnerable</style> for <style=cIsUtility>{Effect Duration} <style=cStack>(+{Effect Duration Extra Stacks} per stack)</style> seconds</style>. This effect has a <style=cIsUtility>{Cooldown} second cooldown</style>.",
     "ITEM_ROT_ZHONYASPARADOX_LORE": "",
 
 

@@ -10,6 +10,8 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ItemDef itemDef;
         public static BuffDef zhonyasBuff;
 
+        public static BuffDef zhonyasBuffCooldown;
+
         // Taking damage below a threshold causes you to become Gilded for a duration. During this duration you are also invulnerable.
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Zhonyas Paradox",
@@ -39,14 +41,23 @@ namespace RiskOfTactics.Content.Items.Artifacts
             "Additional duration of the Gilded effect with extra stacks.",
             ["ITEM_ROT_ZHONYASPARADOX_DESC"]
         );
+        public static ConfigurableValue<float> zhonyasCooldown = new(
+            "Item: Zhonyas Paradox",
+            "Cooldown",
+            20f,
+            "Cooldown of this effect in seconds.",
+            ["ITEM_ROT_ZHONYASPARADOX_DESC"]
+        );
         public static readonly float percentHealthThreshold = healthThreshold.Value / 100f;
 
         internal static void Init()
         {
             itemDef = ItemManager.GenerateItem("ZhonyasParadox", [ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Artifact);
 
-            zhonyasBuff = Utilities.GenerateBuffDef("ZhonyasParadoxBuff", AssetManager.bundle.LoadAsset<Sprite>("ZhonyasParadox"), false, true, false, true);
+            zhonyasBuff = Utilities.GenerateBuffDef("ZhonyasParadoxBuff", AssetManager.bundle.LoadAsset<Sprite>("ZhonyasParadox"), false, false, false, true);
             ContentAddition.AddBuffDef(zhonyasBuff);
+            zhonyasBuffCooldown = Utilities.GenerateBuffDef("ZhonyasParadoxCooldown", AssetManager.bundle.LoadAsset<Sprite>("ZhonyasParadoxCooldown"), false, false, false, true);
+            ContentAddition.AddBuffDef(zhonyasBuffCooldown);
 
             Hooks();
         }
@@ -56,7 +67,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
             GameEventManager.OnTakeDamage += (damageReport) =>
             {
                 CharacterBody vicBody = damageReport.victimBody;
-                if (vicBody && vicBody.inventory)
+                if (vicBody && vicBody.inventory && !vicBody.HasBuff(zhonyasBuffCooldown))
                 {
                     int count = vicBody.inventory.GetItemCountEffective(itemDef);
                     if (count > 0 && vicBody.healthComponent)
@@ -66,6 +77,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                             float duration = Utilities.GetLinearStacking(effectDuration.Value, effectDurationExtraStacks.Value, count);
                             vicBody.AddTimedBuff(DLC2Content.Buffs.EliteAurelionite, duration);
                             vicBody.AddTimedBuff(zhonyasBuff, duration);
+                            vicBody.AddTimedBuff(zhonyasBuffCooldown, zhonyasCooldown.Value);
                         }
                     }
                 }
@@ -80,6 +92,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                     if (count > 0 && vicBody.healthComponent)
                     {
                         float resultingHealth = Mathf.Max(vicBody.healthComponent.combinedHealth - damageInfo.damage, 0f);
+                        // If the player would be killed before triggering this effect
                         if (resultingHealth < 0 && vicBody.healthComponent.healthFraction > percentHealthThreshold)
                         {
                             // Damage the player down to the threshold instead of killing them
@@ -92,6 +105,17 @@ namespace RiskOfTactics.Content.Items.Artifacts
                             damageInfo.damage = 0f;
                         }
                     }
+                }
+            };
+
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += (orig, self, buffDef) =>
+            {
+                orig(self, buffDef);
+
+                if (buffDef == zhonyasBuff)
+                {
+                    // Start the cooldown when the buff expires
+                    self.AddTimedBuff(zhonyasBuffCooldown, zhonyasCooldown.Value);
                 }
             };
         }
