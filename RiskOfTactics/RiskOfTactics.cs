@@ -83,6 +83,8 @@ namespace RiskOfTactics
                 SpearOfShojin.Init();
             if (SunfireCape.isEnabled.Value)
                 SunfireCape.Init();
+            if (TitansResolve.isEnabled.Value)
+                TitansResolve.Init();
             if (WarmogsArmor.isEnabled.Value)
                 WarmogsArmor.Init();
 
@@ -101,8 +103,6 @@ namespace RiskOfTactics
                 SnipersFocus.Init();
             if (StatikkShiv.isEnabled.Value)
                 StatikkShiv.Init();
-            if (TheIndomitable.isEnabled.Value)
-                TheIndomitable.Init();
             if (ZhonyasParadox.isEnabled.Value)
                 ZhonyasParadox.Init();
 
