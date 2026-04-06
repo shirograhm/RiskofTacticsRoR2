@@ -2,11 +2,33 @@ using R2API;
 using RiskOfTactics.Content.Buffs;
 using RiskOfTactics.Managers;
 using RoR2;
+using RoR2.Items;
 using RoR2.Orbs;
 using UnityEngine;
 
 namespace RiskOfTactics.Content.Items.Artifacts
 {
+    public class StatikkShivItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return StatikkShiv.itemDef;
+        }
+
+        public void FixedUpdate()
+        {
+            if (body && body.inventory && body.inventory.GetItemCountEffective(StatikkShiv.itemDef) > 0)
+            {
+                if (body.GetBuffCount(StatikkShiv.shockBuff) == 0 && body.GetBuffCount(StatikkShiv.shockCooldown) == 0)
+                {
+                    body.AddBuff(StatikkShiv.shockBuff);
+                }
+            }
+        }
+    }
+
+
     class StatikkShiv
     {
         public static ItemDef itemDef;
@@ -80,56 +102,13 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         public static void Hooks()
         {
-            Stage.onStageStartGlobal += (stage) =>
-            {
-                foreach (PlayerCharacterMasterController controller in PlayerCharacterMasterController.instances)
-                {
-                    if (controller)
-                    {
-                        CharacterMaster master = controller.master;
-                        if (master && master.GetBody() && master.GetBody().inventory && master.GetBody().inventory.GetItemCountEffective(itemDef) > 0)
-                        {
-                            master.GetBody().AddBuff(shockBuff);
-                        }
-                    }
-                }
-            };
-
-            On.RoR2.Inventory.GiveItemPermanent_ItemIndex_int += (orig, self, index, count) =>
-            {
-                orig(self, index, count);
-
-                if (index == itemDef.itemIndex)
-                {
-                    CharacterMaster master = self.GetComponent<CharacterMaster>();
-                    if (master && master.GetBody() && self.GetItemCountEffective(itemDef) > 0)
-                    {
-                        master.GetBody().AddBuff(shockBuff);
-                    }
-                }
-            };
-
-            On.RoR2.Inventory.GiveItemTemp += (orig, self, index, count) =>
-            {
-                orig(self, index, count);
-
-                if (index == itemDef.itemIndex)
-                {
-                    CharacterMaster master = self.GetComponent<CharacterMaster>();
-                    if (master && master.GetBody() && self.GetItemCountEffective(itemDef) > 0)
-                    {
-                        master.GetBody().AddBuff(shockBuff);
-                    }
-                }
-            };
-
             On.RoR2.CharacterBody.OnBuffFinalStackLost += (orig, self, buffDef) =>
             {
                 orig(self, buffDef);
 
                 if (buffDef == shockCooldown)
                 {
-                    if (self && self.inventory && self.inventory.GetItemCountEffective(itemDef) > 0 && self.GetBuffCount(shockBuff) == 0)
+                    if (self && self.GetBuffCount(shockBuff) == 0)
                     {
                         self.AddBuff(shockBuff);
                     }
@@ -157,7 +136,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
                         // Remove the shock buff and add cooldown buff
                         atkBody.RemoveBuff(shockBuff);
-                        atkBody.AddTimedBuff(shockCooldown, effectCooldown.Value);
+                        if (count > 0) atkBody.AddTimedBuff(shockCooldown, effectCooldown.Value);
                     }
                 }
             };
