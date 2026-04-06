@@ -44,8 +44,15 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> zhonyasCooldown = new(
             "Item: Zhonyas Paradox",
             "Cooldown",
-            20f,
+            40f,
             "Cooldown of this effect in seconds.",
+            ["ITEM_ROT_ZHONYASPARADOX_DESC"]
+        );
+        public static ConfigurableValue<bool> shouldPlaySoundEffect = new(
+            "Item: Zhonyas Paradox",
+            "Play Sound Effect",
+            true,
+            "Whether or not to play the sound effect when the effect activates.",
             ["ITEM_ROT_ZHONYASPARADOX_DESC"]
         );
         public static readonly float percentHealthThreshold = healthThreshold.Value / 100f;
@@ -72,13 +79,14 @@ namespace RiskOfTactics.Content.Items.Artifacts
                     int count = vicBody.inventory.GetItemCountEffective(itemDef);
                     if (count > 0 && vicBody.healthComponent)
                     {
-                        if (vicBody.healthComponent.healthFraction <= percentHealthThreshold)
+                        if (vicBody.healthComponent.healthFraction <= percentHealthThreshold && !vicBody.HasBuff(zhonyasBuff))
                         {
                             float duration = Utilities.GetLinearStacking(effectDuration.Value, effectDurationExtraStacks.Value, count);
                             vicBody.AddTimedBuff(DLC2Content.Buffs.EliteAurelionite, duration);
                             vicBody.AddTimedBuff(zhonyasBuff, duration);
-                            // Start cooldown upon activation
-                            vicBody.AddTimedBuff(zhonyasBuffCooldown, zhonyasCooldown.Value);
+                            // Play SFX
+                            if (shouldPlaySoundEffect.Value)
+                                AkSoundEngine.PostEvent(SoundManager.zhonyas_SFX_ID, vicBody.gameObject);
                         }
                     }
                 }
@@ -107,6 +115,14 @@ namespace RiskOfTactics.Content.Items.Artifacts
                         }
                     }
                 }
+            };
+
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += (orig, self, buffDef) =>
+            {
+                if (self && buffDef == zhonyasBuff)
+                    self.AddTimedBuff(zhonyasBuffCooldown, zhonyasCooldown.Value);
+
+                orig(self, buffDef);
             };
         }
     }
