@@ -1,10 +1,39 @@
 ﻿using R2API;
 using RiskOfTactics.Managers;
 using RoR2;
+using RoR2.Items;
 using UnityEngine;
 
 namespace RiskOfTactics.Content.Items.Completes
 {
+    public class AdaptiveHelmItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return AdaptiveHelm.itemDef;
+        }
+
+        public void FixedUpdate()
+        {
+            AdaptiveHelm.FixedUpdateHook(body, stack, AdaptiveHelm.cooldownResetBuff);
+        }
+    }
+
+    public class RadiantAdaptiveHelmItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return AdaptiveHelm.radiantDef;
+        }
+
+        public void FixedUpdate()
+        {
+            AdaptiveHelm.FixedUpdateHook(body, stack, AdaptiveHelm.radiantCooldownResetBuff);
+        }
+    }
+
     class AdaptiveHelm
     {
         public static ItemDef itemDef;
@@ -98,9 +127,9 @@ namespace RiskOfTactics.Content.Items.Completes
             itemDef = ItemManager.GenerateItem("AdaptiveHelm", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Normal);
             radiantDef = ItemManager.GenerateItem("Radiant_AdaptiveHelm", [ItemTag.Damage, ItemTag.Utility, ItemTag.CanBeTemporary], ItemManager.TacticTier.Radiant);
 
-            cooldownResetBuff = Utilities.GenerateBuffDef("CooldownReset", AssetManager.bundle.LoadAsset<Sprite>("AdaptiveHelm.png"), false, false, false, true);
+            cooldownResetBuff = Utilities.GenerateBuffDef("CooldownResetBuff", AssetManager.bundle.LoadAsset<Sprite>("AdaptiveHelm"), false, false, false, true);
             ContentAddition.AddBuffDef(cooldownResetBuff);
-            radiantCooldownResetBuff = Utilities.GenerateBuffDef("Radiant_CooldownReset", AssetManager.bundle.LoadAsset<Sprite>("Radiant_AdaptiveHelm.png"), false, false, false, true);
+            radiantCooldownResetBuff = Utilities.GenerateBuffDef("RadiantCooldownResetBuff", AssetManager.bundle.LoadAsset<Sprite>("Radiant_AdaptiveHelm"), false, false, false, true);
             ContentAddition.AddBuffDef(radiantCooldownResetBuff);
 
             if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
@@ -112,20 +141,6 @@ namespace RiskOfTactics.Content.Items.Completes
         public static void Hooks(ItemDef def, ItemManager.TacticTier tier, BuffDef cooldownReset)
         {
             float radiantMultiplier = tier.Equals(ItemManager.TacticTier.Radiant) ? ConfigManager.Scaling.radiantItemStatMultiplier : 1f;
-
-            On.RoR2.CharacterBody.FixedUpdate += (orig, self) =>
-            {
-                orig(self);
-
-                if (self && self.inventory && Utilities.IsRangedBodyPrefab(self.gameObject))
-                {
-                    int itemCount = self.inventory.GetItemCountEffective(def);
-                    if (itemCount > 0 && !self.HasBuff(cooldownReset))
-                    {
-                        self.AddTimedBuff(cooldownReset, Utilities.GetReverseExponentialStacking(cooldownRefreshInterval.Value, percentCooldownRefreshIntervalReduction, itemCount));
-                    }
-                }
-            };
 
             RecalculateStatsAPI.GetStatCoefficients += (sender, args) =>
             {
@@ -158,38 +173,32 @@ namespace RiskOfTactics.Content.Items.Completes
                 if (self && self.skillLocator && buffDef == cooldownReset)
                 {
                     self.skillLocator.ResetSkills();
-
-                    //if (self.inventory)
-                    //{
-                    //    int itemCount = self.inventory.GetItemCountEffective(def);
-                    //    if (itemCount > 0 && Utilities.IsRangedBodyPrefab(self.gameObject))
-                    //    {
-                    //        self.AddTimedBuff(cooldownResetBuff, Utilities.GetReverseExponentialStacking(cooldownRefreshInterval.Value, percentCooldownRefreshIntervalReduction, itemCount));
-                    //    }
-                    //}
                 }
             };
 
             GameEventManager.OnTakeDamage += (damageReport) =>
             {
                 CharacterBody vicBody = damageReport.victimBody;
-                if (vicBody && vicBody.inventory && vicBody.skillLocator && Utilities.IsMeleeBodyPrefab(vicBody.gameObject))
+                if (vicBody && vicBody.inventory && vicBody.skillLocator)
                 {
                     int count = vicBody.inventory.GetItemCountEffective(def);
-                    if (count > 0)
+                    if (count > 0 && Utilities.IsMeleeBodyPrefab(vicBody.gameObject))
                     {
                         vicBody.skillLocator.DeductCooldownFromAllSkillsServer(cooldownRefundOnTakeDamage.Value * radiantMultiplier);
-                        //if (vicBody.skillLocator.primary)
-                        //    vicBody.skillLocator.primary.rechargeStopwatch += cooldownRefundOnTakeDamage.Value;
-                        //if (vicBody.skillLocator.secondary)
-                        //    vicBody.skillLocator.secondary.rechargeStopwatch += cooldownRefundOnTakeDamage.Value;
-                        //if (vicBody.skillLocator.utility)
-                        //    vicBody.skillLocator.utility.rechargeStopwatch += cooldownRefundOnTakeDamage.Value;
-                        //if (vicBody.skillLocator.special)
-                        //    vicBody.skillLocator.special.rechargeStopwatch += cooldownRefundOnTakeDamage.Value;
                     }
                 }
             };
+        }
+
+        internal static void FixedUpdateHook(CharacterBody self, int itemCount, BuffDef cooldownReset)
+        {
+            if (self && self.inventory)
+            {
+                if (itemCount > 0 && Utilities.IsRangedBodyPrefab(self.gameObject) && !self.HasBuff(cooldownReset))
+                {
+                    self.AddTimedBuff(cooldownReset, Utilities.GetReverseExponentialStacking(cooldownRefreshInterval.Value, percentCooldownRefreshIntervalReduction, itemCount));
+                }
+            }
         }
     }
 }
