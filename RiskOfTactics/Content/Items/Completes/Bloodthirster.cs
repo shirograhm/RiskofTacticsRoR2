@@ -31,7 +31,7 @@ namespace RiskOfTactics.Content.Items.Completes
         public static ConfigurableValue<float> barrierTriggerHP = new(
             "Item: Bloodthirster",
             "HP Threshold",
-            20f,
+            25f,
             "Threshold needed to fall below in order to trigger this item's effect.",
             ["ITEM_ROT_BLOODTHIRSTER_DESC"],
             true
