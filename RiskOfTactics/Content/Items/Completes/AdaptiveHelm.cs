@@ -61,58 +61,58 @@ namespace RiskOfTactics.Content.Items.Completes
             true
         );
         public static ConfigurableValue<float> meleeResistBonus = new(
-            "Item: Adaptive Helm - Melee",
-            "Bonus Resist",
+            "Item: Adaptive Helm",
+            "Melee: Bonus Resist",
             20f,
             "Melee: Armor and % shield bonus for melee users for the first stack.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             true
         );
         public static ConfigurableValue<float> meleeResistBonusExtraStacks = new(
-            "Item: Adaptive Helm - Melee",
-            "Bonus Resist Extra Stacks",
+            "Item: Adaptive Helm",
+            "Melee: Bonus Resist Extra Stacks",
             20f,
             "Melee: Armor and % shield bonus for melee users with extra stacks.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             true
         );
         public static ConfigurableValue<float> cooldownRefundOnTakeDamage = new(
-            "Item: Adaptive Helm - Melee",
-            "Cooldown Refund",
+            "Item: Adaptive Helm",
+            "Melee: Cooldown Refund",
             0.5f,
             "Melee: Seconds cooldown refunded when taking damage.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             true
         );
         public static ConfigurableValue<float> rangedDamageBonus = new(
-            "Item: Adaptive Helm - Ranged",
-            "Bonus Damage",
+            "Item: Adaptive Helm",
+            "Ranged: Bonus Damage",
             1f,
-            "Flat damage bonus for ranged users for the first stack.",
+            "Ranged: Flat damage bonus for ranged users for the first stack.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             true
         );
         public static ConfigurableValue<float> rangedDamageBonusExtraStacks = new(
-            "Item: Adaptive Helm - Ranged",
-            "Bonus Damage Extra Stacks",
+            "Item: Adaptive Helm",
+            "Ranged: Bonus Damage Extra Stacks",
             1f,
-            "Flat damage bonus for ranged users with extra stacks.",
+            "Ranged: Flat damage bonus for ranged users with extra stacks.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             true
         );
         public static ConfigurableValue<float> cooldownRefreshInterval = new(
-            "Item: Adaptive Helm - Ranged",
-            "Cooldown Interval",
+            "Item: Adaptive Helm",
+            "Ranged: Cooldown Interval",
             20f,
-            "All cooldowns are refunded on this interval for ranged item users.",
+            "Ranged: All cooldowns are refunded on this interval for ranged item users.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             false
         );
         public static ConfigurableValue<float> cooldownRefreshIntervalReduction = new(
-            "Item: Adaptive Helm - Ranged",
-            "Cooldown Interval Reduction",
+            "Item: Adaptive Helm",
+            "Ranged: Cooldown Interval Reduction",
             20f,
-            "Cooldown refund timer for this item is reduced by this percentage per stack for ranged users.",
+            "Ranged: Cooldown refund timer for this item is reduced by this percentage per stack for ranged users.",
             ["ITEM_ROT_ADAPTIVEHELM_DESC"],
             false
         );
