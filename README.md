@@ -41,6 +41,12 @@ Adds some TFT items, radiants, and artifacts to Risk of Rain 2.
         <td>
             <img src="https://i.imgur.com/8vPWkPC.png" alt="Radiant Sunfire Cape" width="64"/>
         </td>
+        <td>
+            <img src="https://i.imgur.com/qiPfrIF.png" alt="Radiant Titan's Resolve" width="64"/>
+        </td>
+        <td>
+            <img src="https://i.imgur.com/eUGqLF3.png" alt="Radiant Warmog's Armor" width="64"/>
+        </td>
     </tr>
 </table>
 
@@ -71,7 +77,7 @@ Base items have Radiant variants in which most/all values are doubled. These Rad
             <b>Adaptive Helm</b>
         </td>
         <td>
-            Gain <b>10% armor</b> and a <b>10% max HP shield</b>. Gain additional effects based on your character's class.<br><br><i>Melee:</i> Gain <b>40%</b> <b>(+30% per stack)</b> bonus <b>armor</b> and <b>shield</b>. When you take damage, reduce all active cooldowns by <b>0.5 seconds</b>.<br><i>Ranged:</i> Gain <b>5 (+3 per stack)</b> BASE damage. Refresh your <b>active cooldowns</b> every <b>20 (-20% per stack)</b> seconds.
+            Gain <b>20 armor</b> and a <b>20% max HP shield</b>. Gain additional effects based on your character's class.<br><br><i>Melee:</i> Gain <b>20%</b> <b>(+20% per stack)</b> bonus <b>armor</b> and <b>shield</b>. When you take damage, reduce all active cooldowns by <b>0.5 seconds</b>.<br><i>Ranged:</i> Gain <b>1 (+1 per stack)</b> BASE damage. Refresh your <b>active cooldowns</b> every <b>20 (-20% per stack)</b> seconds.
         </td>
     </tr>
     <tr>
@@ -93,7 +99,7 @@ Base items have Radiant variants in which most/all values are doubled. These Rad
             <b>Bloodthirster</b>
         </td>
         <td>
-            Every <b>20 seconds</b>, falling below <b>20% max HP</b> grants a <b>25% (+50% per stack) max HP barrier</b>.
+            Every <b>60 seconds</b>, falling below <b>25% max HP</b> grants a <b>20% (+20% per stack) max HP barrier</b>.
         </td>
     </tr>
     <tr>
@@ -115,7 +121,7 @@ Base items have Radiant variants in which most/all values are doubled. These Rad
             <b>Crownguard</b>
         </td>
         <td>
-            Upon activation of the teleporter, gain a <b>25% (+25% per stack) max HP shield</b> for <b>30 seconds</b>. When the shield expires, gain <b>4 (+1.5 per stack) BASE damage</b>.
+            Upon activation of the teleporter, gain a <b>25% (+25% per stack) max HP shield</b> for <b>30 seconds</b>. When the shield expires, gain <b>2.5 (+2 per stack) BASE damage</b>.
         </td>
     </tr>
     <tr>
@@ -126,7 +132,7 @@ Base items have Radiant variants in which most/all values are doubled. These Rad
             <b>Dragon's Claw</b>
         </td>
         <td>
-            Gain <b>9% (+9% per stack) max HP</b>. Every <b>9 seconds</b>, heal for <b>9% max HP</b>.
+            Gain <b>8% (+8% per stack) max HP</b>. Every <b>8 seconds</b>, heal for <b>4% max HP</b>.
         </td>
     </tr>
     <tr>
@@ -170,7 +176,7 @@ Base items have Radiant variants in which most/all values are doubled. These Rad
             <b>Quicksilver</b>
         </td>
         <td>
-            Upon activation of the teleporter, become <b>immune</b> to crowd control for <b>30 (+30 per stack) seconds</b>. During this time, also gain <b>1% attack speed</b> per second.
+            Upon activation of the teleporter, become <b>immune</b> to crowd control for <b>20 (+20 per stack) seconds</b>. During this time, also gain <b>1% attack speed</b> per second.
         </td>
     </tr>
     <tr>
@@ -203,7 +209,29 @@ Base items have Radiant variants in which most/all values are doubled. These Rad
             <b>Sunfire Cape</b>
         </td>
         <td>
-            Gain <b>7% (+7% per stack) max HP</b>. Every <b>7 seconds</b>, burn enemies within 15m for <b>15% max HP</b> and <b>disable their healing for 7 seconds</b>.
+            Gain <b>7% (+7% per stack) max HP</b>. Every <b>7 seconds</b>, Burn enemies within <b>15m</b> for <b>15% max HP</b> and <b>disable their healing for 7 seconds</b>.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://i.imgur.com/aw9yDN8.png" alt="Titan's Resolve" width="192"/>
+        </td>
+        <td>
+            <b>Titan's Resolve</b>
+        </td>
+        <td>
+            Taking or dealing damage grants stacks of <b>Resolve</b>, up to <b>25</b>. Each stack grants <b>1% (+1% per stack) BASE damage</b> and lasts for <b>10 seconds</b>.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://i.imgur.com/p5tAvOo.png" alt="Warmog's Armor" width="192"/>
+        </td>
+        <td>
+            <b>Warmog's Armor</b>
+        </td>
+        <td>
+            Gain <b>25 (+50 per stack) max HP</b>. Increase your total health by <b>18%</b>.
         </td>
     </tr>
     <tr>
@@ -236,7 +264,7 @@ Base items have Radiant variants in which most/all values are doubled. These Rad
             <b>Horizon Focus</b>
         </td>
         <td>
-            <b>8%</b> chance to stun when damaging enemies. Hits that stun also <b>explode after a delay</b>, dealing <b>8% (+5% per stack)</b> of the <b>enemy's max HP</b> in a small area.
+            On-hit, <b>8%</b> chance to stun when damaging enemies. Hits that stun also <b>explode after a delay</b>, dealing <b>8% (+8% per stack)</b> of the <b>enemy's max HP</b> in a small area.
         </td>
     </tr>
     <tr>
@@ -281,6 +309,17 @@ Base items have Radiant variants in which most/all values are doubled. These Rad
         </td>
         <td>
             Every <b>6 seconds</b>, your next hit chains up to <b>3</b> enemies within <b>30m</b>, dealing an additional <b>150% (+150% per stack) TOTAL damage</b> and applying <b>Sunder</b>, reducing armor by <b>10</b> per stack.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://i.imgur.com/PjSy7mR.png" alt="Zhonya's Paradox" width="192"/>
+        </td>
+        <td>
+            <b>Zhonya's Paradox</b>
+        </td>
+        <td>
+            Taking damage below <b>40%</b> causes you to become <b>Gilded</b> and <b>invulnerable</b> for <b>3 (+3 per stack) seconds</b>. This effect has a <b>40 second cooldown</b>.
         </td>
     </tr>
 </table>
