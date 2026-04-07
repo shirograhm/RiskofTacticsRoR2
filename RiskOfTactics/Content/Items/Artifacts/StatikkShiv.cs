@@ -123,7 +123,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                 {
                     int count = atkBody.inventory.GetItemCountEffective(itemDef);
                     bool hasShockBuff = atkBody.GetBuffCount(shockBuff) > 0;
-                    if (hasShockBuff && !Utilities.OnSameTeam(vicBody, atkBody))
+                    if (hasShockBuff && !Utilities.OnSameTeam(vicBody, atkBody) && !damageInfo.damageType.HasModdedDamageType(Sunder.ApplySunder))
                     {
                         float damageMultiplier = 1 + Utilities.GetLinearStacking(percentEffectOnHitDamage, percentEffectOnHitDamageExtraStacks, count);
                         damageInfo.damage *= damageMultiplier;
