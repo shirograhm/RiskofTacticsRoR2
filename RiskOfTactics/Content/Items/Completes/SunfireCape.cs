@@ -1,11 +1,40 @@
 using R2API;
 using RiskOfTactics.Managers;
 using RoR2;
+using RoR2.Items;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace RiskOfTactics.Content.Items.Completes
 {
+    public class SunfireCapeItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return SunfireCape.itemDef;
+        }
+
+        public void FixedUpdate()
+        {
+            SunfireCape.FixedUpdateHook(body, stack, SunfireCape.sunfireCooldownBuff);
+        }
+    }
+
+    public class RadiantSunfireCapeItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return SunfireCape.radiantDef;
+        }
+
+        public void FixedUpdate()
+        {
+            SunfireCape.FixedUpdateHook(body, stack, SunfireCape.radiantSunfireCooldownBuff, true);
+        }
+    }
+
     class SunfireCape
     {
         public static GameObject sunfireEffectIndicator;
@@ -127,33 +156,6 @@ namespace RiskOfTactics.Content.Items.Completes
                     }
                 }
             };
-
-            On.RoR2.Inventory.GiveItemPermanent_ItemDef_int += (orig, self, itemDef, count) =>
-            {
-                GiveItemProc(self, itemDef == def, cooldownBuff);
-                orig(self, itemDef, count);
-            };
-
-            On.RoR2.Inventory.GiveItemPermanent_ItemIndex_int += (orig, self, index, count) =>
-            {
-                GiveItemProc(self, index == def.itemIndex, cooldownBuff);
-                orig(self, index, count);
-            };
-
-            On.RoR2.Inventory.GiveItemTemp += (orig, self, index, count) =>
-            {
-                GiveItemProc(self, index == def.itemIndex, cooldownBuff);
-                orig(self, index, count);
-            };
-        }
-
-        internal static void GiveItemProc(Inventory self, bool isCorrectItem, BuffDef cooldownBuff)
-        {
-            CharacterMaster master = self.GetComponent<CharacterMaster>();
-            if (master && isCorrectItem)
-            {
-                if (master.GetBody()) master.GetBody().AddTimedBuff(cooldownBuff, debuffTickDuration.Value);
-            }
         }
 
         internal static void ApplySunfireEffect(CharacterBody self, int count, BuffDef cooldownBuff)
@@ -218,6 +220,14 @@ namespace RiskOfTactics.Content.Items.Completes
                 component4.falloffModel = BlastAttack.FalloffModel.SweetSpot;
                 obj.GetComponent<TeamFilter>().teamIndex = self.teamComponent.teamIndex;
                 NetworkServer.Spawn(obj);
+            }
+        }
+
+        internal static void FixedUpdateHook(CharacterBody body, int stack, BuffDef buff)
+        {
+            if (body && body.GetBuffCount(buff) == 0 && stack > 0)
+            {
+                body.AddTimedBuff(buff, debuffTickDuration.Value);
             }
         }
     }

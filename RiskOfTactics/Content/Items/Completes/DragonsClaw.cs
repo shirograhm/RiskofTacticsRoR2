@@ -1,10 +1,39 @@
 ﻿using R2API;
 using RiskOfTactics.Managers;
 using RoR2;
+using RoR2.Items;
 using UnityEngine;
 
 namespace RiskOfTactics.Content.Items.Completes
 {
+    public class DragonsClawItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return DragonsClaw.itemDef;
+        }
+
+        public void FixedUpdate()
+        {
+            DragonsClaw.FixedUpdateHook(body, stack, DragonsClaw.dragonsClawCooldownBuff);
+        }
+    }
+
+    public class RadiantDragonsClawItemBehavior : BaseItemBodyBehavior
+    {
+        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
+        public static ItemDef GetItemDef()
+        {
+            return DragonsClaw.radiantDef;
+        }
+
+        public void FixedUpdate()
+        {
+            DragonsClaw.FixedUpdateHook(body, stack, DragonsClaw.radiantDragonsClawCooldownBuff);
+        }
+    }
+
     class DragonsClaw
     {
         public static ItemDef itemDef;
@@ -102,32 +131,13 @@ namespace RiskOfTactics.Content.Items.Completes
                         self.AddTimedBuff(cooldownBuff, tickDuration.Value);
                 }
             };
-
-            On.RoR2.Inventory.GiveItemPermanent_ItemDef_int += (orig, self, itemDef, count) =>
-            {
-                GiveItemProc(self, itemDef == def, cooldownBuff);
-                orig(self, itemDef, count);
-            };
-
-            On.RoR2.Inventory.GiveItemPermanent_ItemIndex_int += (orig, self, index, count) =>
-            {
-                GiveItemProc(self, index == def.itemIndex, cooldownBuff);
-                orig(self, index, count);
-            };
-
-            On.RoR2.Inventory.GiveItemTemp += (orig, self, index, count) =>
-            {
-                GiveItemProc(self, index == def.itemIndex, cooldownBuff);
-                orig(self, index, count);
-            };
         }
 
-        internal static void GiveItemProc(Inventory self, bool isCorrectItem, BuffDef cooldownBuff)
+        internal static void FixedUpdateHook(CharacterBody body, int stack, BuffDef buff)
         {
-            CharacterMaster master = self.GetComponent<CharacterMaster>();
-            if (master && isCorrectItem)
+            if (body && body.GetBuffCount(buff) == 0 && stack > 0)
             {
-                if (master.GetBody()) master.GetBody().AddTimedBuff(cooldownBuff, tickDuration.Value);
+                body.AddTimedBuff(buff, tickDuration.Value);
             }
         }
     }
