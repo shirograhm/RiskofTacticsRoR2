@@ -31,7 +31,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
         public void FixedUpdate()
         {
-            SunfireCape.FixedUpdateHook(body, stack, SunfireCape.radiantSunfireCooldownBuff, true);
+            SunfireCape.FixedUpdateHook(body, stack, SunfireCape.radiantSunfireCooldownBuff);
         }
     }
 
