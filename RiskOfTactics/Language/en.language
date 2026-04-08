@@ -222,10 +222,10 @@
 
 
 
-    "ROT_CROWNOFDEMACIA": "Crown of Demacia",
-    "ITEM_ROT_CROWNOFDEMACIA_NAME": "Crown of Demacia",
-    "ITEM_ROT_CROWNOFDEMACIA_PICKUP": "Gain health, base damage, attack speed, and health regeneration. If you die, lose the run.",
-    "ITEM_ROT_CROWNOFDEMACIA_DESC": "Gain <style=cIsHealth>{Max Health}%</style> max health, <style=cIsDamage>{Attack Speed}%</style> attack speed, <style=cIsDamage>{Base Damage}%</style> BASE damage, and <style=cIsHealing>{Health Regen} HP/s</style> health regen. <style=cDeath>If you die, lose the run.</style>",
-    "ITEM_ROT_CROWNOFDEMACIA_LORE": ""
+    "ROT_LUCKYITEMCHEST": "Lucky Item Chest",
+    "EQUIPMENT_ROT_LUCKYITEMCHEST_NAME": "Lucky Item Chest",
+    "EQUIPMENT_ROT_LUCKYITEMCHEST_PICKUP": "Choose a random TFT item.",
+    "EQUIPMENT_ROT_LUCKYITEMCHEST_DESC": "On use, spawn a pickup that contains {Num Items} TFT items ({Radiant Chance}%/{Artifact Chance}%/{Normal Chance}%). Consumed on use.",
+    "EQUIPMENT_ROT_LUCKYITEMCHEST_LORE": ""
   }
 }

@@ -2,6 +2,7 @@ using BepInEx;
 using R2API;
 using R2API.Utils;
 using RiskOfTactics.Content.Buffs;
+using RiskOfTactics.Content.Equipment;
 using RiskOfTactics.Content.Items.Artifacts;
 using RiskOfTactics.Content.Items.Completes;
 using RiskOfTactics.Extensions;
@@ -104,9 +105,9 @@ namespace RiskOfTactics
             if (ZhonyasParadox.isEnabled.Value)
                 ZhonyasParadox.Init();
 
-            // Uniques
-            //if (CrownOfDemacia.isEnabled.Value)
-            //    CrownOfDemacia.Init();
+            // Equipments
+            if (LuckyItemChest.isEnabled.Value)
+                LuckyItemChest.Init();
 
             InjectRadiantItemTramsforms();
             Log.Message("Finished initializations.");

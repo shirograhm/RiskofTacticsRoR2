@@ -15,7 +15,7 @@ namespace RiskOfTactics.Managers
 
         public enum TacticTier
         {
-            Normal, Radiant, Artifact, Unique
+            Normal, Radiant, Artifact
         }
 
         public static ItemDef GenerateItem(string name, ItemTag[] tags, TacticTier tTier)
@@ -25,21 +25,7 @@ namespace RiskOfTactics.Managers
             itemDef.name = "ROT_" + name.ToUpperInvariant();
             itemDef.AutoPopulateTokens();
 
-            switch (tTier)
-            {
-                case TacticTier.Normal:
-                    SetItemTier(itemDef, ItemTier.Tier2);
-                    break;
-                case TacticTier.Radiant:
-                    SetItemTier(itemDef, ItemTier.Boss);
-                    break;
-                case TacticTier.Artifact:
-                    SetItemTier(itemDef, ItemTier.Tier3);
-                    break;
-                case TacticTier.Unique:
-                    SetItemTier(itemDef, ItemTier.Lunar);
-                    break;
-            }
+            SetItemTier(itemDef, GetTierFromTacticTier(tTier));
 
             GameObject prefab = AssetManager.bundle.LoadAsset<GameObject>(name + ".prefab");
             if (prefab == null)
@@ -61,7 +47,7 @@ namespace RiskOfTactics.Managers
             itemDef.tags = tags;
 
             // Add item to item dict
-            ItemDisplayRuleDict displayRules = new ItemDisplayRuleDict(null);
+            ItemDisplayRuleDict displayRules = new(null);
             ItemAPI.Add(new CustomItem(itemDef, displayRules));
 
             // Add item to personal dict
@@ -79,6 +65,68 @@ namespace RiskOfTactics.Managers
             }
 
             return itemDef;
+        }
+
+        public static EquipmentDef GenerateEquipment(string name, float cooldown, bool isLunar = false, bool appearsInMultiPlayer = true, bool appearsInSinglePlayer = true, bool canBeRandomlyTriggered = true, bool enigmaCompatible = true, bool canDrop = true)
+        {
+            EquipmentDef equipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
+
+            equipmentDef.name = "ROT_" + name.ToUpperInvariant();
+            equipmentDef.AutoPopulateTokens();
+
+            GameObject prefab = AssetManager.bundle.LoadAsset<GameObject>(name + ".prefab");
+            if (prefab == null)
+            {
+                Log.Warning("Missing prefab file for equipment " + equipmentDef.name + ". Substituting default...");
+                prefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Mystery/PickupMystery.prefab").WaitForCompletion();
+            }
+            ModelPanelParameters modelPanelParameters = prefab.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = prefab.transform;
+            modelPanelParameters.cameraPositionTransform = prefab.transform;
+            modelPanelParameters.maxDistance = 10f;
+            modelPanelParameters.minDistance = 5f;
+
+            equipmentDef.pickupIconSprite = AssetManager.bundle.LoadAsset<Sprite>(name + ".png");
+            equipmentDef.pickupModelPrefab = prefab;
+
+            equipmentDef.isLunar = isLunar;
+            if (isLunar) equipmentDef.colorIndex = ColorCatalog.ColorIndex.LunarItem;
+
+            equipmentDef.appearsInMultiPlayer = appearsInMultiPlayer;
+            equipmentDef.appearsInSinglePlayer = appearsInSinglePlayer;
+            equipmentDef.canBeRandomlyTriggered = canBeRandomlyTriggered;
+            equipmentDef.enigmaCompatible = enigmaCompatible;
+            equipmentDef.canDrop = canDrop;
+
+            equipmentDef.cooldown = cooldown;
+
+            // Add item to item dict
+            ItemDisplayRuleDict displayRules = new(null);
+            ItemAPI.Add(new CustomEquipment(equipmentDef, displayRules));
+
+            return equipmentDef;
+        }
+
+        public static ItemTier GetTierFromTacticTier(TacticTier tier)
+        {
+            return tier switch
+            {
+                TacticTier.Normal => ItemTier.Tier2,
+                TacticTier.Radiant => ItemTier.Boss,
+                TacticTier.Artifact => ItemTier.Tier3,
+                _ => ItemTier.NoTier
+            };
+        }
+
+        public static ItemDef GetRandomTacticItemOfTier(TacticTier tier)
+        {
+            return tier switch
+            {
+                TacticTier.Normal => normalList[UnityEngine.Random.Range(0, normalList.Count)],
+                TacticTier.Radiant => radiantList[UnityEngine.Random.Range(0, radiantList.Count)],
+                TacticTier.Artifact => artifactList[UnityEngine.Random.Range(0, artifactList.Count)],
+                _ => null
+            };
         }
 
         public static void SetItemTier(ItemDef itemDef, ItemTier tier)
