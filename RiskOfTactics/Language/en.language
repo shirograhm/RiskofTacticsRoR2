@@ -225,7 +225,7 @@
     "ROT_LUCKYITEMCHEST": "Lucky Item Chest",
     "EQUIPMENT_ROT_LUCKYITEMCHEST_NAME": "Lucky Item Chest",
     "EQUIPMENT_ROT_LUCKYITEMCHEST_PICKUP": "Choose a random TFT item.",
-    "EQUIPMENT_ROT_LUCKYITEMCHEST_DESC": "On use, spawn a pickup that contains {Num Items} TFT items ({Radiant Chance}%/{Artifact Chance}%/{Normal Chance}%). Consumed on use.",
+    "EQUIPMENT_ROT_LUCKYITEMCHEST_DESC": "On use, spawn a pickup that contains {Num Items} TFT items (<style=cHumanObjective>{Radiant Chance}%</style>/<style=cIsHealth>{Artifact Chance}%</style>/{Normal Chance}%). Consumed on use.",
     "EQUIPMENT_ROT_LUCKYITEMCHEST_LORE": ""
   }
 }
