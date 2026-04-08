@@ -3,40 +3,11 @@ using R2API.Networking;
 using R2API.Networking.Interfaces;
 using RiskOfTactics.Managers;
 using RoR2;
-using RoR2.Items;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace RiskOfTactics.Content.Items.Completes
 {
-    public class GuinsoosRagebladeItemBehavior : BaseItemBodyBehavior
-    {
-        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
-        public static ItemDef GetItemDef()
-        {
-            return GuinsoosRageblade.itemDef;
-        }
-
-        public void FixedUpdate()
-        {
-            GuinsoosRageblade.FixedUpdateHook(body, stack);
-        }
-    }
-
-    public class RadiantGuinsoosRagebladeItemBehavior : BaseItemBodyBehavior
-    {
-        [ItemDefAssociation(useOnServer = true, useOnClient = false)]
-        public static ItemDef GetItemDef()
-        {
-            return GuinsoosRageblade.radiantDef;
-        }
-
-        public void FixedUpdate()
-        {
-            GuinsoosRageblade.FixedUpdateHook(body, stack);
-        }
-    }
-
     class GuinsoosRageblade
     {
         public static ItemDef itemDef;
@@ -181,19 +152,12 @@ namespace RiskOfTactics.Content.Items.Completes
                             component.LastTarget = vicBody.gameObject;
                         }
                     }
+                    else
+                    {
+                        atkBody.SetBuffCount(wrathBuff.buffIndex, 0);
+                    }
                 }
             };
-        }
-
-        internal static void FixedUpdateHook(CharacterBody self, int itemCount)
-        {
-            if (self && self.HasBuff(wrathBuff) && self.inventory)
-            {
-                if (itemCount == 0)
-                {
-                    self.SetBuffCount(wrathBuff.buffIndex, 0);
-                }
-            }
         }
     }
 }
