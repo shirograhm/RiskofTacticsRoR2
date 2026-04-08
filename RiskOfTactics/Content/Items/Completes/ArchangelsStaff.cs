@@ -80,7 +80,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
             staffIntervalCooldown = Utilities.GenerateBuffDef("ArchangelIntervalCooldown", AssetManager.bundle.LoadAsset<Sprite>("ArchangelsStaff.png"), false, true, false, true);
             ContentAddition.AddBuffDef(staffIntervalCooldown);
-            staffRadiantIntervalCooldown = Utilities.GenerateBuffDef("RadiantArchangelIntervalCooldown", AssetManager.bundle.LoadAsset<Sprite>("ArchangelsStaff.png"), false, true, false, true);
+            staffRadiantIntervalCooldown = Utilities.GenerateBuffDef("RadiantArchangelIntervalCooldown", AssetManager.bundle.LoadAsset<Sprite>("Radiant_ArchangelsStaff.png"), false, true, false, true);
             ContentAddition.AddBuffDef(staffRadiantIntervalCooldown);
 
             if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
