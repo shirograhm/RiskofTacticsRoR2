@@ -152,10 +152,6 @@ namespace RiskOfTactics.Content.Items.Completes
                             component.LastTarget = vicBody.gameObject;
                         }
                     }
-                    else
-                    {
-                        atkBody.SetBuffCount(wrathBuff.buffIndex, 0);
-                    }
                 }
             };
         }

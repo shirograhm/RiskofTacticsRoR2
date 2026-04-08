@@ -22,21 +22,21 @@ namespace RiskOfTactics.Content.Equipment
         public static ConfigurableValue<float> radiantChance = new(
             "Equipment: Lucky Item Chest",
             "Radiant Chance",
-            5f,
+            8f,
             "Percent chance to roll a radiant on use.",
             ["EQUIPMENT_ROT_LUCKYITEMCHEST_DESC"]
         );
         public static ConfigurableValue<float> artifactChance = new(
             "Equipment: Lucky Item Chest",
             "Artifact Chance",
-            5f,
+            8f,
             "Percent chance to roll an artifact on use.",
             ["EQUIPMENT_ROT_LUCKYITEMCHEST_DESC"]
         );
         public static ConfigurableValue<float> normalChance = new(
             "Equipment: Lucky Item Chest",
             "Normal Chance",
-            90f,
+            84f,
             "Percent chance to roll a normal on use.",
             ["EQUIPMENT_ROT_LUCKYITEMCHEST_DESC"]
         );
