@@ -51,7 +51,7 @@ namespace RiskOfTactics.Content.Equipment
             "Equipment: Lucky Item Chest",
             "Cooldown",
             10f,
-            "Equipment cooldown. This value is irrelevant (but required for item creation) since this item is consumed on use.",
+            "Equipment cooldown. This value is only used if 2 or more Lucky Item Chests are used back-to-back.",
             ["EQUIPMENT_ROT_LUCKYITEMCHEST_DESC"]
         );
         public static float percentRadiantChance = radiantChance.Value / 100f;
