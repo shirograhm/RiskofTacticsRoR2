@@ -1,6 +1,7 @@
 using BepInEx;
 using R2API;
 using R2API.Utils;
+using RiskOfTactics.Content.Artifacts;
 using RiskOfTactics.Content.Buffs;
 using RiskOfTactics.Content.Equipment;
 using RiskOfTactics.Content.Items.Artifacts;
@@ -30,7 +31,7 @@ namespace RiskOfTactics
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "shirograhm";
         public const string PluginName = "RiskOfTactics";
-        public const string PluginVersion = "0.1.5";
+        public const string PluginVersion = "0.1.6";
 
         public static PluginInfo PInfo { get; private set; }
 
@@ -110,6 +111,10 @@ namespace RiskOfTactics
             // Equipments
             if (LuckyItemChest.isEnabled.Value)
                 LuckyItemChest.Init();
+
+            // Artifact Modifiers
+            if (ArtifactOfTheGoldenSpat.isEnabled.Value)
+                ArtifactOfTheGoldenSpat.Init();
 
             InjectRadiantItemTramsforms();
             Log.Message("Finished initializations.");

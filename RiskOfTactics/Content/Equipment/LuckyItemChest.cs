@@ -57,7 +57,7 @@ namespace RiskOfTactics.Content.Equipment
         public static ConfigurableValue<float> cooldown = new(
             "Equipment: Lucky Item Chest",
             "Cooldown",
-            75f,
+            0f,
             "Equipment cooldown. This value is only used if 'Consume On Use' is disabled or if 2 or more Lucky Item Chests are used back-to-back.",
             ["EQUIPMENT_ROT_LUCKYITEMCHEST_DESC"]
         );
