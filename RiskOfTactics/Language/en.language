@@ -202,7 +202,7 @@
     "ROT_SNIPERSFOCUS": "Sniper's Focus",
     "ITEM_ROT_SNIPERSFOCUS_NAME": "Sniper's Focus",
     "ITEM_ROT_SNIPERSFOCUS_PICKUP": "Deal more damage to targets that are far away.",
-    "ITEM_ROT_SNIPERSFOCUS_DESC": "Deal <style=cIsUtility>{Damage Increase}% <style=cStack>(+{Damage Increase Extra Stacks}% per stack)</style></style> more damage <style=cIsUtility>per meter</style> between you and the target, up to <style=cIsUtility>{Max Distance}m</style>. Hits at max range fire a missile dealing <style=cIsDamage>{Missile Damage Multiplier}% TOTAL damage</style>.",
+    "ITEM_ROT_SNIPERSFOCUS_DESC": "Deal <style=cIsUtility>{Damage Increase}% <style=cStack>(+{Damage Increase Extra Stacks}% per stack)</style></style> more damage <style=cIsUtility>per meter</style> between you and the target, up to <style=cIsUtility>{Max Distance}m</style>. At max range, fire a missile that deals <style=cIsDamage>{Missile Damage Multiplier}% TOTAL damage</style>.",
     "ITEM_ROT_SNIPERSFOCUS_LORE": "",
     "ROT_STATIKKSHIV": "Statikk Shiv",
     "ITEM_ROT_STATIKKSHIV_NAME": "Statikk Shiv",
