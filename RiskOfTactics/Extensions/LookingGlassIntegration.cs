@@ -10,6 +10,8 @@ namespace RiskOfTactics.Extensions
 {
     internal static class LookingGlassIntegration
     {
+        private static float PercentRadiantItemStatMultiplier => ConfigManager.Scaling.radiantItemStatMultiplier;
+
         internal static void Init()
         {
             RoR2Application.onLoad += LookingGlassStats.RegisterStats;
@@ -62,10 +64,30 @@ namespace RiskOfTactics.Extensions
                         new("On-Hit Reduction: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.Percentage)
                         ], (master, itemCount) =>
                         {
-                            return [Utilities.GetHyperbolicStacking(SpearOfShojin.percentCooldownOnHit, SpearOfShojin.percentCooldownOnHitExtraStacks, itemCount) * ConfigManager.Scaling.radiantItemStatMultiplier];
+                            return [Utilities.GetHyperbolicStacking(SpearOfShojin.percentCooldownOnHit, SpearOfShojin.percentCooldownOnHitExtraStacks, itemCount) * PercentRadiantItemStatMultiplier];
                         });
                 }
-
+                if (WarmogsArmor.isEnabled.Value)
+                {
+                    RegisterStatsForItem(WarmogsArmor.itemDef, [
+                        new("Bonus Health: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.FlatHealth)
+                        ], (master, itemCount) =>
+                        {
+                            float baseAmt = Utilities.GetLinearStacking(WarmogsArmor.flatHealth, WarmogsArmor.flatHealthExtraStacks, itemCount);
+                            if (master.GetBody()?.healthComponent)
+                                baseAmt += master.GetBody().healthComponent.fullHealth * WarmogsArmor.percentHealthBonus;
+                            return [baseAmt];
+                        });
+                    RegisterStatsForItem(WarmogsArmor.radiantDef, [
+                        new("Bonus Health: ", ItemStatsDef.ValueType.Utility, ItemStatsDef.MeasurementUnits.FlatHealth)
+                        ], (master, itemCount) =>
+                        {
+                            float baseAmt = Utilities.GetLinearStacking(WarmogsArmor.flatHealth, WarmogsArmor.flatHealthExtraStacks, itemCount) * PercentRadiantItemStatMultiplier;
+                            if (master.GetBody()?.healthComponent)
+                                baseAmt += master.GetBody().healthComponent.fullHealth * WarmogsArmor.percentHealthBonus * PercentRadiantItemStatMultiplier;
+                            return [baseAmt];
+                        });
+                }
 
 
                 // Artifacts
