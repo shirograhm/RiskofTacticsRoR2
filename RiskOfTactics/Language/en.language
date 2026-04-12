@@ -202,7 +202,7 @@
     "ROT_SNIPERSFOCUS": "Sniper's Focus",
     "ITEM_ROT_SNIPERSFOCUS_NAME": "Sniper's Focus",
     "ITEM_ROT_SNIPERSFOCUS_PICKUP": "Deal more damage to targets that are far away.",
-    "ITEM_ROT_SNIPERSFOCUS_DESC": "Deal <style=cIsUtility>{Damage Increase}% <style=cStack>(+{Damage Increase Extra Stacks}% per stack)</style></style> more damage <style=cIsUtility>per meter</style> between you and the target, up to <style=cIsUtility>{Max Distance}m</style>.",
+    "ITEM_ROT_SNIPERSFOCUS_DESC": "Deal <style=cIsUtility>{Damage Increase}% <style=cStack>(+{Damage Increase Extra Stacks}% per stack)</style></style> more damage <style=cIsUtility>per meter</style> between you and the target, up to <style=cIsUtility>{Max Distance}m</style>. Hits at max range fire a missile dealing <style=cIsDamage>{Missile Damage Multiplier}% TOTAL damage</style>.",
     "ITEM_ROT_SNIPERSFOCUS_LORE": "",
     "ROT_STATIKKSHIV": "Statikk Shiv",
     "ITEM_ROT_STATIKKSHIV_NAME": "Statikk Shiv",
@@ -225,7 +225,7 @@
     "ROT_LUCKYITEMCHEST": "Lucky Item Chest",
     "EQUIPMENT_ROT_LUCKYITEMCHEST_NAME": "Lucky Item Chest",
     "EQUIPMENT_ROT_LUCKYITEMCHEST_PICKUP": "Choose a random TFT item.",
-    "EQUIPMENT_ROT_LUCKYITEMCHEST_DESC": "On use, spawn a pickup that contains {Num Items} TFT items (<style=cHumanObjective>{Radiant Chance}%</style>/<style=cIsHealth>{Artifact Chance}%</style>/<style=cIsHealing>{Normal Chance}%</style>). Consumed on use.",
+    "EQUIPMENT_ROT_LUCKYITEMCHEST_DESC": "On use, spawn a pickup that contains {Num Items} TFT items (<style=cHumanObjective>{Radiant Chance}%</style>/<style=cIsHealth>{Artifact Chance}%</style>/<style=cIsHealing>{Normal Chance}%</style>).",
     "EQUIPMENT_ROT_LUCKYITEMCHEST_LORE": ""
   }
 }

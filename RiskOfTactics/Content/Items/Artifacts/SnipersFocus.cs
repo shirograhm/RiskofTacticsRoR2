@@ -7,6 +7,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
     public class SnipersFocus
     {
         public static ItemDef itemDef;
+        public static GameObject missilePrefab;
 
         // Deal more damage to targets that are far away.
         public static ConfigurableValue<bool> isEnabled = new(
@@ -30,6 +31,13 @@ namespace RiskOfTactics.Content.Items.Artifacts
             "Percent of additional damage dealt per meter of distance for additional item stacks.",
             ["ITEM_ROT_SNIPERSFOCUS_DESC"]
         );
+        public static ConfigurableValue<float> missileDamageMult = new(
+            "Item: Snipers Focus",
+            "Missile Damage Multiplier",
+            50f,
+            "Missile damage dealt (multiplied by hit's damage).",
+            ["ITEM_ROT_SNIPERSFOCUS_DESC"]
+        );
         public static ConfigurableValue<float> maxDistance = new(
             "Item: Snipers Focus",
             "Max Distance",
@@ -39,10 +47,13 @@ namespace RiskOfTactics.Content.Items.Artifacts
         );
         public static readonly float percentDamageIncreasePerMeter = damageIncreasePerMeter.Value / 100f;
         public static readonly float percentDamageIncreasePerMeterExtraStacks = damageIncreasePerMeterExtraStacks.Value / 100f;
+        public static readonly float percentMissileDamageMult = missileDamageMult.Value / 100f;
 
         internal static void Init()
         {
             itemDef = ItemManager.GenerateItem("SnipersFocus", [ItemTag.Damage, ItemTag.CanBeTemporary], ItemManager.TacticTier.Artifact);
+
+            missilePrefab = LegacyResourcesAPI.LoadAsync<GameObject>("Prefabs/Projectiles/MissileProjectile").WaitForCompletion();
 
             Hooks();
         }
@@ -64,6 +75,23 @@ namespace RiskOfTactics.Content.Items.Artifacts
                         float damageIncrease = Mathf.Min(distance * totalPercentage, maxDistance.Value * totalPercentage);
 
                         damageInfo.damage *= 1f + damageIncrease;
+
+                        if (distance >= maxDistance.Value && !damageInfo.procChainMask.HasProc(ProcType.Missile))
+                        {
+                            int moreMissileCount = atkBody.inventory.GetItemCountEffective(DLC1Content.Items.MoreMissile);
+                            // Fire a missile at the target
+                            MissileUtils.FireMissile(
+                                atkBody.corePosition,
+                                atkBody,
+                                default,
+                                victimObject,
+                                damageInfo.damage * percentMissileDamageMult * (1 + Utilities.GetLinearStacking(0f, 0.5f, moreMissileCount)),
+                                atkBody.RollCrit(),
+                                missilePrefab,
+                                DamageColorIndex.WeakPoint,
+                                addMissileProc: true
+                            );
+                        }
                     }
                 }
             };
