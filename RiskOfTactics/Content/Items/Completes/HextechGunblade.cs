@@ -150,7 +150,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
         public class HextechOrb : Orb
         {
-            private readonly float speed = 25f;
+            private readonly float speed = 55f;
 
             private readonly CharacterBody toBeHealed;
             private readonly CharacterBody toBeTracked;
