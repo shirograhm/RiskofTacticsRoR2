@@ -91,7 +91,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                     if (count > 0)
                     {
                         // Make sure this calculation only runs when healthFraction is below 1, not above 1
-                        if (sender.healthComponent.combinedHealthFraction < 1f)
+                        if (sender.healthComponent.healthFraction < 1f)
                         {
                             args.attackSpeedMultAdd += Utilities.GetLinearStacking(percentAttackSpeedPerPercent, percentAttackSpeedPerPercentExtraStacks, count) * Utilities.GetMissingHealthPercent(sender.healthComponent, true);
                         }
