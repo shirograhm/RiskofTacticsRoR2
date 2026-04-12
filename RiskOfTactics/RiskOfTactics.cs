@@ -91,8 +91,6 @@ namespace RiskOfTactics
             // Artifacts
             if (GamblersBlade.isEnabled.Value)
                 GamblersBlade.Init();
-            if (GoldCollector.isEnabled.Value)
-                GoldCollector.Init();
             if (HellfireHatchet.isEnabled.Value)
                 HellfireHatchet.Init();
             if (HorizonFocus.isEnabled.Value)
