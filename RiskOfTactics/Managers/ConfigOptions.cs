@@ -1,5 +1,6 @@
 using BepInEx.Configuration;
 using RiskOfTactics.Content.Buffs;
+using RiskOfTactics.Content.Equipment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,7 @@ namespace RiskOfTactics.Managers
             if (reloadLogbook)
             {
                 reloadLogbook = false;
-#pragma warning disable Publicizer001 // Accessing a member that was not originally public
                 RoR2.UI.LogBook.LogBookController.BuildStaticData();
-#pragma warning restore Publicizer001 // Accessing a member that was not originally public
             }
         }
 
@@ -53,6 +52,12 @@ namespace RiskOfTactics.Managers
 
                 result = result.Replace("{" + configurableValue.key + "}", replacement);
                 result = result.Replace("{Sunder Reduction}", Sunder.armorReduction.Value.ToString());
+
+                if (LuckyItemChest.shouldConsumeOnUse.Value &&
+                    (token.Equals("EQUIPMENT_ROT_LUCKYITEMCHEST_PICKUP") || token.Equals("EQUIPMENT_ROT_LUCKYITEMCHEST_DESC")))
+                {
+                    result += " Consumed on use.";
+                }
             }
 
             return result;
