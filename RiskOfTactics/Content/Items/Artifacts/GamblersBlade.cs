@@ -2,7 +2,6 @@
 using RiskOfTactics.Managers;
 using RoR2;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace RiskOfTactics.Content.Items.Artifacts
 {
@@ -96,42 +95,10 @@ namespace RiskOfTactics.Content.Items.Artifacts
                 {
                     if (Util.CheckRoll0To1(percentMoneyDropChance, atkBody.master.luck))
                     {
-                        SpawnGoldPack(atkBody, vicBody);
+                        Utilities.SpawnGoldPack(atkBody, vicBody, moneyGainOnDrop.Value * Utilities.GetDifficultyAsMultiplier());
                     }
                 }
             };
         }
-
-        private static void SpawnGoldPack(CharacterBody attacker, CharacterBody victim)
-        {
-            GameObject goldPackObject = Object.Instantiate(LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/BonusMoneyPack"), victim.transform.position, Random.rotation);
-            if (goldPackObject)
-            {
-                Collider component = goldPackObject.GetComponent<Collider>();
-                if (component)
-                {
-                    TeamFilter teamComponent = goldPackObject.GetComponent<TeamFilter>();
-                    if (teamComponent && attacker.teamComponent)
-                    {
-                        teamComponent.teamIndex = attacker.teamComponent.teamIndex;
-                    }
-                    MoneyPickup componentInChildren = goldPackObject.GetComponentInChildren<MoneyPickup>();
-                    if ((bool)componentInChildren)
-                    {
-                        componentInChildren.baseGoldReward = Mathf.RoundToInt(moneyGainOnDrop.Value * Utilities.GetDifficultyAsMultiplier());
-                        Physics.IgnoreCollision(component, componentInChildren.GetComponent<Collider>());
-                    }
-                    GravitatePickup componentInChildren2 = goldPackObject.GetComponentInChildren<GravitatePickup>();
-                    if ((bool)componentInChildren2)
-                    {
-                        Physics.IgnoreCollision(component, componentInChildren2.GetComponent<Collider>());
-                    }
-                    goldPackObject.transform.localScale = new Vector3(0.65f, 4.5f, 0.25f);
-
-                    NetworkServer.Spawn(goldPackObject);
-                }
-            }
-        }
-
     }
 }

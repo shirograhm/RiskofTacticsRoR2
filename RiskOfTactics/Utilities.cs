@@ -210,6 +210,38 @@ namespace RiskOfTactics
             EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/MedkitHealEffect"), effectData, transmit: true);
         }
 
+        internal static void SpawnGoldPack(CharacterBody attacker, CharacterBody victim, float moneyGain)
+        {
+            GameObject goldPackObject = UnityEngine.Object.Instantiate(LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/BonusMoneyPack"), victim.transform.position, UnityEngine.Random.rotation);
+            if (goldPackObject)
+            {
+                Collider component = goldPackObject.GetComponent<Collider>();
+                if (component)
+                {
+                    TeamFilter teamComponent = goldPackObject.GetComponent<TeamFilter>();
+                    if (teamComponent && attacker.teamComponent)
+                    {
+                        teamComponent.teamIndex = attacker.teamComponent.teamIndex;
+                    }
+                    MoneyPickup componentInChildren = goldPackObject.GetComponentInChildren<MoneyPickup>();
+                    if ((bool)componentInChildren)
+                    {
+                        componentInChildren.baseGoldReward = Mathf.RoundToInt(moneyGain * Utilities.GetDifficultyAsMultiplier());
+                        Physics.IgnoreCollision(component, componentInChildren.GetComponent<Collider>());
+                    }
+                    GravitatePickup componentInChildren2 = goldPackObject.GetComponentInChildren<GravitatePickup>();
+                    if ((bool)componentInChildren2)
+                    {
+                        Physics.IgnoreCollision(component, componentInChildren2.GetComponent<Collider>());
+                    }
+                    goldPackObject.transform.localScale = new Vector3(0.65f, 4.5f, 0.25f);
+
+                    NetworkServer.Spawn(goldPackObject);
+                }
+            }
+        }
+
+
         // ContentPackProvider methods for radiant item transformations
         // Must be called Utilities.Init() -> All Items -> InjectRadiantTramsforms()
         public static List<ItemDef.Pair> radiantPairs = [];
@@ -224,3 +256,4 @@ namespace RiskOfTactics
         }
     }
 }
+
