@@ -11,7 +11,7 @@ namespace RiskOfTactics.Content.Equipment
     {
         public static EquipmentDef equipmentDef;
 
-        // Stunning enemies strikes them again after a short delay.
+        // Spawns a random assortment of TFT items on use.
         public static ConfigurableValue<bool> isEnabled = new(
             "Equipment: Lucky Item Chest",
             "Enabled",
@@ -47,11 +47,18 @@ namespace RiskOfTactics.Content.Equipment
             "Number of items available to choose from.",
             ["EQUIPMENT_ROT_LUCKYITEMCHEST_DESC"]
         );
+        public static ConfigurableValue<bool> shouldConsumeOnUse = new(
+            "Equipment: Lucky Item Chest",
+            "Consume On Use",
+            true,
+            "Whether the equipment should be consumed on use.",
+            ["EQUIPMENT_ROT_LUCKYITEMCHEST_DESC"]
+        );
         public static ConfigurableValue<float> cooldown = new(
             "Equipment: Lucky Item Chest",
             "Cooldown",
-            10f,
-            "Equipment cooldown. This value is only used if 2 or more Lucky Item Chests are used back-to-back.",
+            75f,
+            "Equipment cooldown. This value is only used if 'Consume On Use' is disabled or if 2 or more Lucky Item Chests are used back-to-back.",
             ["EQUIPMENT_ROT_LUCKYITEMCHEST_DESC"]
         );
         public static float percentRadiantChance = radiantChance.Value / 100f;
@@ -81,36 +88,41 @@ namespace RiskOfTactics.Content.Equipment
         private static bool OnUse(EquipmentSlot slot)
         {
             var pickups = new List<UniquePickup>();
-            for (int i = 0; i < numItems; i++)
-            {
-                ItemManager.TacticTier tTier = RollTier();
-                // Get a random item of the rolled tier
-                ItemDef chosenDef = ItemManager.GetRandomTacticItemOfTier(tTier);
-                PickupIndex rolledPickup = PickupCatalog.FindPickupIndex(chosenDef.itemIndex);
-                pickups.Add(new UniquePickup { pickupIndex = rolledPickup });
-            }
-            var pickupInfo = new GenericPickupController.CreatePickupInfo
-            {
-                pickerOptions = PickupPickerController.GenerateOptionsFromList(pickups),
-                prefabOverride = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/OptionPickup/OptionPickup.prefab").WaitForCompletion(),
-                position = slot.transform.position,
-                rotation = Quaternion.identity,
-                pickupIndex = PickupCatalog.FindPickupIndex(ItemTier.Tier1)
-            };
 
             if (slot.characterBody && slot.characterBody.inventory)
             {
+                // Roll for the tier of each item and add them to the list of options
+                for (int i = 0; i < numItems; i++)
+                {
+                    ItemManager.TacticTier tTier = RollTier();
+                    // Get a random item of the rolled tier
+                    ItemDef chosenDef = ItemManager.GetRandomTacticItemOfTier(tTier);
+                    PickupIndex rolledPickup = PickupCatalog.FindPickupIndex(chosenDef.itemIndex);
+                    pickups.Add(new UniquePickup { pickupIndex = rolledPickup });
+                }
+                // Create the pickup selection
+                var pickupInfo = new GenericPickupController.CreatePickupInfo
+                {
+                    pickerOptions = PickupPickerController.GenerateOptionsFromList(pickups),
+                    prefabOverride = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/OptionPickup/OptionPickup.prefab").WaitForCompletion(),
+                    position = slot.transform.position,
+                    rotation = Quaternion.identity,
+                    pickupIndex = PickupCatalog.FindPickupIndex(ItemTier.Tier1)
+                };
+                // Spawn the pickup selection
                 PickupDropletController.CreatePickupDroplet(
                     pickupInfo,
                     pickupInfo.position,
                     Vector3.up * 20f + slot.transform.forward * 2f
                 );
-
-                CharacterMasterNotificationQueue.SendTransformNotification(
-                    slot.characterBody.master, equipmentDef.equipmentIndex, EquipmentIndex.None, CharacterMasterNotificationQueue.TransformationType.Default
-                );
-                slot.characterBody.inventory.SetEquipmentIndex(EquipmentIndex.None, isRemovingEquipment: true);
-
+                // Consume the equipment if the config is enabled
+                if (shouldConsumeOnUse.Value)
+                {
+                    CharacterMasterNotificationQueue.SendTransformNotification(
+                        slot.characterBody.master, equipmentDef.equipmentIndex, EquipmentIndex.None, CharacterMasterNotificationQueue.TransformationType.Default
+                    );
+                    slot.characterBody.inventory.SetEquipmentIndex(EquipmentIndex.None, isRemovingEquipment: true);
+                }
                 return true;
             }
             return false;
