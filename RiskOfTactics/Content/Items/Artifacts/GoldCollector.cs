@@ -63,10 +63,10 @@ namespace RiskOfTactics.Content.Items.Artifacts
 
         public static void Hooks()
         {
-            GameEventManager.BeforeTakeDamage += (damageInfo, attackerInfo, victimInfo) =>
+            GameEventManager.OnTakeDamage += (damageReport) =>
             {
-                CharacterBody vicBody = attackerInfo.body;
-                CharacterBody atkBody = victimInfo.body;
+                CharacterBody vicBody = damageReport.attackerBody;
+                CharacterBody atkBody = damageReport.victimBody;
                 if (vicBody && atkBody && atkBody.inventory)
                 {
                     int count = atkBody.inventory.GetItemCountEffective(itemDef);
@@ -74,11 +74,21 @@ namespace RiskOfTactics.Content.Items.Artifacts
                     {
                         if (vicBody.healthComponent && vicBody.healthComponent.alive && vicBody.healthComponent.combinedHealthFraction <= percentExecuteThreshold)
                         {
-                            damageInfo.crit = true;
-                            damageInfo.damage *= 1000f;
-                            damageInfo.damageColorIndex = DamageColorIndex.WeakPoint;
-
+                            DamageInfo damageInfo = new DamageInfo()
+                            {
+                                damage = vicBody.healthComponent.fullCombinedHealth * vicBody.healthComponent.combinedHealthFraction,
+                                attacker = atkBody.gameObject,
+                                inflictor = atkBody.gameObject,
+                                procCoefficient = 0f,
+                                position = vicBody.corePosition,
+                                crit = true,
+                                damageColorIndex = DamageColorIndex.WeakPoint,
+                                procChainMask = default,
+                                damageType = DamageType.Silent
+                            };
                             damageInfo.AddModdedDamageType(ExecuteDamage);
+
+                            vicBody.healthComponent.TakeDamage(damageInfo);
                         }
                     }
                 }
