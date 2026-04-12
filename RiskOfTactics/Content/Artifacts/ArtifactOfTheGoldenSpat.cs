@@ -48,7 +48,6 @@ namespace RiskOfTactics.Content.Artifacts
                         {
                             var inventory = player.master.inventory;
                             inventory.SetEquipmentIndexForSlot(LuckyItemChest.equipmentDef.equipmentIndex, 0, 0);
-                            inventory.DeductEquipmentCooldown(0, 0, 1);
                         }
                     }
                 }
