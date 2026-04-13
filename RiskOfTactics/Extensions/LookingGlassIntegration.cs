@@ -91,6 +91,15 @@ namespace RiskOfTactics.Extensions
 
 
                 // Artifacts
+                if (CappaJuice.isEnabled.Value)
+                {
+                    RegisterStatsForItem(CappaJuice.itemDef, [
+                        new("Base Damage: ", ItemStatsDef.ValueType.Damage, ItemStatsDef.MeasurementUnits.Percentage)
+                        ], (master, itemCount) =>
+                        {
+                            return [CappaJuice.percentDamageBonus * itemCount];
+                        });
+                }
                 if (GamblersBlade.isEnabled.Value)
                 {
                     RegisterStatsForItem(GamblersBlade.itemDef, [

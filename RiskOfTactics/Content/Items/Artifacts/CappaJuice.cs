@@ -8,7 +8,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
     {
         public static ItemDef itemDef;
 
-        // Gain 1 (+1 per stack) base damage. Killing boss enemies grants an additional stack of this item. 
+        // Gain stacking base damage. Killing enemies during the teleporter event grants an additional stack of this item. 
         public static ConfigurableValue<bool> isEnabled = new(
             "Item: Cappa Juice",
             "Enabled",
@@ -19,10 +19,11 @@ namespace RiskOfTactics.Content.Items.Artifacts
         public static ConfigurableValue<float> damageBonus = new(
             "Item: Cappa Juice",
             "Damage Bonus",
-            1f,
-            "Damage bonus for each stack of this item.",
+            0.5f,
+            "Percent damage bonus for each stack of this item.",
             ["ITEM_ROT_CAPPAJUICE_DESC"]
         );
+        public static float percentDamageBonus = damageBonus.Value / 100f;
 
         internal static void Init()
         {
@@ -40,7 +41,7 @@ namespace RiskOfTactics.Content.Items.Artifacts
                     int count = sender.inventory.GetItemCountEffective(itemDef);
                     if (count > 0)
                     {
-                        args.baseDamageAdd += Utilities.GetLinearStacking(damageBonus.Value, damageBonus.Value, count);
+                        args.damageTotalMult *= 1 + Utilities.GetLinearStacking(percentDamageBonus, percentDamageBonus, count);
                     }
                 }
             };
@@ -50,12 +51,16 @@ namespace RiskOfTactics.Content.Items.Artifacts
                 CharacterBody vicBody = damageReport.victimBody;
                 CharacterBody atkBody = damageReport.attackerBody;
 
-                if (vicBody && atkBody && atkBody.inventory)
+                foreach (HoldoutZoneController hzc in InstanceTracker.GetInstancesList<HoldoutZoneController>())
                 {
-                    int count = atkBody.inventory.GetItemCountEffective(itemDef);
-                    if (count > 0 && vicBody.isBoss)
+                    if (vicBody && atkBody && atkBody.inventory)
                     {
-                        atkBody.inventory.GiveItemPermanent(itemDef);
+                        int count = atkBody.inventory.GetItemCountEffective(itemDef);
+
+                        if (count > 0 && hzc.isActiveAndEnabled)
+                        {
+                            atkBody.inventory.GiveItemPermanent(itemDef);
+                        }
                     }
                 }
             };
