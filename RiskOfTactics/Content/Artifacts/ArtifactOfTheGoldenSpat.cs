@@ -47,7 +47,13 @@ namespace RiskOfTactics.Content.Artifacts
                         if (player && player.master && player.master.inventory)
                         {
                             var inventory = player.master.inventory;
-                            inventory.SetEquipmentIndexForSlot(LuckyItemChest.equipmentDef.equipmentIndex, 0, 0);
+                            var oldIndex = inventory.GetEquipment(0, 0).equipmentIndex;
+                            var newIndex = LuckyItemChest.equipmentDef.equipmentIndex;
+
+                            if (oldIndex != EquipmentIndex.None)
+                                CharacterMasterNotificationQueue.PushEquipmentTransformNotification(player.master, oldIndex, newIndex, CharacterMasterNotificationQueue.TransformationType.LunarSun);
+
+                            inventory.SetEquipmentIndexForSlot(newIndex, 0, 0);
                         }
                     }
                 }
