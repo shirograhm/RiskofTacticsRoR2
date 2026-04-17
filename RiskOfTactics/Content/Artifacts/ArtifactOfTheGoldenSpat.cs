@@ -12,7 +12,7 @@ namespace RiskOfTactics.Content.Artifacts
 
         public static GameObject PickupModelPrefab { get; } = null;
 
-        // Start with a random normal-tier TFT item. Every time you level up, replace your current equipment with a Lucky Item Chest.
+        // Spawns a random assortment of TFT items on use.
         public static ConfigurableValue<bool> isEnabled = new(
             "Artifact of the Golden Spatula",
             "Enabled",
@@ -40,30 +40,17 @@ namespace RiskOfTactics.Content.Artifacts
         {
             On.RoR2.Run.BeginStage += (orig, self) =>
             {
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifactDef) && Run.instance.stageClearCount == 0)
+                if (RunArtifactManager.instance.IsArtifactEnabled(artifactDef))
                 {
                     foreach (var player in PlayerCharacterMasterController.instances)
                     {
                         if (player && player.master && player.master.inventory)
                         {
                             var inventory = player.master.inventory;
-                            inventory.GiveItemPermanent(ItemManager.GetRandomTacticItemOfTier(ItemManager.TacticTier.Normal));
+                            inventory.SetEquipmentIndexForSlot(LuckyItemChest.equipmentDef.equipmentIndex, 0, 0);
                         }
                     }
                 }
-                orig(self);
-            };
-
-            On.RoR2.CharacterBody.OnLevelUp += (orig, self) =>
-            {
-                if (RunArtifactManager.instance.IsArtifactEnabled(artifactDef))
-                {
-                    if (self && self.inventory)
-                    {
-                        self.inventory.SetEquipmentIndexForSlot(LuckyItemChest.equipmentDef.equipmentIndex, 0, 0);
-                    }
-                }
-
                 orig(self);
             };
         }
