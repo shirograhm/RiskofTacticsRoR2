@@ -241,6 +241,47 @@ namespace RiskOfTactics
             }
         }
 
+        internal static void UpdateSingleTemporaryVisualEffect(ref TemporaryVisualEffect tempEffect, GameObject tempEffectPrefab, CharacterBody userBody, bool active, string childLocatorOverride = "")
+        {
+            if (tempEffect != null != active)
+            {
+                if (active && tempEffectPrefab)
+                {
+                    GameObject gameObject = UnityEngine.Object.Instantiate(tempEffectPrefab, userBody.corePosition, Quaternion.identity);
+                    tempEffect = gameObject.GetComponent<TemporaryVisualEffect>();
+                    tempEffect.parentTransform = userBody.coreTransform;
+                    tempEffect.visualState = TemporaryVisualEffect.VisualState.Enter;
+                    tempEffect.healthComponent = userBody.healthComponent;
+                    tempEffect.radius = 1.0f;
+                    LocalCameraEffect component = gameObject.GetComponent<LocalCameraEffect>();
+                    if (component)
+                    {
+                        component.targetCharacter = userBody.gameObject;
+                    }
+                    if (!string.IsNullOrEmpty(childLocatorOverride))
+                    {
+                        ChildLocator childLocator = userBody.modelLocator?.modelTransform?.GetComponent<ChildLocator>();
+                        if (childLocator)
+                        {
+                            Transform transform = childLocator.FindChild(childLocatorOverride);
+                            if (transform)
+                            {
+                                tempEffect.parentTransform = transform;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    tempEffect.visualState = TemporaryVisualEffect.VisualState.Exit;
+                }
+            }
+            if (tempEffect != null)
+            {
+                bool isNotVehicle = userBody.currentVehicle == null || !userBody.currentVehicle.hidePassenger;
+                if (tempEffect.visualTransform) tempEffect.visualTransform.gameObject.SetActive(isNotVehicle);
+            }
+        }
 
         // ContentPackProvider methods for radiant item transformations
         // Must be called Utilities.Init() -> All Items -> InjectRadiantTramsforms()
