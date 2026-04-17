@@ -237,7 +237,7 @@
 
 
     "ROT_GOLDEN_SPATULA_MODIFIER": "<style=cShrine>Artifact of the Golden Spatula</style>",
-    "ROT_GOLDEN_SPATULA_MODIFIER_NAME": "<style=cShrine>Artifact of the Golden Spatula</style>",
+    "ROT_GOLDEN_SPATULA_MODIFIER_NAME": "Artifact of the Golden Spatula",
     "ROT_GOLDEN_SPATULA_MODIFIER_DESC": "At the beginning of each stage, replace your current equipment with a <style=cIsDamage>Lucky Item Chest</style>."
   }
 }
