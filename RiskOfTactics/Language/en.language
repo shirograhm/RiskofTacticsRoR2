@@ -174,11 +174,6 @@
 
 
 
-    "ROT_CAPPAJUICE": "Cappa Juice",
-    "ITEM_ROT_CAPPAJUICE_NAME": "Cappa Juice",
-    "ITEM_ROT_CAPPAJUICE_PICKUP": "Gain stacking <style=cIsDamage>BASE damage</style> when killing enemies during the teleporter event.",
-    "ITEM_ROT_CAPPAJUICE_DESC": "Gain <style=cIsDamage>{Damage Bonus}% <style=cStack>(+{Damage Bonus}% per stack)</style> BASE damage</style>. Gain a stack of this item when killing an emeny during the teleporter event.",
-    "ITEM_ROT_CAPPAJUICE_LORE": "",
     "ROT_GAMBLERSBLADE": "Gambler's Blade",
     "ITEM_ROT_GAMBLERSBLADE_NAME": "Gambler's Blade",
     "ITEM_ROT_GAMBLERSBLADE_PICKUP": "Gain <style=cIsDamage>attack speed</style> based on your <style=cHumanObjective>current gold</style>. Small chance to drop treasure on-hit.",

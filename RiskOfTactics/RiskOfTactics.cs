@@ -89,8 +89,6 @@ namespace RiskOfTactics
                 WarmogsArmor.Init();
 
             // Artifacts
-            if (CappaJuice.isEnabled.Value)
-                CappaJuice.Init();
             if (GamblersBlade.isEnabled.Value)
                 GamblersBlade.Init();
             if (HellfireHatchet.isEnabled.Value)
