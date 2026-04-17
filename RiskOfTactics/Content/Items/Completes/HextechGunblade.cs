@@ -152,6 +152,7 @@ namespace RiskOfTactics.Content.Items.Completes
         {
             private readonly float speed = 55f;
 
+            private readonly CharacterBody victim;
             private readonly CharacterBody toBeHealed;
             private readonly CharacterBody toBeTracked;
             private readonly float healing;
@@ -167,6 +168,7 @@ namespace RiskOfTactics.Content.Items.Completes
                     origin = originBody ? originBody.corePosition : Vector3.zero;
                     if (targetBody) target = targetBody.mainHurtBox;
                 }
+                victim = originBody;
             }
 
             public override void Begin()
@@ -188,7 +190,10 @@ namespace RiskOfTactics.Content.Items.Completes
                     toBeHealed.healthComponent.Heal(healing, default, true);
                     if (toBeTracked && toBeTracked.inventory)
                     {
-                        Statistics component = toBeTracked.inventory.GetComponent<Statistics>();
+                        // Healing calculation takes minions into account
+                        CharacterBody trackerBody = Utilities.GetMinionOwnershipParentBody(victim);
+                        // Store healing numbers for user flavor
+                        Statistics component = trackerBody.inventory.GetComponent<Statistics>();
                         if (component) component.DamageHealed += healing;
                     }
                 }

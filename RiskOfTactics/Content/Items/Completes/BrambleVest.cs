@@ -239,7 +239,7 @@ namespace RiskOfTactics.Content.Items.Completes
                     // Damage calculation takes minions into account
                     CharacterBody trackerBody = Utilities.GetMinionOwnershipParentBody(damageReport.victimBody);
                     // Store damage numbers for user flavor
-                    Statistics component = vicBody.inventory.GetComponent<Statistics>();
+                    Statistics component = trackerBody.inventory.GetComponent<Statistics>();
                     if (component) component.DamageReflected += brambleProc.damage;
                 }
             }
