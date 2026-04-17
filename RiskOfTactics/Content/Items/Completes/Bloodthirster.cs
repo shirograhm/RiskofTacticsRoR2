@@ -64,7 +64,7 @@ namespace RiskOfTactics.Content.Items.Completes
             satedBuff = Utilities.GenerateBuffDef("Sated", AssetManager.bundle.LoadAsset<Sprite>("Sated.png"), false, false, false, true);
             ContentAddition.AddBuffDef(satedBuff);
 
-            if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

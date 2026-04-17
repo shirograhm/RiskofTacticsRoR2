@@ -118,7 +118,7 @@ namespace RiskOfTactics.Content.Items.Completes
 
             sunfireEffectIndicator = LegacyResourcesAPI.LoadAsync<GameObject>("Prefabs/NetworkedObjects/ExplodeOnDeathVoidExplosion").WaitForCompletion();
 
-            if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, sunfireCooldownBuff, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, radiantSunfireCooldownBuff, ItemManager.TacticTier.Radiant);

@@ -66,7 +66,7 @@ namespace RiskOfTactics.Content.Items.Completes
             radiantResolveBuff = Utilities.GenerateBuffDef("RadiantTitansResolveBuff", AssetManager.bundle.LoadAsset<Sprite>("Radiant_TitansResolve"), true, false, false, false);
             ContentAddition.AddBuffDef(radiantResolveBuff);
 
-            if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, resolveBuff, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, radiantResolveBuff, ItemManager.TacticTier.Radiant);

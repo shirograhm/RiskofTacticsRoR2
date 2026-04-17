@@ -114,7 +114,9 @@ namespace RiskOfTactics
             if (ArtifactOfTheGoldenSpat.isEnabled.Value)
                 ArtifactOfTheGoldenSpat.Init();
 
-            InjectRadiantItemTramsforms();
+            // Radiant Transformations Content Provider
+            if (ConfigManager.Scaling.useRadiantAutoConversion)
+                InjectRadiantItemTramsforms();
             Log.Message("Finished initializations.");
         }
 

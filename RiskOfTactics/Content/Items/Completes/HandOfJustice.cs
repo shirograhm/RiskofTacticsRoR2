@@ -105,7 +105,7 @@ namespace RiskOfTactics.Content.Items.Completes
             belowHalfBuff = Utilities.GenerateBuffDef("Below", AssetManager.bundle.LoadAsset<Sprite>("HoJ Omnivamp.png"), false, false, false, false);
             ContentAddition.AddBuffDef(belowHalfBuff);
 
-            if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, ItemManager.TacticTier.Radiant);

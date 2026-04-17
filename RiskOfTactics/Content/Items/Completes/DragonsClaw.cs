@@ -96,7 +96,7 @@ namespace RiskOfTactics.Content.Items.Completes
             radiantDragonsClawCooldownBuff = Utilities.GenerateBuffDef("DragonsClawRadiantCooldown", AssetManager.bundle.LoadAsset<Sprite>("DragonsClawRadiantCooldown"), false, false, false, true);
             ContentAddition.AddBuffDef(radiantDragonsClawCooldownBuff);
 
-            if (ConfigManager.Scaling.useRadiantAutoConversion) Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
+            Utilities.RegisterRadiantUpgrade(itemDef, radiantDef);
 
             Hooks(itemDef, dragonsClawCooldownBuff, ItemManager.TacticTier.Normal);
             Hooks(radiantDef, radiantDragonsClawCooldownBuff, ItemManager.TacticTier.Radiant);
